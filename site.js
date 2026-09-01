@@ -37,13 +37,14 @@ document.addEventListener('alpine:init', () => {
             address: '',
             contact: '',
             receiptFile: null,
-            paymentMethod: 'gcash',      // gcash | maya | bank
-            deliveryOption: 'standard'   // same_day | standard
+            paymentMethod: 'gcash',
+            deliveryOption: 'standard',
+            region: ''                
         },
         isSubmitting: false,
         orderSuccess: false,
-        
-        // HOT STYLE TOAST
+        messengerLink: "",
+        paymentModalOpen: false,
         hotToastVisible: false,
         
         // ===== HOT PRODUCTS =====
@@ -244,23 +245,26 @@ document.addEventListener('alpine:init', () => {
         get cartTotal() {
             return this.cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
         },
-
+        
         // Same Day Delivery fee (₱150)
-        get deliveryFee() {
-            return this.form.deliveryOption === 'same_day' ? 150 : 0;
+        get regionShippingFee() {
+            if (this.form.deliveryOption === 'same_day') return 0;
+            if (this.form.region === 'luzon') return 100;
+            if (this.form.region === 'vismin') return 150;
+            return 0;
         },
-
+        
         get grandTotal() {
-            return this.cartTotal + this.deliveryFee;
+            return this.cartTotal + this.regionShippingFee;
         },
-
+        
         get canSubmit() {
             return this.form.name && 
-                   this.form.address && 
-                   this.form.contact && 
-                   this.form.paymentMethod && 
-                   this.form.deliveryOption &&
-                   this.form.receiptFile;
+            this.form.address && 
+            this.form.contact && 
+            this.form.paymentMethod && 
+            this.form.deliveryOption &&
+            this.form.receiptFile;
         },
         
         addToCart(product) {
@@ -297,12 +301,24 @@ document.addEventListener('alpine:init', () => {
         handleFileUpload(event) {
             this.form.receiptFile = event.target.files[0];
         },
-
+        
         // Used by checkout.html
         initCheckoutPage() {
             this.initHeader();
             // Reload cart from localStorage in case it changed
             this.cart = JSON.parse(localStorage.getItem('ulti_cart')) || [];
+        },
+
+        openPaymentModal() {
+            if (!this.form.name || !this.form.address || !this.form.contact) {
+                alert("Please complete all shipping details.");
+                return;
+            }
+            if (this.form.deliveryOption !== 'same_day' && !this.form.paymentMethod) {
+                alert("Please select a payment method.");
+                return;
+            }
+            this.paymentModalOpen = true;
         },
         
         async submitOrder() {
@@ -314,10 +330,7 @@ document.addEventListener('alpine:init', () => {
                 alert("Please select a payment method.");
                 return;
             }
-            if (!this.form.receiptFile) {
-                alert("Please upload your payment receipt / screenshot.");
-                return;
-            }
+            // Receipt is optional now (uploaded in the modal)
             
             this.isSubmitting = true;
             
@@ -326,21 +339,21 @@ document.addEventListener('alpine:init', () => {
                 maya: 'Maya',
                 bank: 'Bank Transfer'
             }[this.form.paymentMethod] || this.form.paymentMethod;
-
+            
             const deliveryLabel = this.form.deliveryOption === 'same_day' 
                 ? 'Same Day Delivery (+₱150)' 
                 : 'Standard Delivery';
             
-            // Prepare order summary text
-            let orderSummary = `🛒 NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
-            orderSummary += `👤 Name: ${this.form.name}\n`;
-            orderSummary += `📍 Address: ${this.form.address}\n`;
-            orderSummary += `📞 Contact: ${this.form.contact}\n`;
-            orderSummary += `🚚 Delivery: ${deliveryLabel}\n`;
-            orderSummary += `💳 Payment: ${paymentLabel}\n\n`;
+            // Clean order summary (no emojis)
+            let orderSummary = `NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
+            orderSummary += `Name: ${this.form.name}\n`;
+            orderSummary += `Address: ${this.form.address}\n`;
+            orderSummary += `Contact: ${this.form.contact}\n`;
+            orderSummary += `Delivery: ${deliveryLabel}\n`;
+            orderSummary += `Payment: ${paymentLabel}\n\n`;
             orderSummary += `Items:\n`;
             this.cart.forEach(item => {
-                orderSummary += `• ${item.name} (Qty: ${item.quantity}) - ₱${(item.price * item.quantity).toLocaleString()}\n`;
+                orderSummary += `- ${item.name} (Qty: ${item.quantity}) - ₱${(item.price * item.quantity).toLocaleString()}\n`;
             });
             orderSummary += `\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
             if (this.deliveryFee > 0) {
@@ -348,9 +361,9 @@ document.addEventListener('alpine:init', () => {
             }
             orderSummary += `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
             
+            // Telegram (optional)
             if (this.config.telegram.enabled && this.config.telegram.botToken && !this.config.telegram.botToken.includes("YOUR")) {
                 try {
-                    // Direct Telegram Bot API Text Transmission
                     const telegramUrl = `https://api.telegram.org/bot${this.config.telegram.botToken}/sendMessage`;
                     await fetch(telegramUrl, {
                         method: 'POST',
@@ -361,7 +374,6 @@ document.addEventListener('alpine:init', () => {
                         })
                     });
                     
-                    // If receipt file is attached, send photo as well
                     if (this.form.receiptFile) {
                         const formData = new FormData();
                         formData.append('chat_id', this.config.telegram.chatId);
@@ -378,11 +390,23 @@ document.addEventListener('alpine:init', () => {
                 }
             }
             
-            // Simulate success state
+            // Success state
             this.isSubmitting = false;
             this.orderSuccess = true;
             this.cart = [];
             this.saveCart();
-        }
+            
+            // Messenger link
+            const messengerBase = (this.config.socials && this.config.socials.messenger) 
+                ? this.config.socials.messenger 
+                : "https://m.me/61551038027330";
+            
+            this.messengerLink = messengerBase + "?text=" + encodeURIComponent(orderSummary);
+            
+            // Auto open Messenger
+            setTimeout(() => {
+                window.open(this.messengerLink, "_blank");
+            }, 600);
+        },
     }));
 });

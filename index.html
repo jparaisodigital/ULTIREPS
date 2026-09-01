@@ -63,7 +63,7 @@
     <!-- Desktop Navigation -->
     <nav class="hidden md:flex items-center space-x-8 text-sm font-bold tracking-[0.15em] uppercase text-white">
         <a href="index.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Shop</a>
-        <a href="story.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Ulti Story</a>
+        <a href="#collections" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Collections</a>
         <a href="about.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">About</a>
     </nav>
 </div>
@@ -102,7 +102,7 @@ class="md:hidden absolute top-0 left-0 w-full bg-neutral-950 pt-24 px-6 pb-8 bor
 style="display: none;">
 <nav class="flex flex-col space-y-4 text-base font-bold tracking-[0.15em] uppercase text-white">
     <a href="index.html" @click="mobileMenuOpen = false" class="transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50">Shop</a>
-    <a href="story.html" @click="mobileMenuOpen = false" class="transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50">Ulti Story</a>
+    <a href="#collections" @click="mobileMenuOpen = false" class="transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50">Collections</a>
     <a href="about.html" @click="mobileMenuOpen = false" class="transition-colors hover:text-neutral-400 py-2">About</a>
 </nav>
 </div>
@@ -382,9 +382,12 @@ x-transition:leave-end="translate-x-full">
             <span class="text-sm text-neutral-600">Subtotal</span>
             <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
         </div>
-        <button @click="cartOpen = false; checkoutModalOpen = true" :disabled="cart.length === 0" class="w-full bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        <a href="checkout.html" 
+           @click="cartOpen = false"
+           :class="cart.length === 0 ? 'opacity-50 pointer-events-none' : ''"
+           class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
             Proceed to Checkout
-        </button>
+        </a>
     </div>
 </div>
 </div>

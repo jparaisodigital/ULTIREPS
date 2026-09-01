@@ -33,7 +33,8 @@ window.CONFIG = {
     socials: {
         facebook: "https://www.facebook.com/profile.php?id=61551038027330",
         instagram: "https://instagram.com/YOUR_PAGE",
-        tiktok: "https://tiktok.com/@YOUR_PAGE"
+        tiktok: "https://tiktok.com/@YOUR_PAGE",
+        messenger: "https://m.me/61551038027330"
     },
     
     // Idagdag sa loob ng iyong config object sa config.js
