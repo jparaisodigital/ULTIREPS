@@ -391,15 +391,164 @@ style="display: none;">
 </div>
 
 <!-- Product Details -->
-<div class="md:w-1/2 p-6 md:p-10 flex flex-col justify-center">
-    <p class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 mb-3" x-text="quickViewProduct.category"></p>
-    <h3 class="text-xl md:text-2xl font-bold text-neutral-900 mb-2" x-text="quickViewProduct.name"></h3>
-    <p class="text-lg text-neutral-700 mb-8" x-text="config.currency + Number(quickViewProduct.price).toLocaleString()"></p>
+<div
+class="md:w-1/2 p-6 md:p-10 flex flex-col justify-center"
+x-init="
+selectedSize = null;
+sizeChartOpen = false;
+"
+>
+
+<!-- Category -->
+<p
+class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 mb-3"
+x-text="quickViewProduct.category"
+></p>
+
+<!-- Product Name -->
+<h3
+class="text-xl md:text-2xl font-bold text-neutral-900 mb-2"
+x-text="quickViewProduct.name"
+></h3>
+
+<!-- Price -->
+<p
+class="text-lg text-neutral-700 mb-6"
+x-text="config.currency + Number(quickViewProduct.price).toLocaleString()"
+></p>
+
+
+<!-- ===== SIZE SELECTOR ===== -->
+<template x-if="quickViewProduct.sizes && quickViewProduct.sizes.length">
     
-    <button @click="addToCartAndClose(quickViewProduct)" 
-    class="w-full bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-all duration-300 active:scale-[0.98]">
-    Add to Cart
+    <div class="mb-5">
+        
+        <!-- Label -->
+        <div class="flex items-center justify-between mb-3">
+            
+            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-700">
+                Select Size (US)
+            </p>
+            
+            <p
+            x-show="selectedSize"
+            class="text-[10px] uppercase tracking-wider text-neutral-400"
+            >
+            Selected:
+            <span
+            class="font-bold text-neutral-900"
+            x-text="selectedSize"
+            ></span>
+        </p>
+        
+    </div>
+    
+    
+    <!-- Size Buttons -->
+    <div class="grid grid-cols-4 gap-2">
+        
+        <template
+        x-for="size in quickViewProduct.sizes"
+        :key="size"
+        >
+        
+        <button
+        type="button"
+        @click="selectedSize = size"
+        class="h-10 border rounded-lg text-xs font-semibold transition-all duration-200"
+        :class="selectedSize === size
+        ? 'bg-neutral-900 text-white border-neutral-900'
+        : 'bg-white text-neutral-700 border-neutral-300 hover:border-neutral-900'"
+        x-text="size"
+        ></button>
+        
+    </template>
+    
+</div>
+
+
+<!-- ===== SIZE CHART TOGGLE ===== -->
+<button
+type="button"
+@click="sizeChartOpen = !sizeChartOpen"
+class="mt-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-500 hover:text-neutral-900 transition-colors"
+>
+
+<span x-text="config.sizeChart.label"></span>
+
+<svg
+class="w-3.5 h-3.5 transition-transform duration-300"
+:class="sizeChartOpen ? 'rotate-180' : ''"
+fill="none"
+stroke="currentColor"
+viewBox="0 0 24 24"
+>
+<path
+stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="1.5"
+d="M19 9l-7 7-7-7"
+/>
+</svg>
+
 </button>
+
+
+<!-- ===== SLIDE-DOWN SIZE CHART ===== -->
+<div
+class="grid transition-all duration-500 ease-in-out"
+:class="sizeChartOpen
+? 'grid-rows-[1fr] opacity-100'
+: 'grid-rows-[0fr] opacity-0'"
+>
+
+<div class="overflow-hidden">
+    
+    <div class="pt-4">
+        
+        <img
+        :src="config.sizeChart.image"
+        alt="Nike Mind 001 Size Chart"
+        class="w-full h-auto rounded-lg border border-neutral-200"
+        >
+        
+    </div>
+    
+</div>
+
+</div>
+
+</div>
+
+</template>
+
+
+<!-- ===== ADD TO CART ===== -->
+<button
+@click="
+if (!quickViewProduct.sizes || !quickViewProduct.sizes.length || selectedSize) {
+    addToCartAndClose(quickViewProduct)
+}
+"
+:disabled="quickViewProduct.sizes && quickViewProduct.sizes.length && !selectedSize"
+:class="
+quickViewProduct.sizes && quickViewProduct.sizes.length && !selectedSize
+? 'bg-neutral-300 text-neutral-500 cursor-not-allowed'
+: 'bg-neutral-900 text-white hover:bg-neutral-800 active:scale-[0.98]'
+"
+class="w-full text-xs uppercase tracking-wider py-4 rounded-full font-medium transition-all duration-300"
+>
+<span
+x-text="
+quickViewProduct.sizes &&
+quickViewProduct.sizes.length &&
+!selectedSize
+? 'Select a Size'
+: 'Add to Cart'
+"
+></span>
+</button>
+
 </div>
 </div>
 </div>
@@ -500,39 +649,110 @@ x-transition:leave-end="translate-x-full">
     </div>
     
     <!-- Drawer Body (Items List) -->
-    <div class="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-        <template x-for="item in cart" :key="item.id">
-            <div class="flex items-center space-x-4 border-b border-neutral-100 pb-4">
-                <img :src="item.image_url || config.fallbackImage" class="w-16 h-20 object-cover rounded bg-neutral-100">
-                <div class="flex-1">
-                    <h4 class="text-sm font-medium text-neutral-900" x-text="item.name"></h4>
-                    <p class="text-xs text-neutral-500 mt-1" x-text="config.currency + Number(item.price).toLocaleString()"></p>
-                    <div class="flex items-center space-x-3 mt-2">
-                        <button @click="updateQuantity(item.id, -1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">-</button>
-                        <span class="text-xs font-medium" x-text="item.quantity"></span>
-                        <button @click="updateQuantity(item.id, 1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">+</button>
-                    </div>
+<div class="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+
+    <template
+        x-for="item in cart"
+        :key="`${item.id}-${item.selectedSize ?? 'no-size'}`"
+    >
+        <div class="flex items-center space-x-4 border-b border-neutral-100 pb-4">
+
+            <!-- Product Image -->
+            <img
+                :src="item.image_url || config.fallbackImage"
+                :alt="item.name"
+                class="w-16 h-20 object-cover rounded bg-neutral-100"
+            >
+
+            <!-- Product Information -->
+            <div class="flex-1 min-w-0">
+
+                <h4
+                    class="text-sm font-medium text-neutral-900"
+                    x-text="item.name"
+                ></h4>
+
+                <!-- Size -->
+                <p
+                    x-show="item.selectedSize !== null && item.selectedSize !== undefined"
+                    class="text-[11px] text-neutral-500 mt-1"
+                >
+                    Size:
+                    <span
+                        class="font-medium text-neutral-700"
+                        x-text="'US ' + item.selectedSize"
+                    ></span>
+                </p>
+
+                <!-- Price -->
+                <p
+                    class="text-xs text-neutral-500 mt-1"
+                    x-text="config.currency + Number(item.price).toLocaleString()"
+                ></p>
+
+                <!-- Quantity -->
+                <div class="flex items-center space-x-3 mt-2">
+
+                    <button
+                        type="button"
+                        @click="updateQuantity(item.id, item.selectedSize, -1)"
+                        class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100"
+                    >
+                        -
+                    </button>
+
+                    <span
+                        class="text-xs font-medium"
+                        x-text="item.quantity"
+                    ></span>
+
+                    <button
+                        type="button"
+                        @click="updateQuantity(item.id, item.selectedSize, 1)"
+                        class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100"
+                    >
+                        +
+                    </button>
+
                 </div>
-                <button @click="removeFromCart(item.id)" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors">Remove</button>
+
             </div>
-        </template>
-        <div x-show="cart.length === 0" class="text-center py-12 text-neutral-400 text-sm">
-            Your cart is empty.
+
+            <!-- Remove -->
+            <button
+                type="button"
+                @click="removeFromCart(item.id, item.selectedSize)"
+                class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors"
+            >
+                Remove
+            </button>
+
         </div>
+    </template>
+
+
+    <!-- Empty Cart -->
+    <div
+        x-show="cart.length === 0"
+        class="text-center py-12 text-neutral-400 text-sm"
+    >
+        Your cart is empty.
     </div>
-    
-    <!-- Drawer Footer (Subtotal & Checkout CTA) -->
-    <div class="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
-        <div class="flex justify-between items-center mb-4">
-            <span class="text-sm text-neutral-600">Subtotal</span>
-            <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
-        </div>
-        <a href="checkout.html" 
-        @click="cartOpen = false"
-        :class="cart.length === 0 ? 'opacity-50 pointer-events-none' : ''"
-        class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
-        Proceed to Checkout
-    </a>
+
+</div>
+
+<!-- Drawer Footer (Subtotal & Checkout CTA) -->
+<div class="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
+    <div class="flex justify-between items-center mb-4">
+        <span class="text-sm text-neutral-600">Subtotal</span>
+        <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
+    </div>
+    <a href="checkout.html" 
+    @click="cartOpen = false"
+    :class="cart.length === 0 ? 'opacity-50 pointer-events-none' : ''"
+    class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
+    Proceed to Checkout
+</a>
 </div>
 </div>
 </div>
@@ -627,113 +847,113 @@ x-transition:leave-end="translate-x-full">
 
 <!-- ===== HOT STYLE TOAST (Bottom Right) ===== -->
 <div
-    x-show="hotToastVisible"
-    x-transition:enter="transition ease-out duration-400"
-    x-transition:enter-start="opacity-0 translate-y-4 translate-x-4"
-    x-transition:enter-end="opacity-100 translate-y-0 translate-x-0"
-    x-transition:leave="transition ease-in duration-250"
-    x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 translate-y-4"
-    class="fixed bottom-6 right-6 z-[70] w-[300px] max-w-[calc(100vw-3rem)]"
-    style="display: none;"
+x-show="hotToastVisible"
+x-transition:enter="transition ease-out duration-400"
+x-transition:enter-start="opacity-0 translate-y-4 translate-x-4"
+x-transition:enter-end="opacity-100 translate-y-0 translate-x-0"
+x-transition:leave="transition ease-in duration-250"
+x-transition:leave-start="opacity-100 translate-y-0"
+x-transition:leave-end="opacity-0 translate-y-4"
+class="fixed bottom-6 right-6 z-[70] w-[300px] max-w-[calc(100vw-3rem)]"
+style="display: none;"
 >
-    <div class="bg-neutral-950 text-white rounded-xl shadow-2xl overflow-hidden border border-neutral-800">
-
-        <div class="h-1 bg-white/20"></div>
-
-        <div class="p-5 min-h-[160px] flex">
-
-            <!-- SINGLE ANIMATED CONTENT -->
-            <div
-            class="transition-all duration-300 ease-out flex-1 flex flex-col justify-between"
-                :class="hotToastSwitching
-                    ? 'opacity-0 -translate-y-1'
-                    : 'opacity-100 translate-y-0'"
-            >
+<div class="bg-neutral-950 text-white rounded-xl shadow-2xl overflow-hidden border border-neutral-800">
+    
+    <div class="h-1 bg-white/20"></div>
+    
+    <div class="p-5 min-h-[160px] flex">
         
-                <!-- Header -->
-                <div class="flex items-start justify-between gap-3 mb-3">
+        <!-- SINGLE ANIMATED CONTENT -->
+        <div
+        class="transition-all duration-300 ease-out flex-1 flex flex-col justify-between"
+        :class="hotToastSwitching
+        ? 'opacity-0 -translate-y-1'
+        : 'opacity-100 translate-y-0'"
+        >
         
-                    <div>
-        
-                        <!-- Small Heading -->
-                        <p
-                            class="text-[10px] uppercase tracking-[0.25em] text-neutral-400 mb-1"
-                            x-text="hotToastMode === 'hot'
-                                ? 'Just Dropped'
-                                : 'Customer Love'"
-                        ></p>
-        
-                        <!-- Main Heading -->
-                        <h3
-                            class="text-sm font-bold tracking-[0.15em] uppercase"
-                            x-text="hotToastMode === 'hot'
-                                ? 'Hot Style'
-                                : 'Reviews / Feedback'"
-                        ></h3>
-        
-                    </div>
-        
-                    <!-- Close Button -->
-                    <button
-                        @click="dismissHotToast(false)"
-                        class="text-neutral-500 hover:text-white transition-colors p-0.5 -mt-0.5 -mr-0.5"
-                    >
-                        <svg
-                            class="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="1.5"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
-                    </button>
-        
-                </div>
-        
-        
-                <!-- Description -->
+        <!-- Header -->
+        <div class="flex items-start justify-between gap-3 mb-3">
+            
+            <div>
+                
+                <!-- Small Heading -->
                 <p
-                class="text-xs text-neutral-400 leading-relaxed mb-4 min-h-[40px]"
-                    x-text="hotToastMode === 'hot'
-                        ? 'This week’s hottest colorways just landed. Limited stock.'
-                        : 'See what our customers have to say.'"
+                class="text-[10px] uppercase tracking-[0.25em] text-neutral-400 mb-1"
+                x-text="hotToastMode === 'hot'
+                ? 'Just Dropped'
+                : 'Customer Love'"
                 ></p>
-        
-        
-                <!-- Buttons -->
-                <div class="flex items-center gap-3">
-        
-                    <!-- Dynamic Main Button -->
-                    <button
-                        @click="hotToastMode === 'hot'
-                            ? goToHotProducts()
-                            : goToFeedback()"
-                        class="flex-1 bg-white text-neutral-950 text-[11px] font-bold tracking-[0.15em] uppercase py-2.5 rounded-lg hover:bg-neutral-200 transition-colors"
-                        x-text="hotToastMode === 'hot'
-                            ? 'View Hot Styles'
-                            : 'View Feedback'"
-                    ></button>
-        
-        
-                    <!-- Don't Show -->
-                    <button
-                        @click="dismissHotToast(true)"
-                        class="text-[10px] uppercase tracking-wider text-neutral-500 hover:text-neutral-300 transition-colors whitespace-nowrap"
-                    >
-                        Don’t show
-                    </button>
-        
-                </div>
-        
+                
+                <!-- Main Heading -->
+                <h3
+                class="text-sm font-bold tracking-[0.15em] uppercase"
+                x-text="hotToastMode === 'hot'
+                ? 'Hot Style'
+                : 'Reviews / Feedback'"
+                ></h3>
+                
             </div>
-        
-        </div>
+            
+            <!-- Close Button -->
+            <button
+            @click="dismissHotToast(false)"
+            class="text-neutral-500 hover:text-white transition-colors p-0.5 -mt-0.5 -mr-0.5"
+            >
+            <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            >
+            <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M6 18L18 6M6 6l12 12"
+            />
+        </svg>
+    </button>
+    
+</div>
+
+
+<!-- Description -->
+<p
+class="text-xs text-neutral-400 leading-relaxed mb-4 min-h-[40px]"
+x-text="hotToastMode === 'hot'
+? 'This week’s hottest colorways just landed. Limited stock.'
+: 'See what our customers have to say.'"
+></p>
+
+
+<!-- Buttons -->
+<div class="flex items-center gap-3">
+    
+    <!-- Dynamic Main Button -->
+    <button
+    @click="hotToastMode === 'hot'
+    ? goToHotProducts()
+    : goToFeedback()"
+    class="flex-1 bg-white text-neutral-950 text-[11px] font-bold tracking-[0.15em] uppercase py-2.5 rounded-lg hover:bg-neutral-200 transition-colors"
+    x-text="hotToastMode === 'hot'
+    ? 'View Hot Styles'
+    : 'View Feedback'"
+    ></button>
+    
+    
+    <!-- Don't Show -->
+    <button
+    @click="dismissHotToast(true)"
+    class="text-[10px] uppercase tracking-wider text-neutral-500 hover:text-neutral-300 transition-colors whitespace-nowrap"
+    >
+    Don’t show
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 <!-- Script Logic Integration -->
 <script src="config.js"></script>

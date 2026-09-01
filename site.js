@@ -47,6 +47,8 @@ document.addEventListener('alpine:init', () => {
         messengerLink: "",
         paymentModalOpen: false,
         hotToastVisible: false,
+        selectedSize: null,
+        sizeChartOpen: false,
         
         // HOT STYLE <-> FEEDBACK popup state
         hotToastMode: 'hot',
@@ -113,27 +115,27 @@ document.addEventListener('alpine:init', () => {
         
         startHotToastLoop() {
             this.stopHotToastLoop();
-        
+            
             this.hotToastTimer = setInterval(() => {
                 this.switchHotToastContent();
-            }, 3000);
+            }, 5000);
         },
         
         switchHotToastContent() {
             // Fade out
             this.hotToastSwitching = true;
-        
+            
             setTimeout(() => {
-        
+                
                 // Change content habang invisible
                 this.hotToastMode =
-                    this.hotToastMode === 'hot'
-                        ? 'feedback'
-                        : 'hot';
-        
+                this.hotToastMode === 'hot'
+                ? 'feedback'
+                : 'hot';
+                
                 // Fade back in
                 this.hotToastSwitching = false;
-        
+                
             }, 300);
         },
         
@@ -146,10 +148,9 @@ document.addEventListener('alpine:init', () => {
         
         dismissHotToast(permanent = false) {
             this.hotToastVisible = false;
-            this.stopHotToastLoop();
-            
+        
             if (permanent) {
-                localStorage.setItem('ulti_hot_toast_dismissed', '1');
+                localStorage.setItem('ulti_hot_toast_dismissed', 'true');
             }
         },
         
@@ -170,13 +171,23 @@ document.addEventListener('alpine:init', () => {
         
         goToFeedback() {
             this.stopHotToastLoop();
-            window.location.href = 'feedback.html';
+        
+            // Play popup exit animation first
+            this.hotToastVisible = false;
+        
+            // Navigate after animation finishes
+            setTimeout(() => {
+                window.location.href = 'feedback.html';
+            }, 300);
         },
         
         // Open the Quick View modal for a clicked product
         openQuickView(product) {
             this.quickViewProduct = product;
             this.quickViewSlide = 0;
+            this.selectedSize = null;
+            this.sizeChartOpen = false;
+            
             this.quickViewOpen = true;
         },
         
@@ -189,7 +200,12 @@ document.addEventListener('alpine:init', () => {
         
         // Add to cart then close with animation
         addToCartAndClose(product) {
-            this.addToCart(product);
+            
+            if (product.sizes && product.sizes.length && !this.selectedSize) {
+                return;
+            }
+            
+            this.addToCart(product, this.selectedSize);
             
             this.quickViewClosing = true;
             
@@ -313,30 +329,66 @@ document.addEventListener('alpine:init', () => {
             this.form.receiptFile;
         },
         
-        addToCart(product) {
-            const existing = this.cart.find(item => item.id === product.id);
+        addToCart(product, size = null) {
+            
+            // Products with sizes must have a selected size
+            if (product.sizes && product.sizes.length && !size) {
+                this.openQuickView(product);
+                return;
+            }
+            
+            // Same product + same size = same cart line
+            const existing = this.cart.find(item =>
+                item.id === product.id &&
+                item.selectedSize === size
+            );
+            
             if (existing) {
                 existing.quantity++;
             } else {
-                this.cart.push({ ...product, quantity: 1 });
+                this.cart.push({
+                    ...product,
+                    selectedSize: size,
+                    quantity: 1
+                });
             }
+            
             this.saveCart();
-            this.cartOpen = true; // Auto-open cart drawer on add
+            this.cartOpen = true;
         },
         
-        updateQuantity(id, change) {
-            const item = this.cart.find(i => i.id === id);
+        updateQuantity(id, size, change) {
+            
+            const item = this.cart.find(i =>
+                i.id === id &&
+                i.selectedSize === size
+            );
+            
             if (item) {
                 item.quantity += change;
+                
                 if (item.quantity <= 0) {
-                    this.cart = this.cart.filter(i => i.id !== id);
+                    this.cart = this.cart.filter(i =>
+                        !(
+                            i.id === id &&
+                            i.selectedSize === size
+                        )
+                    );
                 }
             }
+            
             this.saveCart();
         },
         
-        removeFromCart(id) {
-            this.cart = this.cart.filter(i => i.id !== id);
+        removeFromCart(id, size) {
+            
+            this.cart = this.cart.filter(i =>
+                !(
+                    i.id === id &&
+                    i.selectedSize === size
+                )
+            );
+            
             this.saveCart();
         },
         
@@ -392,19 +444,34 @@ document.addEventListener('alpine:init', () => {
             
             // Clean order summary (no emojis)
             let orderSummary = `NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
+            
             orderSummary += `Name: ${this.form.name}\n`;
             orderSummary += `Address: ${this.form.address}\n`;
             orderSummary += `Contact: ${this.form.contact}\n`;
             orderSummary += `Delivery: ${deliveryLabel}\n`;
             orderSummary += `Payment: ${paymentLabel}\n\n`;
+            
             orderSummary += `Items:\n`;
+            
             this.cart.forEach(item => {
-                orderSummary += `- ${item.name} (Qty: ${item.quantity}) - ₱${(item.price * item.quantity).toLocaleString()}\n`;
+                
+                const sizeText =
+                item.selectedSize !== null &&
+                item.selectedSize !== undefined
+                ? ` | Size: US ${item.selectedSize}`
+                : '';
+                
+                orderSummary +=
+                `- ${item.name}${sizeText} | Qty: ${item.quantity} - ₱${(item.price * item.quantity).toLocaleString()}\n`;
+                
             });
+            
             orderSummary += `\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
+            
             if (this.deliveryFee > 0) {
                 orderSummary += `\nSame Day Fee: ₱${this.deliveryFee}`;
             }
+            
             orderSummary += `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
             
             // Success state

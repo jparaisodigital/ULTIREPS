@@ -58,20 +58,20 @@ x-init="initHeader()">
 <!-- RIGHT: Help + Cart -->
 <div class="flex items-center justify-end w-1/3 space-x-5">
     <button @click="helpOpen = true" 
-            class="hidden md:flex relative text-white transition-all duration-300 hover:text-neutral-300 hover:scale-110 active:scale-95 items-center"
-            aria-label="Help">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.86.416-1.51 1.235-1.51 2.226v.5M12 17.5h.008v.008H12V17.5z"></path>
-            <circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></circle>
-        </svg>
-    </button>
-    <button @click="cartOpen = true" 
-    class="relative text-white transition-all duration-300 hover:text-neutral-300 hover:scale-110 active:scale-95 flex items-center">
+    class="hidden md:flex relative text-white transition-all duration-300 hover:text-neutral-300 hover:scale-110 active:scale-95 items-center"
+    aria-label="Help">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.86.416-1.51 1.235-1.51 2.226v.5M12 17.5h.008v.008H12V17.5z"></path>
+        <circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></circle>
     </svg>
-    <span class="absolute -top-1.5 -right-2 bg-white text-neutral-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
-    x-text="cartCount">0</span>
+</button>
+<button @click="cartOpen = true" 
+class="relative text-white transition-all duration-300 hover:text-neutral-300 hover:scale-110 active:scale-95 flex items-center">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+</svg>
+<span class="absolute -top-1.5 -right-2 bg-white text-neutral-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+x-text="cartCount">0</span>
 </button>
 </div>
 </div>
@@ -88,214 +88,221 @@ class="md:hidden absolute top-20 left-0 w-full bg-neutral-950 border-b border-ne
 style="display: none;">
 <nav class="flex flex-col items-center text-center space-y-4 text-base font-bold tracking-[0.15em] uppercase text-white">
     <a href="index.html" @click="mobileMenuOpen = false"
-       class="transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50">
-        Shop
-    </a>
+    class="transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50">
+    Shop
+</a>
 
-    <a href="story.html" @click="mobileMenuOpen = false"
-       class="transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50">
-        Ulti Story
-    </a>
+<a href="story.html" @click="mobileMenuOpen = false"
+class="transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50">
+Ulti Story
+</a>
 
-    <a href="about.html" @click="mobileMenuOpen = false"
-       class="transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50">
-        About
-    </a>
+<a href="about.html" @click="mobileMenuOpen = false"
+class="transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50">
+About
+</a>
 
-    <a href="feedback.html" @click="mobileMenuOpen = false"
-       class="transition-colors hover:text-neutral-400 py-2">
-        Feedback
-    </a>
+<a href="feedback.html" @click="mobileMenuOpen = false"
+class="transition-colors hover:text-neutral-400 py-2">
+Feedback
+</a>
 
-    <button @click="mobileMenuOpen = false; helpOpen = true"
-        class="transition-colors hover:text-neutral-400 py-2 border-t border-neutral-800/50 pt-4 mt-1 w-full">
-        Help / FAQs
-    </button>
+<button @click="mobileMenuOpen = false; helpOpen = true"
+class="transition-colors hover:text-neutral-400 py-2 border-t border-neutral-800/50 pt-4 mt-1 w-full">
+Help / FAQs
+</button>
 </nav>
 </div>
 </header>
 
 <!-- ===== CUSTOMER FEEDBACK ===== -->
-<main class="flex-grow pt-28 pb-20">
+<main
+x-data="{ pageVisible: false }"
+x-init="setTimeout(() => pageVisible = true, 50)"
+:class="pageVisible
+? 'opacity-100 translate-y-0'
+: 'opacity-0 translate-y-3'"
+class="flex-grow pt-28 pb-20 transition-all duration-500 ease-out"
+>
 
-    <!-- Page Title -->
-    <div class="max-w-7xl mx-auto px-6 mb-12">
-        <div class="relative flex py-5 items-center">
-            <div class="flex-grow border-t border-neutral-400"></div>
-
-            <span class="flex-shrink mx-6 text-xl md:text-2xl font-bold tracking-[0.25em] uppercase text-center">
-                Customer Feedback
-            </span>
-
-            <div class="flex-grow border-t border-neutral-400"></div>
-        </div>
-
-        <p class="text-center text-xs md:text-sm uppercase tracking-[0.18em] text-neutral-500 mt-2">
-            Real feedback from our customers.
-        </p>
+<!-- Page Title -->
+<div class="max-w-7xl mx-auto px-6 mb-12">
+    <div class="relative flex py-5 items-center">
+        <div class="flex-grow border-t border-neutral-400"></div>
+        
+        <span class="flex-shrink mx-6 text-xl md:text-2xl font-bold tracking-[0.25em] uppercase text-center">
+            Customer Feedback
+        </span>
+        
+        <div class="flex-grow border-t border-neutral-400"></div>
     </div>
+    
+    <p class="text-center text-xs md:text-sm uppercase tracking-[0.18em] text-neutral-500 mt-2">
+        Real feedback from our customers.
+    </p>
+</div>
 
 
-    <!-- Review Screenshot Gallery -->
-    <div class="max-w-6xl mx-auto px-4 md:px-6">
-
-        <div class="columns-1 sm:columns-2 lg:columns-3 gap-4">
-
-            <template x-for="(img, index) in (config.feedbackImages || [])" :key="index">
-
-                <div class="break-inside-avoid mb-4 bg-white border border-neutral-200 overflow-hidden">
-
-                    <img
-                        :src="img"
-                        :alt="'Customer Feedback ' + (index + 1)"
-                        class="w-full h-auto block"
-                        loading="lazy">
-
-                </div>
-
-            </template>
-
-        </div>
-
-        <!-- Empty State -->
-        <template x-if="!config.feedbackImages || config.feedbackImages.length === 0">
-            <div class="text-center py-20">
-                <p class="text-sm uppercase tracking-[0.2em] text-neutral-500">
-                    Customer feedback coming soon.
-                </p>
+<!-- Review Screenshot Gallery -->
+<div class="max-w-6xl mx-auto px-4 md:px-6">
+    
+    <div class="columns-1 sm:columns-2 lg:columns-3 gap-4">
+        
+        <template x-for="(img, index) in (config.feedbackImages || [])" :key="index">
+            
+            <div class="break-inside-avoid mb-4 bg-white border border-neutral-200 overflow-hidden">
+                
+                <img
+                :src="img"
+                :alt="'Customer Feedback ' + (index + 1)"
+                class="w-full h-auto block"
+                loading="lazy">
+                
             </div>
+            
         </template>
-
+        
     </div>
+    
+    <!-- Empty State -->
+    <template x-if="!config.feedbackImages || config.feedbackImages.length === 0">
+        <div class="text-center py-20">
+            <p class="text-sm uppercase tracking-[0.2em] text-neutral-500">
+                Customer feedback coming soon.
+            </p>
+        </div>
+    </template>
+    
+</div>
 
 </main>
 
 <!-- ===== HELP / FAQ MODAL ===== -->
 <div x-show="helpOpen" 
-     x-transition:enter="transition ease-out duration-300"
-     x-transition:enter-start="opacity-0"
-     x-transition:enter-end="opacity-100"
-     x-transition:leave="transition ease-in duration-200"
-     x-transition:leave-start="opacity-100"
-     x-transition:leave-end="opacity-0"
-     class="fixed inset-0 z-[60] overflow-hidden" 
-     style="display: none;">
+x-transition:enter="transition ease-out duration-300"
+x-transition:enter-start="opacity-0"
+x-transition:enter-end="opacity-100"
+x-transition:leave="transition ease-in duration-200"
+x-transition:leave-start="opacity-100"
+x-transition:leave-end="opacity-0"
+class="fixed inset-0 z-[60] overflow-hidden" 
+style="display: none;">
 
-    <div @click="helpOpen = false" class="absolute inset-0 bg-neutral-900/50 backdrop-blur-sm"></div>
+<div @click="helpOpen = false" class="absolute inset-0 bg-neutral-900/50 backdrop-blur-sm"></div>
 
-    <div class="absolute inset-0 flex items-center justify-center p-4"
-         x-show="helpOpen"
-         x-transition:enter="transition transform ease-out duration-300"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition transform ease-in duration-200"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-95">
-        <div class="w-full max-w-lg max-h-[85vh] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden" x-data="{ openFaq: null }">
-            <div class="flex items-center justify-between px-6 py-5 border-b border-neutral-100">
-                <h2 class="text-base font-bold tracking-[0.15em] uppercase">Help &amp; FAQs</h2>
-                <button @click="helpOpen = false" class="text-neutral-400 hover:text-neutral-900 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-
-            <div class="flex-1 overflow-y-auto px-6 py-4 space-y-2">
-                <template x-for="(faq, index) in [
-    { q: 'How long is shipping?', a: 'Standard delivery within Metro Manila takes 2-4 business days. Provincial/outside Metro Manila takes 4-7 business days. There may be slight delays during sale season or holidays, but we\'ll keep you updated on your order status.' },
-    { q: 'How much is the shipping fee?', a: 'Shipping fee is calculated based on your location and will show up on the checkout page before you confirm your order. Any applicable promo is automatically reflected in the total.' },
-    { q: 'How can I track my order?', a: 'Once your order has been shipped out, we\'ll send you a tracking number through the contact number or email you provided at checkout.' },
-    { q: 'What payment methods do you accept?', a: 'We currently accept GCash payments only. Just upload your proof of payment/receipt on the checkout page.' },
-    { q: 'Can I cancel or change my order?', a: 'Yes, as long as it hasn\'t been shipped out yet. Message us on Facebook or Messenger right away so we can assist you.' },
-    { q: 'Do you have a return or exchange policy?', a: 'We accept exchanges/returns within 7 days of receiving your item, as long as it\'s unused, in its complete packaging, and with proof of purchase.' },
-    { q: 'What if I receive a wrong or defective item?', a: 'Message us right away with a photo of the item and your order details, and we\'ll replace it at no extra charge.' },
-    { q: 'How can I reach customer support?', a: 'You can message us through our Facebook Page or Messenger — the links are in our site footer. We respond to messages within business hours.' }
-]" :key="index">
-                    <div class="border border-neutral-100 rounded-xl overflow-hidden">
-                        <button @click="openFaq = openFaq === index ? null : index"
-                                class="w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium text-neutral-900 hover:bg-neutral-50 transition-colors">
-                            <span x-text="faq.q"></span>
-                            <svg class="w-4 h-4 flex-shrink-0 ml-3 transition-transform duration-200"
-                                 :class="openFaq === index ? 'rotate-180' : ''"
-                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div x-show="openFaq === index" x-collapse class="px-4 pb-4 text-xs text-neutral-600 leading-relaxed" x-text="faq.a"></div>
-                    </div>
-                </template>
-            </div>
-
-            <div class="border-t border-neutral-100 px-6 py-4 bg-neutral-50 text-center">
-                <p class="text-xs text-neutral-500">Need more help? <a :href="config.socials.messenger" target="_blank" rel="noopener" class="text-neutral-900 font-medium underline">Message us</a></p>
-            </div>
-        </div>
+<div class="absolute inset-0 flex items-center justify-center p-4"
+x-show="helpOpen"
+x-transition:enter="transition transform ease-out duration-300"
+x-transition:enter-start="opacity-0 scale-95"
+x-transition:enter-end="opacity-100 scale-100"
+x-transition:leave="transition transform ease-in duration-200"
+x-transition:leave-start="opacity-100 scale-100"
+x-transition:leave-end="opacity-0 scale-95">
+<div class="w-full max-w-lg max-h-[85vh] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden" x-data="{ openFaq: null }">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-neutral-100">
+        <h2 class="text-base font-bold tracking-[0.15em] uppercase">Help &amp; FAQs</h2>
+        <button @click="helpOpen = false" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
     </div>
+    
+    <div class="flex-1 overflow-y-auto px-6 py-4 space-y-2">
+        <template x-for="(faq, index) in [
+        { q: 'How long is shipping?', a: 'Standard delivery within Metro Manila takes 2-4 business days. Provincial/outside Metro Manila takes 4-7 business days. There may be slight delays during sale season or holidays, but we\'ll keep you updated on your order status.' },
+        { q: 'How much is the shipping fee?', a: 'Shipping fee is calculated based on your location and will show up on the checkout page before you confirm your order. Any applicable promo is automatically reflected in the total.' },
+        { q: 'How can I track my order?', a: 'Once your order has been shipped out, we\'ll send you a tracking number through the contact number or email you provided at checkout.' },
+        { q: 'What payment methods do you accept?', a: 'We currently accept GCash payments only. Just upload your proof of payment/receipt on the checkout page.' },
+        { q: 'Can I cancel or change my order?', a: 'Yes, as long as it hasn\'t been shipped out yet. Message us on Facebook or Messenger right away so we can assist you.' },
+        { q: 'Do you have a return or exchange policy?', a: 'We accept exchanges/returns within 7 days of receiving your item, as long as it\'s unused, in its complete packaging, and with proof of purchase.' },
+        { q: 'What if I receive a wrong or defective item?', a: 'Message us right away with a photo of the item and your order details, and we\'ll replace it at no extra charge.' },
+        { q: 'How can I reach customer support?', a: 'You can message us through our Facebook Page or Messenger — the links are in our site footer. We respond to messages within business hours.' }
+        ]" :key="index">
+        <div class="border border-neutral-100 rounded-xl overflow-hidden">
+            <button @click="openFaq = openFaq === index ? null : index"
+            class="w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium text-neutral-900 hover:bg-neutral-50 transition-colors">
+            <span x-text="faq.q"></span>
+            <svg class="w-4 h-4 flex-shrink-0 ml-3 transition-transform duration-200"
+            :class="openFaq === index ? 'rotate-180' : ''"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </button>
+    <div x-show="openFaq === index" x-collapse class="px-4 pb-4 text-xs text-neutral-600 leading-relaxed" x-text="faq.a"></div>
+</div>
+</template>
+</div>
+
+<div class="border-t border-neutral-100 px-6 py-4 bg-neutral-50 text-center">
+    <p class="text-xs text-neutral-500">Need more help? <a :href="config.socials.messenger" target="_blank" rel="noopener" class="text-neutral-900 font-medium underline">Message us</a></p>
+</div>
+</div>
+</div>
 </div>
 
 <!-- ===== CART SLIDE-OVER DRAWER ===== -->
 <div x-show="cartOpen" 
-     x-transition:enter="transition ease-out duration-300"
-     x-transition:enter-start="opacity-0"
-     x-transition:enter-end="opacity-100"
-     x-transition:leave="transition ease-in duration-200"
-     x-transition:leave-start="opacity-100"
-     x-transition:leave-end="opacity-0"
-     class="fixed inset-0 z-50 overflow-hidden" 
-     style="display: none;">
+x-transition:enter="transition ease-out duration-300"
+x-transition:enter-start="opacity-0"
+x-transition:enter-end="opacity-100"
+x-transition:leave="transition ease-in duration-200"
+x-transition:leave-start="opacity-100"
+x-transition:leave-end="opacity-0"
+class="fixed inset-0 z-50 overflow-hidden" 
+style="display: none;">
 
-    <div @click="cartOpen = false" class="absolute inset-0 bg-neutral-900/50 backdrop-blur-sm"></div>
+<div @click="cartOpen = false" class="absolute inset-0 bg-neutral-900/50 backdrop-blur-sm"></div>
 
-    <div class="absolute inset-y-0 right-0 max-w-full flex pl-10"
-         x-show="cartOpen"
-         x-transition:enter="transition transform ease-out duration-300"
-         x-transition:enter-start="translate-x-full"
-         x-transition:enter-end="translate-x-0"
-         x-transition:leave="transition transform ease-in duration-200"
-         x-transition:leave-start="translate-x-0"
-         x-transition:leave-end="translate-x-full">
-        <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
-            <div class="flex items-center justify-between px-6 py-6 border-b border-neutral-100">
-                <h2 class="text-base font-medium tracking-wide uppercase">Your Cart (<span x-text="cartCount"></span>)</h2>
-                <button @click="cartOpen = false" class="text-neutral-400 hover:text-neutral-900 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            
-            <div class="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-                <template x-for="item in cart" :key="item.id">
-                    <div class="flex items-center space-x-4 border-b border-neutral-100 pb-4">
-                        <img :src="item.image_url || config.fallbackImage" class="w-16 h-20 object-cover rounded bg-neutral-100">
-                        <div class="flex-1">
-                            <h4 class="text-sm font-medium text-neutral-900" x-text="item.name"></h4>
-                            <p class="text-xs text-neutral-500 mt-1" x-text="config.currency + Number(item.price).toLocaleString()"></p>
-                            <div class="flex items-center space-x-3 mt-2">
-                                <button @click="updateQuantity(item.id, -1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">-</button>
-                                <span class="text-xs font-medium" x-text="item.quantity"></span>
-                                <button @click="updateQuantity(item.id, 1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">+</button>
-                            </div>
-                        </div>
-                        <button @click="removeFromCart(item.id)" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors">Remove</button>
+<div class="absolute inset-y-0 right-0 max-w-full flex pl-10"
+x-show="cartOpen"
+x-transition:enter="transition transform ease-out duration-300"
+x-transition:enter-start="translate-x-full"
+x-transition:enter-end="translate-x-0"
+x-transition:leave="transition transform ease-in duration-200"
+x-transition:leave-start="translate-x-0"
+x-transition:leave-end="translate-x-full">
+<div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+    <div class="flex items-center justify-between px-6 py-6 border-b border-neutral-100">
+        <h2 class="text-base font-medium tracking-wide uppercase">Your Cart (<span x-text="cartCount"></span>)</h2>
+        <button @click="cartOpen = false" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
+    
+    <div class="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+        <template x-for="item in cart" :key="item.id">
+            <div class="flex items-center space-x-4 border-b border-neutral-100 pb-4">
+                <img :src="item.image_url || config.fallbackImage" class="w-16 h-20 object-cover rounded bg-neutral-100">
+                <div class="flex-1">
+                    <h4 class="text-sm font-medium text-neutral-900" x-text="item.name"></h4>
+                    <p class="text-xs text-neutral-500 mt-1" x-text="config.currency + Number(item.price).toLocaleString()"></p>
+                    <div class="flex items-center space-x-3 mt-2">
+                        <button @click="updateQuantity(item.id, -1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">-</button>
+                        <span class="text-xs font-medium" x-text="item.quantity"></span>
+                        <button @click="updateQuantity(item.id, 1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">+</button>
                     </div>
-                </template>
-                <div x-show="cart.length === 0" class="text-center py-12 text-neutral-400 text-sm">
-                    Your cart is empty.
                 </div>
+                <button @click="removeFromCart(item.id)" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors">Remove</button>
             </div>
-            
-            <div class="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-sm text-neutral-600">Subtotal</span>
-                    <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
-                </div>
-                <a href="checkout.html" 
-                   @click="cartOpen = false"
-                   :class="cart.length === 0 ? 'opacity-50 pointer-events-none' : ''"
-                   class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
-                    Proceed to Checkout
-                </a>
-            </div>
+        </template>
+        <div x-show="cart.length === 0" class="text-center py-12 text-neutral-400 text-sm">
+            Your cart is empty.
         </div>
     </div>
+    
+    <div class="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
+        <div class="flex justify-between items-center mb-4">
+            <span class="text-sm text-neutral-600">Subtotal</span>
+            <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
+        </div>
+        <a href="checkout.html" 
+        @click="cartOpen = false"
+        :class="cart.length === 0 ? 'opacity-50 pointer-events-none' : ''"
+        class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
+        Proceed to Checkout
+    </a>
+</div>
+</div>
+</div>
 </div>
 
 <!-- Footer -->
@@ -306,7 +313,7 @@ style="display: none;">
         <p class="text-xs tracking-widest uppercase text-neutral-500 order-2 sm:order-1">
             &copy; 2026 <span x-text="config.storeName"></span>. All rights reserved.
         </p>
-
+        
         <!-- Right: Socials -->
         <div class="flex items-center space-x-5 order-1 sm:order-2">
             <a :href="config.socials.facebook" target="_blank" rel="noopener" class="text-neutral-600 hover:text-neutral-900 transition-colors">
