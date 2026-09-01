@@ -218,13 +218,7 @@ document.addEventListener('alpine:init', () => {
         },
         
         extractCategories() {
-            const allowed = ['NIKE', 'CROCS'];
-            const cats = new Set(
-                this.products
-                .map(p => p.category)
-                .filter(c => c && allowed.includes(c))
-            );
-            this.categories = ['All', 'HOT', ...Array.from(cats)];
+            this.categories = ['All', 'HOT', ...(this.config.categories || [])];
         },
         
         get filteredProducts() {

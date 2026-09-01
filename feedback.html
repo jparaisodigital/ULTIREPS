@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title x-text="'About Us | ' + config.storeName"></title>
+    <title x-text="'Feedback | ' + config.storeName"></title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js CDN -->
@@ -39,10 +39,10 @@ x-init="initHeader()">
 
 <!-- Desktop Navigation -->
 <nav class="hidden md:flex items-center space-x-8 text-sm font-bold tracking-[0.15em] uppercase text-white">
-    <a href="index.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Shop</a>
-    <a href="story.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Ulti Story</a>
-    <a href="about.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">About</a>
-    <a href="feedback.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Feedback</a>
+    <a href="index.html" class="hover:text-neutral-300 transition-colors">Shop</a>
+    <a href="story.html" class="hover:text-neutral-300 transition-colors">Ulti Story</a>
+    <a href="about.html" class="hover:text-neutral-300 transition-colors">About</a>
+    <a href="feedback.html" class="text-white font-bold">Feedback</a>
 </nav>
 </div>
 
@@ -115,23 +115,59 @@ style="display: none;">
 </div>
 </header>
 
-<!-- About Us Content Section -->
-<main class="max-w-4xl mx-auto px-6 py-28 text-center flex-grow">
-    
-    <!-- Divider na may pamagat sa gitna -->
-    <div class="relative flex py-5 items-center mb-16">
-        <div class="flex-grow border-t border-neutral-400"></div>
-        <span class="flex-shrink mx-6 text-xl md:text-2xl font-bold tracking-[0.25em] uppercase">About Us</span>
-        <div class="flex-grow border-t border-neutral-400"></div>
+<!-- ===== CUSTOMER FEEDBACK ===== -->
+<main class="flex-grow pt-28 pb-20">
+
+    <!-- Page Title -->
+    <div class="max-w-7xl mx-auto px-6 mb-12">
+        <div class="relative flex py-5 items-center">
+            <div class="flex-grow border-t border-neutral-400"></div>
+
+            <span class="flex-shrink mx-6 text-xl md:text-2xl font-bold tracking-[0.25em] uppercase text-center">
+                Customer Feedback
+            </span>
+
+            <div class="flex-grow border-t border-neutral-400"></div>
+        </div>
+
+        <p class="text-center text-xs md:text-sm uppercase tracking-[0.18em] text-neutral-500 mt-2">
+            Real feedback from our customers.
+        </p>
     </div>
-    
-    <!-- Teksto mula sa image ng client -->
-    <div class="space-y-6 text-sm md:text-base font-medium tracking-[0.15em] leading-relaxed text-neutral-800 uppercase max-w-2xl mx-auto">
-        <p>Welcome to Ulti.</p>
-        <p>We offer premium-quality footwear, bags, slides, and fashion accessories at affordable prices.</p>
-        <p>Our goal is to provide stylish products with great craftsmanship, excellent customer service, and a smooth shopping experience.</p>
-        <p class="pt-4 font-bold">Thank you for choosing Ulti.</p>
+
+
+    <!-- Review Screenshot Gallery -->
+    <div class="max-w-6xl mx-auto px-4 md:px-6">
+
+        <div class="columns-1 sm:columns-2 lg:columns-3 gap-4">
+
+            <template x-for="(img, index) in (config.feedbackImages || [])" :key="index">
+
+                <div class="break-inside-avoid mb-4 bg-white border border-neutral-200 overflow-hidden">
+
+                    <img
+                        :src="img"
+                        :alt="'Customer Feedback ' + (index + 1)"
+                        class="w-full h-auto block"
+                        loading="lazy">
+
+                </div>
+
+            </template>
+
+        </div>
+
+        <!-- Empty State -->
+        <template x-if="!config.feedbackImages || config.feedbackImages.length === 0">
+            <div class="text-center py-20">
+                <p class="text-sm uppercase tracking-[0.2em] text-neutral-500">
+                    Customer feedback coming soon.
+                </p>
+            </div>
+        </template>
+
     </div>
+
 </main>
 
 <!-- ===== HELP / FAQ MODAL ===== -->

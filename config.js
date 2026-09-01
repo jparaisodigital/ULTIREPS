@@ -3,6 +3,13 @@ window.CONFIG = {
     storeName: "Ulti",
     currency: "₱",
     
+    // Product Categories
+    categories: [
+        "NIKE",
+        "CROCS",
+        "NEW RELEASE"
+    ],
+    
     // Google Sheets CSV Export URL (Mag-publish sa web as CSV ang Google Sheet tapos ilagay rito ang link)
     googleSheetCSV: "YOUR_GOOGLE_SHEET_CSV_URL_HERE",
     
@@ -16,6 +23,14 @@ window.CONFIG = {
         "assets/mobile1.png",
         "assets/mobile2.png",
         "assets/mobile3.png"
+    ],
+    
+    // Customer Feedback / Review Screenshots
+    feedbackImages: [
+        "assets/1.png",
+        "assets/2.png",
+        "assets/3.png",
+        "assets/4.png"
     ],
     
     // Logo (PNG or SVG with transparent background recommended)
@@ -151,13 +166,13 @@ window.CONFIG = {
         },
         /*
         {
-            id: 14,
-            name: "SAMPLE",
-            price: 999,
-            category: "CROCS",
-            hot: false,
-            image_url: "products/1 (14).png",
-            images: ["products/1 (14).png", "products/crocs-2-2.jpg", "products/crocs-2-3.jpg", "products/crocs-2-4.jpg", "products/crocs-2-5.jpg"]
+        id: 14,
+        name: "SAMPLE",
+        price: 999,
+        category: "CROCS",
+        hot: false,
+        image_url: "products/1 (14).png",
+        images: ["products/1 (14).png", "products/crocs-2-2.jpg", "products/crocs-2-3.jpg", "products/crocs-2-4.jpg", "products/crocs-2-5.jpg"]
         },*/
         {
             id: 15,
@@ -181,21 +196,21 @@ window.CONFIG = {
     
     
     // Ulti Story Images (portrait)
-storyImages: [
-    "assets/history/1 (1).png",
-    "assets/history/1 (2).png",
-    "assets/history/1 (3).png",
-    "assets/history/1 (4).png",
-    "assets/history/1 (5).png",
-    "assets/history/1 (6).png",
-    "assets/history/1 (7).png",
-    "assets/history/1 (8).png",
-    "assets/history/1 (9).png",
-    "assets/history/1 (10).png",
-    "assets/history/1 (11).png"
-],
-
-
+    storyImages: [
+        "assets/history/1 (1).png",
+        "assets/history/1 (2).png",
+        "assets/history/1 (3).png",
+        "assets/history/1 (4).png",
+        "assets/history/1 (5).png",
+        "assets/history/1 (6).png",
+        "assets/history/1 (7).png",
+        "assets/history/1 (8).png",
+        "assets/history/1 (9).png",
+        "assets/history/1 (10).png",
+        "assets/history/1 (11).png"
+    ],
+    
+    
     // marquee
     marqueeImages: [
         "products/1 (1).png",
@@ -211,13 +226,12 @@ storyImages: [
         "products/1 (11).png",
         "products/1 (12).png",
         "products/1 (13).png",
-       /* "products/1 (14).png", */
+        /* "products/1 (14).png", */
         "products/1 (15).png",
         "products/1 (16).png"
     ],
     
     // Default fallback images kung sakaling sakaling magka-issue sa Cloudinary URL
     fallbackImage: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80"
-    
     
 };
