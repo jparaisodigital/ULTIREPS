@@ -6,13 +6,6 @@ window.CONFIG = {
     // Google Sheets CSV Export URL (Mag-publish sa web as CSV ang Google Sheet tapos ilagay rito ang link)
     googleSheetCSV: "YOUR_GOOGLE_SHEET_CSV_URL_HERE",
     
-    // Telegram Bot Integration 
-    telegram: {
-        enabled: true,
-        botToken: "YOUR_TELEGRAM_BOT_TOKEN",
-        chatId: "YOUR_TELEGRAM_CHAT_ID"
-    },
-    
     // Sa loob ng iyong config object sa config.js
     heroImagesDesktop: [
         "assets/hero.png",
@@ -26,13 +19,13 @@ window.CONFIG = {
     ],
     
     // Logo (PNG or SVG with transparent background recommended)
-    logo: "assets/logo.png",          // main logo
-    logoWhite: "assets/logo-white.png", // optional white version for dark hero (if needed)
+    logo: "assets/logo.png",          
+    logoWhite: "assets/logo-white.png", 
     
     // Social Media Links
     socials: {
         facebook: "https://www.facebook.com/profile.php?id=61551038027330",
-        instagram: "https://instagram.com/YOUR_PAGE",
+        instagram: "https://www.instagram.com/ultireps.ph/",
         tiktok: "https://tiktok.com/@YOUR_PAGE",
         messenger: "https://m.me/61551038027330"
     },
@@ -41,8 +34,8 @@ window.CONFIG = {
     products: [
         {
             id: 1,
-            name: "SAMPLE",
-            price: 999,
+            name: "Nike Mind 001 | Black Chrome",
+            price: 3495,
             category: "NIKE",
             hot: true,
             image_url: "products/1 (1).png",
@@ -50,8 +43,8 @@ window.CONFIG = {
         },
         {
             id: 2,
-            name: "SAMPLE",
-            price: 999,
+            name: "Nike Mind 001 | Solar Red ",
+            price: 3495,
             category: "NIKE",
             hot: true,
             image_url: "products/1 (2).png",
@@ -86,8 +79,8 @@ window.CONFIG = {
         },
         {
             id: 6,
-            name: "SAMPLE",
-            price: 999,
+            name: "Nike Mind 001 | Team Red",
+            price: 3495,
             category: "CLASS",
             hot: false,
             image_url: "products/1 (6).png",
@@ -113,8 +106,8 @@ window.CONFIG = {
         },
         {
             id: 9,
-            name: "SAMPLE",
-            price: 999,
+            name: "Nike Mind 001 | Palest Purple",
+            price: 3495,
             category: "CLASS",
             hot: false,
             image_url: "products/1 (9).png",
@@ -122,9 +115,9 @@ window.CONFIG = {
         },
         {
             id: 10,
-            name: "SAMPLE",
-            price: 999,
-            category: "CLASS",
+            name: "Nike Mind 001 x NOCTA",
+            price: 4500,
+            category: "NIKE",
             hot: true,
             image_url: "products/1 (10).png",
             images: ["products/1 (10).png", "products/class-2-2.jpg", "products/class-2-3.jpg", "products/class-2-4.jpg", "products/class-2-5.jpg"]
@@ -140,9 +133,9 @@ window.CONFIG = {
         },
         {
             id: 12,
-            name: "SAMPLE",
-            price: 999,
-            category: "CLASS",
+            name: "Nike Mind 001 | Geode Teal",
+            price: 3495,
+            category: "NIKE",
             hot: false,
             image_url: "products/1 (12).png",
             images: ["products/1 (12).png", "products/class-4-2.jpg", "products/class-4-3.jpg", "products/class-4-4.jpg", "products/class-4-5.jpg"]
@@ -151,11 +144,12 @@ window.CONFIG = {
             id: 13,
             name: "SAMPLE",
             price: 999,
-            category: "CROCS",
+            category: "NIKE",
             hot: true,
             image_url: "products/1 (13).png",
             images: ["products/1 (13).png", "products/crocs-1-2.jpg", "products/crocs-1-3.jpg", "products/crocs-1-4.jpg", "products/crocs-1-5.jpg"]
         },
+        /*
         {
             id: 14,
             name: "SAMPLE",
@@ -164,22 +158,22 @@ window.CONFIG = {
             hot: false,
             image_url: "products/1 (14).png",
             images: ["products/1 (14).png", "products/crocs-2-2.jpg", "products/crocs-2-3.jpg", "products/crocs-2-4.jpg", "products/crocs-2-5.jpg"]
-        },
+        },*/
         {
             id: 15,
-            name: "SAMPLE",
-            price: 999,
-            category: "CROCS",
+            name: "Nike Mind 001 x NOCTA Real Tree",
+            price: 4500,
+            category: "NIKE",
             hot: false,
             image_url: "products/1 (15).png",
             images: ["products/1 (15).png", "products/crocs-3-2.jpg", "products/crocs-3-3.jpg", "products/crocs-3-4.jpg", "products/crocs-3-5.jpg"]
         },
         {
             id: 16,
-            name: "SAMPLE",
-            price: 999,
-            category: "CROCS",
-            hot: true,
+            name: "Nike Mind 001 | Blackened Blue",
+            price: 3495,
+            category: "NIKE",
+            hot: false,
             image_url: "products/1 (16).png",
             images: ["products/1 (16).png", "products/crocs-4-2.jpg", "products/crocs-4-3.jpg", "products/crocs-4-4.jpg", "products/crocs-4-5.jpg"]
         }
@@ -187,23 +181,20 @@ window.CONFIG = {
     
     
     // Ulti Story Images (portrait)
-    storyImages: [
-        "assets/history/1 (1).jpg",
-        "assets/history/1 (2).jpg",
-        "assets/history/1 (3).jpg",
-        "assets/history/1 (4).jpg",
-        "assets/history/1 (5).jpg",
-        "assets/history/1 (6).jpg",
-        "assets/history/1 (7).jpg",
-        "assets/history/1 (8).jpg",
-        "assets/history/1 (9).jpg",
-        "assets/history/1 (10).jpg",
-        "assets/history/1 (11).jpg",
-        "assets/history/1 (12).jpg",
-        "assets/history/1 (13).jpg",
-        "assets/history/1 (14).jpg",
-        "assets/history/1 (15).jpg"
-    ],
+storyImages: [
+    "assets/history/1 (1).png",
+    "assets/history/1 (2).png",
+    "assets/history/1 (3).png",
+    "assets/history/1 (4).png",
+    "assets/history/1 (5).png",
+    "assets/history/1 (6).png",
+    "assets/history/1 (7).png",
+    "assets/history/1 (8).png",
+    "assets/history/1 (9).png",
+    "assets/history/1 (10).png",
+    "assets/history/1 (11).png"
+],
+
 
     // marquee
     marqueeImages: [
@@ -220,7 +211,7 @@ window.CONFIG = {
         "products/1 (11).png",
         "products/1 (12).png",
         "products/1 (13).png",
-        "products/1 (14).png",
+       /* "products/1 (14).png", */
         "products/1 (15).png",
         "products/1 (16).png"
     ],

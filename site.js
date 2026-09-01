@@ -2,6 +2,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('storeApp', () => ({
         config: window.CONFIG,
         cartOpen: false,
+        helpOpen: false,
         checkoutModalOpen: false,
         mobileMenuOpen: false,
         
@@ -360,35 +361,6 @@ document.addEventListener('alpine:init', () => {
                 orderSummary += `\nSame Day Fee: ₱${this.deliveryFee}`;
             }
             orderSummary += `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
-            
-            // Telegram (optional)
-            if (this.config.telegram.enabled && this.config.telegram.botToken && !this.config.telegram.botToken.includes("YOUR")) {
-                try {
-                    const telegramUrl = `https://api.telegram.org/bot${this.config.telegram.botToken}/sendMessage`;
-                    await fetch(telegramUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: this.config.telegram.chatId,
-                            text: orderSummary
-                        })
-                    });
-                    
-                    if (this.form.receiptFile) {
-                        const formData = new FormData();
-                        formData.append('chat_id', this.config.telegram.chatId);
-                        formData.append('photo', this.form.receiptFile);
-                        formData.append('caption', `${paymentLabel} Receipt - ${this.form.name}`);
-                        
-                        await fetch(`https://api.telegram.org/bot${this.config.telegram.botToken}/sendPhoto`, {
-                            method: 'POST',
-                            body: formData
-                        });
-                    }
-                } catch (err) {
-                    console.error("Telegram transmission error:", err);
-                }
-            }
             
             // Success state
             this.isSubmitting = false;
