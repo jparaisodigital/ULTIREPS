@@ -1,0 +1,388 @@
+document.addEventListener('alpine:init', () => {
+    Alpine.data('storeApp', () => ({
+        config: window.CONFIG,
+        cartOpen: false,
+        checkoutModalOpen: false,
+        mobileMenuOpen: false,
+        
+        // Hero Slider State (3 images nagpapalitan)
+        activeSlide: 0,
+        heroImages: [
+            "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
+            "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=80",
+            "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1600&q=80"
+        ],
+        
+        // Products & Filtering
+        products: [],
+        categories: ['All'],
+        selectedCategory: 'All',
+        searchQuery: '',
+        
+        // Quick View Modal State
+        quickViewOpen: false,
+        quickViewProduct: null,
+        quickViewSlide: 0,
+        quickViewClosing: false,
+        headerHidden: false,
+        lastScrollY: 0,
+        scrolledPastHero: false,
+        
+        // Cart State
+        cart: JSON.parse(localStorage.getItem('ulti_cart')) || [],
+        
+        // Checkout Form State
+        form: {
+            name: '',
+            address: '',
+            contact: '',
+            receiptFile: null,
+            paymentMethod: 'gcash',      // gcash | maya | bank
+            deliveryOption: 'standard'   // same_day | standard
+        },
+        isSubmitting: false,
+        orderSuccess: false,
+        
+        // HOT STYLE TOAST
+        hotToastVisible: false,
+        
+        // ===== HOT PRODUCTS =====
+        get hotProducts() {
+            return this.products.filter(p => p.hot === true);
+        },
+        
+        initShop() {
+            this.initHeader();
+            
+            setInterval(() => {
+                this.activeSlide = (this.activeSlide + 1) % this.heroImages.length;
+            }, 5000);
+            
+            // Fetch Google Sheets Data
+            this.fetchProducts();
+            
+            // HOT STYLE toast – show after 2.5s kung hindi pa na-dismiss
+            const dismissed = localStorage.getItem('ulti_hot_toast_dismissed');
+            if (!dismissed) {
+                setTimeout(() => {
+                    this.hotToastVisible = true;
+                }, 2500);
+            }
+            
+            // Esc key closes Quick View (existing)
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && this.quickViewOpen) {
+                    this.closeQuickView();
+                }
+            });
+        },
+        
+        initHeader() {
+            this.lastScrollY = window.scrollY;
+            
+            window.addEventListener('scroll', () => {
+                const currentY = window.scrollY;
+                
+                // Header background change after hero
+                this.scrolledPastHero = currentY > window.innerHeight - 80;
+                
+                // Hide / show logic
+                if (currentY < 80) {
+                    this.headerHidden = false;
+                } else if (currentY > this.lastScrollY + 8) {
+                    this.headerHidden = true;
+                } else if (currentY < this.lastScrollY - 8) {
+                    this.headerHidden = false;
+                }
+                
+                this.lastScrollY = currentY;
+            }, { passive: true });
+        },
+        
+        // ===== TOAST ACTIONS =====
+        dismissHotToast(permanent = false) {
+            this.hotToastVisible = false;
+            if (permanent) {
+                localStorage.setItem('ulti_hot_toast_dismissed', '1');
+            }
+        },
+        
+        goToHotProducts() {
+            this.dismissHotToast(false);
+            
+            // Optional but recommended: filter to HOT items
+            this.selectedCategory = 'HOT';
+            
+            // Smooth scroll to shop section
+            const el = document.getElementById('shop');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        },
+        
+        // Open the Quick View modal for a clicked product
+        openQuickView(product) {
+            this.quickViewProduct = product;
+            this.quickViewSlide = 0;
+            this.quickViewOpen = true;
+        },
+        
+        // Close the Quick View modal
+        closeQuickView() {
+            this.quickViewOpen = false;
+            this.quickViewProduct = null;
+            this.quickViewClosing = false;
+        },
+        
+        // Add to cart then close with animation
+        addToCartAndClose(product) {
+            this.addToCart(product);
+            
+            this.quickViewClosing = true;
+            
+            setTimeout(() => {
+                this.closeQuickView();
+                this.quickViewClosing = false;
+            }, 280);
+        },
+        
+        // Go to next image in the Quick View slider
+        nextQuickViewSlide() {
+            if (!this.quickViewProduct) return;
+            const images = (this.quickViewProduct.images && this.quickViewProduct.images.length)
+            ? this.quickViewProduct.images
+            : [this.quickViewProduct.image_url];
+            this.quickViewSlide = (this.quickViewSlide + 1) % images.length;
+        },
+        
+        // Go to previous image in the Quick View slider
+        prevQuickViewSlide() {
+            if (!this.quickViewProduct) return;
+            const images = (this.quickViewProduct.images && this.quickViewProduct.images.length)
+            ? this.quickViewProduct.images
+            : [this.quickViewProduct.image_url];
+            this.quickViewSlide = (this.quickViewSlide - 1 + images.length) % images.length;
+        },
+        
+        async fetchProducts() {
+            // Priority 1: Use the hardcoded products already defined in config.js
+            // (this is where your 4 real products with their actual image_url paths live)
+            if (Array.isArray(this.config.products) && this.config.products.length > 0) {
+                this.products = this.config.products;
+                this.extractCategories();
+                return;
+            }
+            
+            // Priority 2: Google Sheets CSV (only used if config.products is empty)
+            if (!this.config.googleSheetCSV || this.config.googleSheetCSV.includes("YOUR_GOOGLE")) {
+                // Mock data kung wala pang nakalagay na Google Sheet link para makita agad ang UI
+                this.products = [
+                    { id: '1', name: 'Heavyweight Boxy Tee', category: 'Apparel', price: '1200', stock: 'In Stock', image_url: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80' },
+                    { id: '2', name: 'Vintage Washed Hoodie', category: 'Apparel', price: '2500', stock: 'In Stock', image_url: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80' },
+                    { id: '3', name: 'Premium Leather Crossbody', category: 'Accessories', price: '1800', stock: 'In Stock', image_url: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80' },
+                    { id: '4', name: 'Minimalist Runner Sneakers', category: 'Footwear', price: '3200', stock: 'In Stock', image_url: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80' }
+                ];
+                this.extractCategories();
+                return;
+            }
+            
+            try {
+                const response = await fetch(this.config.googleSheetCSV);
+                const csvText = await response.text();
+                this.parseCSV(csvText);
+            } catch (error) {
+                console.error("Error fetching Google Sheets data:", error);
+            }
+        },
+        
+        parseCSV(text) {
+            const lines = text.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
+            
+            const result = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                const obj = {};
+                for (let j = 0; j < headers.length; j++) {
+                    let val = currentline[j] ? currentline[j].trim() : '';
+                    val = val.replace(/^["']|["']$/g, ''); // remove quotes
+                    obj[headers[j]] = val;
+                }
+                result.push(obj);
+            }
+            this.products = result;
+            this.extractCategories();
+        },
+        
+        extractCategories() {
+            const allowed = ['NIKE', 'CROCS'];
+            const cats = new Set(
+                this.products
+                .map(p => p.category)
+                .filter(c => c && allowed.includes(c))
+            );
+            this.categories = ['All', 'HOT', ...Array.from(cats)];
+        },
+        
+        get filteredProducts() {
+            return this.products.filter(product => {
+                const matchesCategory = 
+                this.selectedCategory === 'All' || 
+                (this.selectedCategory === 'HOT' && product.hot === true) ||
+                product.category === this.selectedCategory;
+                
+                const matchesSearch = product.name.toLowerCase().includes(this.searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+        },
+        
+        get cartCount() {
+            return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+        },
+        
+        get cartTotal() {
+            return this.cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+        },
+
+        // Same Day Delivery fee (₱150)
+        get deliveryFee() {
+            return this.form.deliveryOption === 'same_day' ? 150 : 0;
+        },
+
+        get grandTotal() {
+            return this.cartTotal + this.deliveryFee;
+        },
+
+        get canSubmit() {
+            return this.form.name && 
+                   this.form.address && 
+                   this.form.contact && 
+                   this.form.paymentMethod && 
+                   this.form.deliveryOption &&
+                   this.form.receiptFile;
+        },
+        
+        addToCart(product) {
+            const existing = this.cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                this.cart.push({ ...product, quantity: 1 });
+            }
+            this.saveCart();
+            this.cartOpen = true; // Auto-open cart drawer on add
+        },
+        
+        updateQuantity(id, change) {
+            const item = this.cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    this.cart = this.cart.filter(i => i.id !== id);
+                }
+            }
+            this.saveCart();
+        },
+        
+        removeFromCart(id) {
+            this.cart = this.cart.filter(i => i.id !== id);
+            this.saveCart();
+        },
+        
+        saveCart() {
+            localStorage.setItem('ulti_cart', JSON.stringify(this.cart));
+        },
+        
+        handleFileUpload(event) {
+            this.form.receiptFile = event.target.files[0];
+        },
+
+        // Used by checkout.html
+        initCheckoutPage() {
+            this.initHeader();
+            // Reload cart from localStorage in case it changed
+            this.cart = JSON.parse(localStorage.getItem('ulti_cart')) || [];
+        },
+        
+        async submitOrder() {
+            if (!this.form.name || !this.form.address || !this.form.contact) {
+                alert("Please complete all shipping details.");
+                return;
+            }
+            if (!this.form.paymentMethod) {
+                alert("Please select a payment method.");
+                return;
+            }
+            if (!this.form.receiptFile) {
+                alert("Please upload your payment receipt / screenshot.");
+                return;
+            }
+            
+            this.isSubmitting = true;
+            
+            const paymentLabel = {
+                gcash: 'GCash',
+                maya: 'Maya',
+                bank: 'Bank Transfer'
+            }[this.form.paymentMethod] || this.form.paymentMethod;
+
+            const deliveryLabel = this.form.deliveryOption === 'same_day' 
+                ? 'Same Day Delivery (+₱150)' 
+                : 'Standard Delivery';
+            
+            // Prepare order summary text
+            let orderSummary = `🛒 NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
+            orderSummary += `👤 Name: ${this.form.name}\n`;
+            orderSummary += `📍 Address: ${this.form.address}\n`;
+            orderSummary += `📞 Contact: ${this.form.contact}\n`;
+            orderSummary += `🚚 Delivery: ${deliveryLabel}\n`;
+            orderSummary += `💳 Payment: ${paymentLabel}\n\n`;
+            orderSummary += `Items:\n`;
+            this.cart.forEach(item => {
+                orderSummary += `• ${item.name} (Qty: ${item.quantity}) - ₱${(item.price * item.quantity).toLocaleString()}\n`;
+            });
+            orderSummary += `\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
+            if (this.deliveryFee > 0) {
+                orderSummary += `\nSame Day Fee: ₱${this.deliveryFee}`;
+            }
+            orderSummary += `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
+            
+            if (this.config.telegram.enabled && this.config.telegram.botToken && !this.config.telegram.botToken.includes("YOUR")) {
+                try {
+                    // Direct Telegram Bot API Text Transmission
+                    const telegramUrl = `https://api.telegram.org/bot${this.config.telegram.botToken}/sendMessage`;
+                    await fetch(telegramUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: this.config.telegram.chatId,
+                            text: orderSummary
+                        })
+                    });
+                    
+                    // If receipt file is attached, send photo as well
+                    if (this.form.receiptFile) {
+                        const formData = new FormData();
+                        formData.append('chat_id', this.config.telegram.chatId);
+                        formData.append('photo', this.form.receiptFile);
+                        formData.append('caption', `${paymentLabel} Receipt - ${this.form.name}`);
+                        
+                        await fetch(`https://api.telegram.org/bot${this.config.telegram.botToken}/sendPhoto`, {
+                            method: 'POST',
+                            body: formData
+                        });
+                    }
+                } catch (err) {
+                    console.error("Telegram transmission error:", err);
+                }
+            }
+            
+            // Simulate success state
+            this.isSubmitting = false;
+            this.orderSuccess = true;
+            this.cart = [];
+            this.saveCart();
+        }
+    }));
+});
