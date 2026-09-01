@@ -48,6 +48,11 @@ document.addEventListener('alpine:init', () => {
         paymentModalOpen: false,
         hotToastVisible: false,
         
+        // HOT STYLE <-> FEEDBACK popup state
+        hotToastMode: 'hot',
+        hotToastTimer: null,
+        hotToastSwitching: false,
+        
         // ===== HOT PRODUCTS =====
         get hotProducts() {
             return this.products.filter(p => p.hot === true);
@@ -63,12 +68,15 @@ document.addEventListener('alpine:init', () => {
             // Fetch Google Sheets Data
             this.fetchProducts();
             
-            // HOT STYLE toast – show after 2.5s kung hindi pa na-dismiss
+            // HOT STYLE toast 
             const dismissed = localStorage.getItem('ulti_hot_toast_dismissed');
+            
             if (!dismissed) {
                 setTimeout(() => {
                     this.hotToastVisible = true;
-                }, 2500);
+                    this.hotToastMode = 'hot';
+                    this.startHotToastLoop();
+                }, 4000);
             }
             
             // Esc key closes Quick View (existing)
@@ -102,8 +110,44 @@ document.addEventListener('alpine:init', () => {
         },
         
         // ===== TOAST ACTIONS =====
+        
+        startHotToastLoop() {
+            this.stopHotToastLoop();
+        
+            this.hotToastTimer = setInterval(() => {
+                this.switchHotToastContent();
+            }, 3000);
+        },
+        
+        switchHotToastContent() {
+            // Fade out
+            this.hotToastSwitching = true;
+        
+            setTimeout(() => {
+        
+                // Change content habang invisible
+                this.hotToastMode =
+                    this.hotToastMode === 'hot'
+                        ? 'feedback'
+                        : 'hot';
+        
+                // Fade back in
+                this.hotToastSwitching = false;
+        
+            }, 300);
+        },
+        
+        stopHotToastLoop() {
+            if (this.hotToastTimer) {
+                clearInterval(this.hotToastTimer);
+                this.hotToastTimer = null;
+            }
+        },
+        
         dismissHotToast(permanent = false) {
             this.hotToastVisible = false;
+            this.stopHotToastLoop();
+            
             if (permanent) {
                 localStorage.setItem('ulti_hot_toast_dismissed', '1');
             }
@@ -112,14 +156,21 @@ document.addEventListener('alpine:init', () => {
         goToHotProducts() {
             this.dismissHotToast(false);
             
-            // Optional but recommended: filter to HOT items
             this.selectedCategory = 'HOT';
             
-            // Smooth scroll to shop section
             const el = document.getElementById('shop');
+            
             if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             }
+        },
+        
+        goToFeedback() {
+            this.stopHotToastLoop();
+            window.location.href = 'feedback.html';
         },
         
         // Open the Quick View modal for a clicked product
@@ -303,7 +354,7 @@ document.addEventListener('alpine:init', () => {
             // Reload cart from localStorage in case it changed
             this.cart = JSON.parse(localStorage.getItem('ulti_cart')) || [];
         },
-
+        
         openPaymentModal() {
             if (!this.form.name || !this.form.address || !this.form.contact) {
                 alert("Please complete all shipping details.");
@@ -336,8 +387,8 @@ document.addEventListener('alpine:init', () => {
             }[this.form.paymentMethod] || this.form.paymentMethod;
             
             const deliveryLabel = this.form.deliveryOption === 'same_day' 
-                ? 'Same Day Delivery (+₱150)' 
-                : 'Standard Delivery';
+            ? 'Same Day Delivery (+₱150)' 
+            : 'Standard Delivery';
             
             // Clean order summary (no emojis)
             let orderSummary = `NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
@@ -364,8 +415,8 @@ document.addEventListener('alpine:init', () => {
             
             // Messenger link
             const messengerBase = (this.config.socials && this.config.socials.messenger) 
-                ? this.config.socials.messenger 
-                : "https://m.me/61551038027330";
+            ? this.config.socials.messenger 
+            : "https://m.me/61551038027330";
             
             this.messengerLink = messengerBase + "?text=" + encodeURIComponent(orderSummary);
             

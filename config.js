@@ -27,10 +27,10 @@ window.CONFIG = {
     
     // Customer Feedback / Review Screenshots
     feedbackImages: [
-        "assets/1.png",
-        "assets/2.png",
-        "assets/3.png",
-        "assets/4.png"
+        "assets/reviews (1).png",
+        "assets/reviews (2).png",
+        "assets/reviews (3).png",
+        "assets/reviews (4).png"
     ],
     
     // Logo (PNG or SVG with transparent background recommended)
@@ -230,6 +230,7 @@ window.CONFIG = {
         "products/1 (15).png",
         "products/1 (16).png"
     ],
+    
     
     // Default fallback images kung sakaling sakaling magka-issue sa Cloudinary URL
     fallbackImage: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80"
