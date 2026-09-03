@@ -27,15 +27,15 @@ window.CONFIG = {
     
     // Customer Feedback / Review Screenshots
     feedbackImages: [
-        "assets/feedback/1.jpg",
-        "assets/feedback/2.jpg",
-        "assets/feedback/3.jpg",
-        "assets/feedback/4.jpg",
-        "assets/feedback/5.jpg",
-        "assets/feedback/6.jpg",
-        "assets/feedback/7.jpg",
-        "assets/feedback/8.jpg",
-        "assets/feedback/9.jpg"
+        "assets/feedback/1.webp",
+        "assets/feedback/2.webp",
+        "assets/feedback/3.webp",
+        "assets/feedback/4.webp",
+        "assets/feedback/5.webp",
+        "assets/feedback/6.webp",
+        "assets/feedback/7.webp",
+        "assets/feedback/8.webp",
+        "assets/feedback/9.webp"
     ],
     
     
@@ -350,16 +350,16 @@ siteLoader: {
     // Ulti Story Images (portrait)
     storyImages: [
         "assets/history/1 (1).png",
-        "assets/history/1 (2).png",
-        "assets/history/1 (3).png",
-        "assets/history/1 (4).png",
-        "assets/history/1 (5).png",
-        "assets/history/1 (6).png",
-        "assets/history/1 (7).png",
-        "assets/history/1 (8).png",
-        "assets/history/1 (9).png",
-        "assets/history/1 (10).png",
-        "assets/history/1 (11).png"
+        "assets/history/1 (2).webp",
+        "assets/history/1 (3).webp",
+        "assets/history/1 (4).webp",
+        "assets/history/1 (5).webp",
+        "assets/history/1 (6).webp",
+        "assets/history/1 (7).webp",
+        "assets/history/1 (8).webp",
+        "assets/history/1 (9).webp",
+        "assets/history/1 (10).webp",
+        "assets/history/1 (11).webp"
     ],
     
     
@@ -378,7 +378,7 @@ siteLoader: {
         "products/1 (11).png",
         "products/1 (12).png",
         "products/1 (13).png",
-        /* "products/1 (14).png", */
+        "products/1 (14).png",
         "products/1 (15).png",
         "products/1 (16).png"
     ],
