@@ -34,13 +34,18 @@ document.addEventListener('alpine:init', () => {
         
         // Checkout Form State
         form: {
-            name: '',
+            email: '',
+            firstName: '',
+            lastName: '',
             address: '',
+            region: '',
             contact: '',
+            postalCode: '',
+            orderNotes: '',
+        
             receiptFile: null,
             paymentMethod: 'gcash',
-            deliveryOption: 'standard',
-            region: ''                
+            deliveryOption: 'standard'
         },
         isSubmitting: false,
         orderSuccess: false,

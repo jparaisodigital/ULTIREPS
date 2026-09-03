@@ -15,11 +15,11 @@
     </style>
 </head>
 <body
-    class="bg-neutral-100 text-neutral-900 antialiased
-           selection:bg-neutral-900 selection:text-white
-           opacity-0 transition-opacity duration-500"
-    x-data="storeApp()"
-    x-init="initHeader(); requestAnimationFrame(() => document.body.classList.remove('opacity-0'))"
+class="bg-neutral-100 text-neutral-900 antialiased
+selection:bg-neutral-900 selection:text-white
+opacity-0 transition-opacity duration-500"
+x-data="storeApp()"
+x-init="initHeader(); requestAnimationFrame(() => document.body.classList.remove('opacity-0'))"
 >
 
 <!-- ===== HEADER (same style as about.html) ===== -->
@@ -91,47 +91,47 @@ x-transition:leave-end="opacity-0 -translate-y-4"
 class="md:hidden absolute top-20 left-0 w-full bg-neutral-950 border-b border-neutral-800 px-6 py-6 shadow-xl"
 style="display: none;">
 <a 
-    href="index.html" 
-    @click.prevent="
-        document.body.classList.add('opacity-0');
-        setTimeout(() => window.location.href = 'index.html', 400);
-    "
-    class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
+href="index.html" 
+@click.prevent="
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'index.html', 400);
+"
+class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
 >
-    Shop
+Shop
 </a>
 
 <a 
-    href="story.html" 
-    @click.prevent="
-        document.body.classList.add('opacity-0');
-        setTimeout(() => window.location.href = 'story.html', 400);
-    "
-    class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
+href="story.html" 
+@click.prevent="
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'story.html', 400);
+"
+class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
 >
-    Ulti Story
+Ulti Story
 </a>
 
 <a 
-    href="about.html" 
-    @click.prevent="
-        document.body.classList.add('opacity-0');
-        setTimeout(() => window.location.href = 'about.html', 400);
-    "
-    class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
+href="about.html" 
+@click.prevent="
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'about.html', 400);
+"
+class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
 >
-    About
+About
 </a>
 
 <a 
-    href="feedback.html" 
-    @click.prevent="
-        document.body.classList.add('opacity-0');
-        setTimeout(() => window.location.href = 'feedback.html', 400);
-    "
-    class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
+href="feedback.html" 
+@click.prevent="
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'feedback.html', 400);
+"
+class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
 >
-    Feedback
+Feedback
 </a>
 
 <button @click="mobileMenuOpen = false; helpOpen = true"
@@ -196,104 +196,180 @@ Help / FAQs
                 
                 <!-- 1. Customer Details -->
                 <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200">
-                    <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-6 text-neutral-900">1. Customer Details</h3>
+                    
+                    <!-- CONTACT -->
+                    <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-5 text-neutral-900">
+                        Contact
+                    </h3>
+                    
+                    <div class="mb-8">
+                        <input
+                        type="email"
+                        x-model="form.email"
+                        required
+                        placeholder="Email"
+                        class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                        focus:outline-none focus:border-neutral-900 transition-colors"
+                        >
+                    </div>
+                    
+                    
+                    <!-- DELIVERY -->
+                    <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-5 text-neutral-900">
+                        Delivery
+                    </h3>
+                    
                     <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs uppercase tracking-wider text-neutral-600 mb-1.5">Full Name</label>
-                            <input type="text" x-model="form.name" required
-                            class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 transition-colors"
-                            placeholder="Juan Dela Cruz">
-                        </div>
-                        <div>
-                            <label class="block text-xs uppercase tracking-wider text-neutral-600 mb-1.5">Complete Delivery Address</label>
-                            <textarea x-model="form.address" required rows="3"
-                            class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 transition-colors"
-                            placeholder="House No., Street, Barangay, City, Province"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs uppercase tracking-wider text-neutral-600 mb-1.5">Contact Number</label>
-                            <input type="text" x-model="form.contact" required
-                            class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 transition-colors"
-                            placeholder="09XX XXX XXXX">
+                        
+                        <!-- First Name + Last Name -->
+                        <div class="grid grid-cols-2 gap-3">
+                            
+                            <input
+                            type="text"
+                            x-model="form.firstName"
+                            required
+                            placeholder="First name"
+                            class="w-full min-w-0 px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                            focus:outline-none focus:border-neutral-900 transition-colors"
+                            >
+                            
+                            <input
+                            type="text"
+                            x-model="form.lastName"
+                            required
+                            placeholder="Last name"
+                            class="w-full min-w-0 px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                            focus:outline-none focus:border-neutral-900 transition-colors"
+                            >
+                            
                         </div>
                         
-                        <div>
-                            <label class="block text-xs uppercase tracking-wider text-neutral-600 mb-1.5">Region</label>
-                            <select x-model="form.region" required
-                            class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 transition-colors bg-white">
-                            <option value="">Select Region</option>
-                            <option value="luzon">Luzon (₱100)</option>
-                            <option value="vismin">Visayas / Mindanao (₱150)</option>
-                        </select>
+                        
+                        <!-- Address -->
+                        <input
+                        type="text"
+                        x-model="form.address"
+                        required
+                        placeholder="Address (street, barangay, city)"
+                        class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                        focus:outline-none focus:border-neutral-900 transition-colors"
+                        >
+                        
+                        
+                        <!-- Region -->
+                        <select
+                        x-model="form.region"
+                        required
+                        class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                        focus:outline-none focus:border-neutral-900 transition-colors bg-white"
+                        >
+                        <option value="">Select region</option>
+                        <option value="luzon">Luzon (₱100)</option>
+                        <option value="vismin">Visayas / Mindanao (₱150)</option>
+                    </select>
+                    
+                    
+                    <!-- Phone + Postal Code -->
+                    <div class="grid grid-cols-2 gap-3">
+                        
+                        <input
+                        type="tel"
+                        x-model="form.contact"
+                        required
+                        placeholder="Phone number"
+                        class="w-full min-w-0 px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                        focus:outline-none focus:border-neutral-900 transition-colors"
+                        >
+                        
+                        <input
+                        type="text"
+                        x-model="form.postalCode"
+                        placeholder="Postal code (optional)"
+                        class="w-full min-w-0 px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                        focus:outline-none focus:border-neutral-900 transition-colors"
+                        >
+                        
                     </div>
+                    
+                    
+                    <!-- Order Notes -->
+                    <textarea
+                    x-model="form.orderNotes"
+                    rows="3"
+                    placeholder="Order notes (optional) — e.g. landmark, special instructions"
+                    class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                    focus:outline-none focus:border-neutral-900 transition-colors resize-none"
+                    ></textarea>
+                    
                 </div>
+                
             </section>
             
             <!-- Shipping Info -->
-<section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200">
-    <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-4 text-neutral-900">
-        Shipping Info
-    </h3>
-
-    <div class="bg-neutral-50 rounded-xl p-4 border border-neutral-200 space-y-4">
-
-        <!-- J&T Express -->
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center flex-shrink-0">
-                <span class="text-[10px] font-bold text-white">J&T</span>
-            </div>
-
-            <div>
-                <p class="text-sm font-bold">J&T Express</p>
-                <p class="text-xs text-neutral-500">
-                    Standard nationwide delivery
-                </p>
-            </div>
-        </div>
-
-        <!-- Divider -->
-        <div class="border-t border-neutral-200"></div>
-
-        <!-- Lalamove -->
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0">
-                <span class="text-[10px] font-bold text-white">LALA</span>
-            </div>
-
-            <div>
-                <p class="text-sm font-bold">Lalamove</p>
-                <p class="text-xs text-neutral-500">
-                    Same-day delivery
-                </p>
-            </div>
-        </div>
-
-        <!-- Divider -->
-        <div class="border-t border-neutral-200"></div>
-
-        <!-- GrabExpress -->
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-green-600 flex items-center justify-center flex-shrink-0">
-                <span class="text-[10px] font-bold text-white">GRAB</span>
-            </div>
-
-            <div>
-                <p class="text-sm font-bold">GrabExpress</p>
-                <p class="text-xs text-neutral-500">
-                    Same-day delivery
-                </p>
-            </div>
-        </div>
-
-        <!-- Shipping Fee Note -->
-        <div class="border-t border-neutral-200 pt-3">
-            <p class="text-xs text-neutral-500">
-                Shipping fees are calculated based on your region or arranged via Messenger for same-day delivery.
-            </p>
-        </div>
-
-    </div>
-</section>
+            <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200">
+                <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-4 text-neutral-900">
+                    Shipping Info
+                </h3>
+                
+                <div class="bg-neutral-50 rounded-xl p-4 border border-neutral-200 space-y-4">
+                    
+                    <!-- J&T Express -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center flex-shrink-0">
+                            <span class="text-[10px] font-bold text-white">J&T</span>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm font-bold">J&T Express</p>
+                            <p class="text-xs text-neutral-500">
+                                Standard nationwide delivery
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Divider -->
+                    <div class="border-t border-neutral-200"></div>
+                    
+                    <!-- Lalamove -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0">
+                            <span class="text-[10px] font-bold text-white">LALA</span>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm font-bold">Lalamove</p>
+                            <p class="text-xs text-neutral-500">
+                                Same-day delivery
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Divider -->
+                    <div class="border-t border-neutral-200"></div>
+                    
+                    <!-- GrabExpress -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-green-600 flex items-center justify-center flex-shrink-0">
+                            <span class="text-[10px] font-bold text-white">GRAB</span>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm font-bold">GrabExpress</p>
+                            <p class="text-xs text-neutral-500">
+                                Same-day delivery
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping Fee Note -->
+                    <div class="border-t border-neutral-200 pt-3">
+                        <p class="text-xs text-neutral-500">
+                            Shipping fees are calculated based on your region or arranged via Messenger for same-day delivery.
+                        </p>
+                    </div>
+                    
+                </div>
+            </section>
             
             <!-- 2. Delivery Option -->
             <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200">
@@ -361,10 +437,28 @@ Help / FAQs
 <div class="bg-neutral-50 rounded-xl p-5 text-sm space-y-2 border border-neutral-200" x-show="form.paymentMethod">
     <template x-if="form.paymentMethod === 'gcash'">
         <div>
-            <p class="font-bold uppercase tracking-wide text-xs mb-2">GCash Payment Details</p>
-            <p class="text-neutral-700">Send payment to: <strong>09XX XXX XXXX</strong></p>
-            <p class="text-neutral-700">Account Name: <strong>ULTI</strong></p>
-            <p class="text-xs text-neutral-500 mt-2">After clicking Place Order, you will be redirected to Messenger.</p>
+            <p class="font-bold uppercase tracking-wide text-xs mb-2">
+                GCash Payment Details
+            </p>
+            
+            <p class="text-neutral-700">
+                Send payment to: <strong>09XX XXX XXXX</strong>
+            </p>
+            
+            <!-- GCASH SCREENSHOT -->
+            <div class="mt-4 flex justify-center">
+                <img
+                src="assets/gcash.jpg"
+                alt="GCash Payment Details"
+                class="w-full max-w-[280px] h-auto rounded-xl border border-neutral-200 object-contain"
+                >
+            </div>
+            
+            <div class="mt-4 text-xs text-neutral-500 space-y-1">
+                <p>1. Scan QR & pay.</p>
+                <p>2. Click Place Order.</p>
+                <p>3. Send screenshot in Messenger.</p>
+            </div>
         </div>
     </template>
     <template x-if="form.paymentMethod === 'maya'">
@@ -386,15 +480,6 @@ Help / FAQs
     </template>
 </div>
 </section>
-
-<!-- Mobile Place Order Button -->
-<div class="lg:hidden">
-    <button @click="openPaymentModal()" 
-    :disabled="!form.name || !form.address || !form.contact || !form.region || (form.deliveryOption !== 'same_day' && !form.paymentMethod)"
-    class="w-full mt-2 bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-    Place Order
-</button>
-</div>
 
 </div> <!-- END LEFT COLUMN -->
 
@@ -473,6 +558,15 @@ Help / FAQs
         <span>Total</span>
         <span x-text="config.currency + Number(grandTotal).toLocaleString()"></span>
     </div>
+    
+    <!-- Place Order Button -->
+    <button
+    @click="openPaymentModal()"
+    :disabled="!form.name || !form.address || !form.contact || !form.region || (form.deliveryOption !== 'same_day' && !form.paymentMethod)"
+    class="w-full mt-6 bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+    Place Order
+</button>
 </div>
 
 <!-- Desktop Place Order Button -->

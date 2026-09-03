@@ -1,6 +1,6 @@
 window.CONFIG = {
     // Store Metadata
-    storeName: "Ulti",
+    storeName: "Ulti Reps",
     currency: "₱",
     
     // Product Categories
