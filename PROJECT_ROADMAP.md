@@ -4,7 +4,7 @@
 * **Project Name:** Static E-Commerce Web App (Google Sheets Backend + Cloudinary CDN)
 * **Tech Stack:** Vanilla JavaScript, Tailwind CSS (via CDN), HTML5, Alpine.js (cart, modals, checkout, help/FAQ states)
 * **Hosting:** Netlify / Vercel (Zero database overhead)
-* **Agreed Budget:** ₱3,500 PHP (₱2,000 downpayment received — ₱1,500 balance)
+* **Agreed Budget:** ₱4,000 PHP (₱2,000 downpayment received — ₱1,500 balance)
 * **Status:** Core storefront + checkout UI complete. Order submission via Messenger (auto-opens with prefilled order summary). Google Sheets live sync pending client decision.
 
 ---
@@ -61,8 +61,8 @@ ARCHWAY/
 
 ---
 
-## Pricing Note (₱3,500 PHP Scope)
+## Pricing Note (₱4,000 PHP Scope)
 * Setup of static structure and Google Sheets data synchronization.
 * UI implementation matching the requested minimalist premium direction.
 * Client-side cart state and direct checkout/order transmission via Messenger.
-* **Payment status:** ₱2,000 downpayment received. ₱1,500 balance due upon completion/handoff.
+* **Payment status:** ₱2,000 downpayment received. ₱2,000 balance due upon completion/handoff.
