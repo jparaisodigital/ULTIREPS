@@ -7,7 +7,11 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js CDN -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Alpine Collapse Plugin -->
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+
+<!-- Alpine.js -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Google Fonts: Space Grotesk -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -562,17 +566,35 @@ Help / FAQs
     <!-- Place Order Button -->
     <button
     @click="openPaymentModal()"
-    :disabled="!form.name || !form.address || !form.contact || !form.region || (form.deliveryOption !== 'same_day' && !form.paymentMethod)"
+    :disabled="
+    !form.email ||
+    !form.firstName ||
+    !form.lastName ||
+    !form.address ||
+    !form.contact ||
+    !form.region ||
+    (form.deliveryOption !== 'same_day' && !form.paymentMethod)
+    "
     class="w-full mt-6 bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
     >
     Place Order
 </button>
-</div>
+
 
 <!-- Desktop Place Order Button -->
-<button @click="openPaymentModal()" 
-:disabled="!form.name || !form.address || !form.contact || !form.region || (form.deliveryOption !== 'same_day' && !form.paymentMethod)"
-class="hidden lg:block w-full mt-10 bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+<button
+@click="openPaymentModal()"
+:disabled="
+!form.email ||
+!form.firstName ||
+!form.lastName ||
+!form.address ||
+!form.contact ||
+!form.region ||
+(form.deliveryOption !== 'same_day' && !form.paymentMethod)
+"
+class="hidden lg:block w-full mt-10 bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+>
 Place Order
 </button>
 
@@ -809,22 +831,68 @@ style="display: none;">
     <p class="text-xs text-neutral-500 uppercase tracking-wider mb-6"
     x-text="form.deliveryOption === 'same_day' ? 'Same Day Delivery' : (form.paymentMethod === 'gcash' ? 'GCash' : form.paymentMethod === 'maya' ? 'Maya' : 'Bank Transfer')"></p>
     
-    <div class="bg-neutral-100 rounded-xl p-4 mb-6 text-left text-sm space-y-1">
-        <p><span class="text-neutral-500">Name:</span> <span x-text="form.name"></span></p>
-        <p><span class="text-neutral-500">Contact:</span> <span x-text="form.contact"></span></p>
-        <p><span class="text-neutral-500">Delivery:</span> 
-            <span x-text="form.deliveryOption === 'same_day' ? 'Same Day Delivery' : 'Standard Delivery'"></span>
+    <div class="bg-neutral-100 rounded-xl p-4 mb-6 text-left text-sm space-y-2">
+
+        <p>
+            <span class="text-neutral-500">Name:</span>
+            <span x-text="form.firstName + ' ' + form.lastName"></span>
         </p>
-    </div>
     
-    <!-- Optional Upload (only for Standard Delivery) -->
-    <div class="mb-6 text-left" x-show="form.deliveryOption !== 'same_day'">
-        <label class="block text-xs uppercase tracking-wider text-neutral-600 mb-1.5">
-            Payment Receipt / Screenshot <span class="normal-case text-neutral-400">(optional)</span>
-        </label>
-        <input type="file" @change="handleFileUpload($event)" accept="image/*"
-        class="w-full text-xs text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-medium file:bg-neutral-100 file:text-neutral-900 hover:file:bg-neutral-200 cursor-pointer">
-        <p class="text-[11px] text-neutral-400 mt-1.5">You can also send the receipt later via Messenger.</p>
+        <p>
+            <span class="text-neutral-500">Email:</span>
+            <span x-text="form.email"></span>
+        </p>
+    
+        <p>
+            <span class="text-neutral-500">Contact:</span>
+            <span x-text="form.contact"></span>
+        </p>
+    
+        <p>
+            <span class="text-neutral-500">Address:</span>
+            <span x-text="form.address"></span>
+        </p>
+    
+        <p>
+            <span class="text-neutral-500">Region:</span>
+            <span
+                x-text="
+                    form.region === 'luzon'
+                    ? 'Luzon'
+                    : form.region === 'vismin'
+                    ? 'Visayas / Mindanao'
+                    : form.region
+                "
+            ></span>
+        </p>
+    
+        <p x-show="form.postalCode">
+            <span class="text-neutral-500">Postal Code:</span>
+            <span x-text="form.postalCode"></span>
+        </p>
+    
+        <p>
+            <span class="text-neutral-500">Delivery:</span>
+            <span
+                x-text="
+                    form.deliveryOption === 'same_day'
+                    ? 'Same Day Delivery'
+                    : 'Standard Delivery'
+                "
+            ></span>
+        </p>
+    
+        <div
+            x-show="form.orderNotes"
+            class="pt-2 mt-2 border-t border-neutral-200"
+        >
+            <p class="text-neutral-500 mb-1">Order Notes:</p>
+            <p
+                class="text-neutral-700 whitespace-pre-line"
+                x-text="form.orderNotes"
+            ></p>
+        </div>
+    
     </div>
     
     <p class="text-xs text-neutral-600 mb-6 leading-relaxed">

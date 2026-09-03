@@ -42,7 +42,7 @@ document.addEventListener('alpine:init', () => {
             contact: '',
             postalCode: '',
             orderNotes: '',
-        
+            
             receiptFile: null,
             paymentMethod: 'gcash',
             deliveryOption: 'standard'
@@ -500,20 +500,40 @@ document.addEventListener('alpine:init', () => {
         },
         
         openPaymentModal() {
-            if (!this.form.name || !this.form.address || !this.form.contact) {
-                alert("Please complete all shipping details.");
+            
+            if (
+                !this.form.email ||
+                !this.form.firstName ||
+                !this.form.lastName ||
+                !this.form.address ||
+                !this.form.contact ||
+                !this.form.region
+            ) {
+                alert("Please complete all required checkout details.");
                 return;
             }
-            if (this.form.deliveryOption !== 'same_day' && !this.form.paymentMethod) {
+            
+            if (
+                this.form.deliveryOption !== 'same_day' &&
+                !this.form.paymentMethod
+            ) {
                 alert("Please select a payment method.");
                 return;
             }
+            
             this.paymentModalOpen = true;
         },
         
         async submitOrder() {
-            if (!this.form.name || !this.form.address || !this.form.contact) {
-                alert("Please complete all shipping details.");
+            if (
+                !this.form.email ||
+                !this.form.firstName ||
+                !this.form.lastName ||
+                !this.form.address ||
+                !this.form.contact ||
+                !this.form.region
+            ) {
+                alert("Please complete all required checkout details.");
                 return;
             }
             if (!this.form.paymentMethod) {
@@ -537,7 +557,22 @@ document.addEventListener('alpine:init', () => {
             // Clean order summary (no emojis)
             let orderSummary = `NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
             
-            orderSummary += `Name: ${this.form.name}\n`;
+            orderSummary += `Name: ${this.form.firstName} ${this.form.lastName}\n`;
+            orderSummary += `Email: ${this.form.email}\n`;
+            orderSummary += `Phone: ${this.form.contact}\n`;
+            orderSummary += `Address: ${this.form.address}\n`;
+            orderSummary += `Region: ${this.form.region}\n`;
+            
+            if (this.form.postalCode) {
+                orderSummary += `Postal Code: ${this.form.postalCode}\n`;
+            }
+            
+            if (this.form.orderNotes) {
+                orderSummary += `Order Notes: ${this.form.orderNotes}\n`;
+            }
+            
+            orderSummary += `Delivery: ${deliveryLabel}\n`;
+            orderSummary += `Payment: ${paymentLabel}\n\n`;
             orderSummary += `Address: ${this.form.address}\n`;
             orderSummary += `Contact: ${this.form.contact}\n`;
             orderSummary += `Delivery: ${deliveryLabel}\n`;
