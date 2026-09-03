@@ -50,10 +50,93 @@ document.addEventListener('alpine:init', () => {
         selectedSize: null,
         sizeChartOpen: false,
         
+        // ===== SITE LOADER =====
+        siteLoaderVisible: true,
+        siteLoaderLeaving: false,
+        
         // HOT STYLE <-> FEEDBACK popup state
         hotToastMode: 'hot',
         hotToastTimer: null,
         hotToastSwitching: false,
+        
+        // ===== SITE LOADER =====
+        initSiteLoader() {
+            const settings = this.config.siteLoader || {};
+            
+            // Disabled through config
+            if (settings.enabled === false) {
+                this.siteLoaderVisible = false;
+                return;
+            }
+            
+            // Optional: show only once per browser session
+            if (
+                settings.showOncePerSession &&
+                sessionStorage.getItem('ulti_loader_seen') === 'true'
+            ) {
+                this.siteLoaderVisible = false;
+                return;
+            }
+            
+            this.siteLoaderVisible = true;
+            this.siteLoaderLeaving = false;
+            
+            // Prevent scrolling habang loader ang nakikita
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
+            
+            const startTime = Date.now();
+            
+            const hideLoader = () => {
+                const minimumDuration =
+                Number(settings.minDuration) || 2000;
+                
+                const fadeDuration =
+                Number(settings.fadeDuration) || 600;
+                
+                const elapsed = Date.now() - startTime;
+                
+                const remainingTime = Math.max(
+                    0,
+                    minimumDuration - elapsed
+                );
+                
+                setTimeout(() => {
+                    
+                    // Start fade out
+                    this.siteLoaderLeaving = true;
+                    
+                    setTimeout(() => {
+                        this.siteLoaderVisible = false;
+                        this.siteLoaderLeaving = false;
+                        
+                        // Restore scrolling
+                        document.documentElement.style.overflow = '';
+                        document.body.style.overflow = '';
+                        
+                        if (settings.showOncePerSession) {
+                            sessionStorage.setItem(
+                                'ulti_loader_seen',
+                                'true'
+                            );
+                        }
+                        
+                    }, fadeDuration);
+                    
+                }, remainingTime);
+            };
+            
+            // Hintayin muna na fully loaded ang page/images
+            if (document.readyState === 'complete') {
+                hideLoader();
+            } else {
+                window.addEventListener(
+                    'load',
+                    hideLoader,
+                    { once: true }
+                );
+            }
+        },
         
         // ===== HOT PRODUCTS =====
         get hotProducts() {
@@ -148,7 +231,7 @@ document.addEventListener('alpine:init', () => {
         
         dismissHotToast(permanent = false) {
             this.hotToastVisible = false;
-        
+            
             if (permanent) {
                 localStorage.setItem('ulti_hot_toast_dismissed', 'true');
             }
@@ -171,10 +254,10 @@ document.addEventListener('alpine:init', () => {
         
         goToFeedback() {
             this.stopHotToastLoop();
-        
+            
             // Play popup exit animation first
             this.hotToastVisible = false;
-        
+            
             // Navigate after animation finishes
             setTimeout(() => {
                 window.location.href = 'feedback.html';

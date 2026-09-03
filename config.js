@@ -42,6 +42,37 @@ window.CONFIG = {
     // Logo (PNG or SVG with transparent background recommended)
     logo: "assets/logo.png",          
     logoWhite: "assets/logo-white.png", 
+
+    // ===== SITE LOADING SCREEN =====
+siteLoader: {
+    enabled: true,
+
+    // Loading logo
+    logo: "assets/logo.png",
+
+    // Loader appearance
+    background: "#ffffff",
+
+    // Dahil white ang uploaded logo,
+    // brightness(0) = gagawin siyang black sa white background
+    logoFilter: "brightness(0)",
+
+    // Responsive logo size
+    logoWidth: "clamp(180px, 32vw, 340px)",
+
+    // Minimum time bago pumasok sa site
+    minDuration: 2000,
+
+    // Fade-out duration
+    fadeDuration: 600,
+
+    // "Breathing" animation speed
+    breatheDuration: 1000,
+
+    // false = lalabas ulit kapag ni-refresh ang homepage
+    // true = isang beses lang per browser tab/session
+    showOncePerSession: false
+},
     
     // Social Media Links
     socials: {
