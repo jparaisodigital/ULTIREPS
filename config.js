@@ -10,9 +10,6 @@ window.CONFIG = {
         "NEW RELEASE"
     ],
     
-    // Google Sheets CSV Export URL (Mag-publish sa web as CSV ang Google Sheet tapos ilagay rito ang link)
-    googleSheetCSV: "YOUR_GOOGLE_SHEET_CSV_URL_HERE",
-    
     // Sa loob ng iyong config object sa config.js
     heroImagesDesktop: [
         "assets/hero.png",
@@ -47,30 +44,17 @@ window.CONFIG = {
 siteLoader: {
     enabled: true,
 
-    // Loading logo
     logo: "assets/logo.png",
-
-    // Loader appearance
     background: "#ffffff",
-
-    // Dahil white ang uploaded logo,
-    // brightness(0) = gagawin siyang black sa white background
     logoFilter: "brightness(0)",
 
-    // Responsive logo size
-    logoWidth: "clamp(180px, 32vw, 340px)",
+    logoWidth: "clamp(90px, 16vw, 170px)",
 
-    // Minimum time bago pumasok sa site
-    minDuration: 2000,
-
-    // Fade-out duration
+    minDuration: 1500,
     fadeDuration: 600,
-
-    // "Breathing" animation speed
     breatheDuration: 1000,
 
-    // false = lalabas ulit kapag ni-refresh ang homepage
-    // true = isang beses lang per browser tab/session
+    // false = lalabas ulit kapag nirefresh ang site
     showOncePerSession: false
 },
     

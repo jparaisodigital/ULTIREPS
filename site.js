@@ -150,8 +150,12 @@ document.addEventListener('alpine:init', () => {
                 this.activeSlide = (this.activeSlide + 1) % this.heroImages.length;
             }, 5000);
             
-            // Fetch Google Sheets Data
-            this.fetchProducts();
+            // Load products directly from config.js
+            this.products = Array.isArray(this.config.products)
+            ? this.config.products
+            : [];
+            
+            this.extractCategories();
             
             // HOT STYLE toast 
             const dismissed = localStorage.getItem('ulti_hot_toast_dismissed');
