@@ -67,6 +67,21 @@ document.addEventListener('alpine:init', () => {
         // ===== SITE LOADER =====
         initSiteLoader() {
             const settings = this.config.siteLoader || {};
+            // Skip loader once kapag galing sa internal/header navigation
+            const skipLoaderOnce =
+            sessionStorage.getItem('ulti_skip_loader_once') === 'true';
+            
+            if (skipLoaderOnce) {
+                sessionStorage.removeItem('ulti_skip_loader_once');
+                
+                this.siteLoaderVisible = false;
+                this.siteLoaderLeaving = false;
+                
+                document.documentElement.style.overflow = '';
+                document.body.style.overflow = '';
+                
+                return;
+            }
             
             // Disabled through config
             if (settings.enabled === false) {
