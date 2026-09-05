@@ -2,6 +2,9 @@ window.CONFIG = {
     // Store Metadata
     storeName: "Ulti Reps",
     currency: "₱",
+
+    // Google Sheets / Apps Script API
+googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQfkRAQpZ55ssvjUo-xLIw42eDn41e_FiERw53HWM8wdGWdZ50axw/exec",
     
     // Product Categories
     categories: [
@@ -115,6 +118,7 @@ window.CONFIG = {
             id: 2,
             name: "Nike Mind 001 x NOCTA Blue Owl",
             price: 4500,
+            discountAmount: 200,
             category: "NIKE",
             hot: true,
             reserveAllowed: true,
@@ -145,6 +149,7 @@ window.CONFIG = {
             id: 3,
             name: "Nike Mind 001 x NOCTA Black Owl",
             price: 4500,
+            discountAmount: 0,
             category: "NIKE",
             hot: false,
             reserveAllowed: true,
@@ -176,6 +181,7 @@ window.CONFIG = {
             id: 4,
             name: "Nike Mind 001 x NOCTA Real Tree",
             price: 4500,
+            discountAmount: 0,
             category: "NIKE",
             hot: false,
             image_url: "products/1 (4).png",

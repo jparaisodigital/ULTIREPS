@@ -390,7 +390,7 @@ document.addEventListener('alpine:init', () => {
                 alert('Please enter your contact number.');
                 return;
             }
-
+            
             if (!this.preOrderForm.location.trim()) {
                 alert('Please enter your location.');
                 return;
@@ -415,17 +415,17 @@ document.addEventListener('alpine:init', () => {
                 productName: product.name,
                 size: this.preOrderForm.size,
                 quantity: this.preOrderForm.quantity,
-            
+                
                 name: this.preOrderForm.name,
                 contact: this.preOrderForm.contact,
                 location: this.preOrderForm.location,
                 note: this.preOrderForm.note,
-            
+                
                 requiredDownpayment:
-                    this.config.payments.preorderDownpayment,
-            
+                this.config.payments.preorderDownpayment,
+                
                 proofFile:
-                    this.preOrderForm.proofFile.name
+                this.preOrderForm.proofFile.name
             });
             
             alert('Pre-order form is ready. Google Sheet submission will be connected next.');
@@ -552,6 +552,36 @@ document.addEventListener('alpine:init', () => {
             return false;
         },
         
+        // ===== PRODUCT DISCOUNT HELPERS =====
+        
+        hasProductDiscount(product) {
+            if (!product) return false;
+            
+            const regularPrice = Number(product.price) || 0;
+            const discountAmount = Number(product.discountAmount) || 0;
+            
+            return (
+                discountAmount > 0 &&
+                discountAmount < regularPrice
+            );
+        },
+        
+        getProductFinalPrice(product) {
+            if (!product) return 0;
+            
+            const regularPrice = Number(product.price) || 0;
+            const discountAmount = Number(product.discountAmount) || 0;
+            
+            if (
+                discountAmount > 0 &&
+                discountAmount < regularPrice
+            ) {
+                return regularPrice - discountAmount;
+            }
+            
+            return regularPrice;
+        },
+        
         selectProductSize(size) {
             this.selectedSize = size;
             
@@ -575,9 +605,16 @@ document.addEventListener('alpine:init', () => {
         },
         
         get cartTotal() {
-            return this.cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
-        },
+
+            return this.cart.reduce((sum, item) => {
         
+                const finalPrice = this.getProductFinalPrice(item);
+        
+                return sum + (finalPrice * item.quantity);
+        
+            }, 0);
+        
+        },
         
         // Standard shipping fee based on region
         get regionShippingFee() {

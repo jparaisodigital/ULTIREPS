@@ -428,7 +428,7 @@ Help / FAQs
             <!-- Image -->
             <div
             class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5] transition-colors duration-300"
-            :class="Number(product.stock) === 0
+            :class="isProductSoldOut(product)
             ? 'bg-neutral-300'
             : 'bg-neutral-100'"
             @click="openQuickView(product)"
@@ -437,7 +437,7 @@ Help / FAQs
             <!-- Product Status Badge -->
             
             <!-- SOLD OUT Ribbon -->
-            <template x-if="Number(product.stock) === 0">
+            <template x-if="isProductSoldOut(product)">
                 <span
                 class="absolute top-5 -left-9 z-20 w-36 -rotate-45 text-center
                 text-white text-[10px] font-bold tracking-[0.22em] uppercase
@@ -449,7 +449,7 @@ Help / FAQs
         </template>
         
         <!-- HOT only when product is available -->
-        <template x-if="product.hot && Number(product.stock) !== 0">
+        <template x-if="product.hot && !isProductSoldOut(product)">
             <span class="absolute top-3 left-3 z-10 bg-neutral-900 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-2.5 py-1 rounded-sm">
                 Hot
             </span>
@@ -458,10 +458,11 @@ Help / FAQs
         :src="product.image_url || config.fallbackImage"
         :alt="product.name"
         class="w-full h-full object-contain transition-all duration-500"
-        :style="Number(product.stock) === 0
+        :style="isProductSoldOut(product)
         ? 'opacity: 0.32; filter: grayscale(100%);'
         : ''"
-        :class="Number(product.stock) === 0
+        
+        :class="isProductSoldOut(product)
         ? ''
         : 'group-hover:scale-105'"
         >
@@ -469,9 +470,27 @@ Help / FAQs
     
     <!-- Name + Price + Add to Cart -->
     <div class="flex items-start justify-between gap-3">
-        <div class="min-w-0" @click="openQuickView(product)">
-            <h3 class="text-sm font-medium text-neutral-900 mb-0.5 truncate" x-text="product.name"></h3>
-            <p class="text-sm text-neutral-500" x-text="config.currency + Number(product.price).toLocaleString()"></p>
+        <div class="flex items-center gap-2">
+            
+            <span
+            x-show="hasProductDiscount(product)"
+            class="text-[11px] text-neutral-400 line-through"
+            x-text="
+            config.currency +
+            Number(product.price).toLocaleString()
+            "
+            ></span>
+            
+            <span
+            class="text-sm font-semibold text-neutral-900"
+            x-text="
+            config.currency +
+            Number(
+            getProductFinalPrice(product)
+            ).toLocaleString()
+            "
+            ></span>
+            
         </div>
         
         <!-- Add to Cart (Text + Icon) -->
@@ -623,10 +642,30 @@ x-text="quickViewProduct.name"
 ></h3>
 
 <!-- Price -->
-<p
-class="text-lg text-neutral-700 mb-6"
-x-text="config.currency + Number(quickViewProduct.price).toLocaleString()"
-></p>
+<div class="mb-6 flex items-center gap-2">
+    
+    <!-- Original Price - only shows when discounted -->
+    <span
+    x-show="hasProductDiscount(quickViewProduct)"
+    class="text-sm text-neutral-400 line-through"
+    x-text="
+    config.currency +
+    Number(quickViewProduct.price).toLocaleString()
+    "
+    ></span>
+    
+    <!-- Current Price -->
+    <span
+    class="text-lg font-semibold text-neutral-900"
+    x-text="
+    config.currency +
+    Number(
+    getProductFinalPrice(quickViewProduct)
+    ).toLocaleString()
+    "
+    ></span>
+    
+</div>
 
 <!-- ===== SIZE SELECTOR ===== -->
 <template x-if="quickViewProduct.sizes && quickViewProduct.sizes.length">
@@ -882,14 +921,14 @@ class="flex items-center justify-between border-b border-neutral-100 pb-3"
 >
 <div>
     <p
-        class="text-[9px] uppercase tracking-[0.16em] text-neutral-400"
+    class="text-[9px] uppercase tracking-[0.16em] text-neutral-400"
     >
-        Estimated Delivery
-    </p>
+    Estimated Delivery
+</p>
 
-    <p class="text-sm font-bold text-neutral-900 mt-1">
-        5–7 days
-    </p>
+<p class="text-sm font-bold text-neutral-900 mt-1">
+    5–7 days
+</p>
 </div>
 
 <p class="text-[10px] text-neutral-400 text-right leading-relaxed">
@@ -1328,10 +1367,28 @@ x-transition:leave-end="translate-x-full">
             </p>
             
             <!-- Price -->
-            <p
-            class="text-xs text-neutral-500 mt-1"
-            x-text="config.currency + Number(item.price).toLocaleString()"
-            ></p>
+<div class="flex items-center gap-2 mt-1">
+
+    <span
+        x-show="hasProductDiscount(item)"
+        class="text-[10px] text-neutral-400 line-through"
+        x-text="
+            config.currency +
+            Number(item.price).toLocaleString()
+        "
+    ></span>
+
+    <span
+        class="text-xs font-medium text-neutral-700"
+        x-text="
+            config.currency +
+            Number(
+                getProductFinalPrice(item)
+            ).toLocaleString()
+        "
+    ></span>
+
+</div>
             
             <!-- Quantity -->
             <div class="flex items-center space-x-3 mt-2">

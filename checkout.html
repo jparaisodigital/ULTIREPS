@@ -522,62 +522,82 @@ x-show="form.paymentMethod"
                     class="text-sm font-medium truncate"
                     x-text="item.name"
                     ></p>
+                    
+                    <!-- Quantity -->
+                    <p class="text-xs text-neutral-500">
+                        Qty:
+                        <span x-text="item.quantity"></span>
+                    </p>
+                    
+                </div>
                 
-                <!-- Quantity -->
-                <p class="text-xs text-neutral-500">
-                    Qty:
-                    <span x-text="item.quantity"></span>
-                </p>
+                <!-- Line Total -->
+                <div class="text-right whitespace-nowrap">
+                    
+                    <span
+                    x-show="hasProductDiscount(item)"
+                    class="block text-[10px] text-neutral-400 line-through"
+                    x-text="
+                    config.currency +
+                    Number(
+                    item.price * item.quantity
+                    ).toLocaleString()
+                    "
+                    ></span>
+                    
+                    <span
+                    class="block text-sm font-medium text-neutral-900"
+                    x-text="
+                    config.currency +
+                    Number(
+                    getProductFinalPrice(item) * item.quantity
+                    ).toLocaleString()
+                    "
+                    ></span>
+                    
+                </div>
                 
             </div>
-            
-            <!-- Line Total -->
-            <p
-            class="text-sm font-medium whitespace-nowrap"
-            x-text="config.currency + Number(item.price * item.quantity).toLocaleString()"
-            ></p>
-            
+        </template>
+        
+    </div>
+    
+    <div class="border-t border-neutral-200 pt-4 space-y-2 text-sm">
+        <div class="flex justify-between">
+            <span class="text-neutral-600">Subtotal</span>
+            <span x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
         </div>
-    </template>
+        
+        <div class="flex justify-between" x-show="regionShippingFee > 0">
+            <span class="text-neutral-600">Shipping</span>
+            <span x-text="config.currency + Number(regionShippingFee).toLocaleString()"></span>
+        </div>
+        
+        <div class="flex justify-between font-bold text-base pt-2 border-t border-neutral-200">
+            <span>Total</span>
+            <span x-text="config.currency + Number(grandTotal).toLocaleString()"></span>
+        </div>
+        
+        <!-- Place Order Button -->
+        <button
+        @click="openPaymentModal()"
+        :disabled="
+        !form.email ||
+        !form.firstName ||
+        !form.lastName ||
+        !form.address ||
+        !form.contact ||
+        !form.region ||
+        (form.deliveryOption !== 'same_day' && !form.paymentMethod)
+        "
+        class="w-full mt-6 bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+        Place Order
+    </button>
     
-</div>
-
-<div class="border-t border-neutral-200 pt-4 space-y-2 text-sm">
-    <div class="flex justify-between">
-        <span class="text-neutral-600">Subtotal</span>
-        <span x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
-    </div>
-    
-    <div class="flex justify-between" x-show="regionShippingFee > 0">
-        <span class="text-neutral-600">Shipping</span>
-        <span x-text="config.currency + Number(regionShippingFee).toLocaleString()"></span>
-    </div>
-    
-    <div class="flex justify-between font-bold text-base pt-2 border-t border-neutral-200">
-        <span>Total</span>
-        <span x-text="config.currency + Number(grandTotal).toLocaleString()"></span>
-    </div>
-    
-    <!-- Place Order Button -->
-    <button
-    @click="openPaymentModal()"
-    :disabled="
-    !form.email ||
-    !form.firstName ||
-    !form.lastName ||
-    !form.address ||
-    !form.contact ||
-    !form.region ||
-    (form.deliveryOption !== 'same_day' && !form.paymentMethod)
-    "
-    class="w-full mt-6 bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-    Place Order
-</button>
-
-<p class="text-[11px] text-neutral-500 text-center mt-4 leading-relaxed">
-    By submitting, you agree that your order details will be sent for verification.
-</p>
+    <p class="text-[11px] text-neutral-500 text-center mt-4 leading-relaxed">
+        By submitting, you agree that your order details will be sent for verification.
+    </p>
 </div>
 </div> <!-- END RIGHT COLUMN -->
 
@@ -713,10 +733,30 @@ x-transition:leave-end="translate-x-full">
             </p>
             
             <!-- Price -->
-            <p
-            class="text-xs text-neutral-500 mt-1"
-            x-text="config.currency + Number(item.price).toLocaleString()"
-            ></p>
+            <div class="flex items-center gap-2 mt-1">
+                
+                <!-- Original Price -->
+                <span
+                x-show="hasProductDiscount(item)"
+                class="text-[10px] text-neutral-400 line-through"
+                x-text="
+                config.currency +
+                Number(item.price).toLocaleString()
+                "
+                ></span>
+                
+                <!-- Discounted / Current Price -->
+                <span
+                class="text-xs font-medium text-neutral-700"
+                x-text="
+                config.currency +
+                Number(
+                getProductFinalPrice(item)
+                ).toLocaleString()
+                "
+                ></span>
+                
+            </div>
             
             <!-- Quantity Controls -->
             <div class="flex items-center space-x-3 mt-2">
@@ -801,8 +841,8 @@ style="display: none;">
 
 <div class="relative bg-white rounded-2xl w-full max-w-md p-8 shadow-2xl z-10 text-center">
     <button
-type="button"
-@click="paymentModalOpen = false" class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-900">✕</button>
+    type="button"
+    @click="paymentModalOpen = false" class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-900">✕</button>
     
     <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-2">Confirm Order</h3>
     
