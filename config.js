@@ -10,7 +10,7 @@ window.CONFIG = {
         "NEW RELEASE"
     ],
     
-    // Sa loob ng iyong config object sa config.js
+    // Hero Images
     heroImagesDesktop: [
         "assets/hero.png",
         "assets/hero1.png",
@@ -36,11 +36,11 @@ window.CONFIG = {
     ],
     
     
-    // Logo (PNG or SVG with transparent background recommended)
+    // Logos
     logo: "assets/logo.png",          
     logoWhite: "assets/logo-white.png", 
     
-    // ===== SITE LOADING SCREEN =====
+    // Site Loader
     siteLoader: {
         enabled: true,
         
@@ -54,21 +54,22 @@ window.CONFIG = {
         fadeDuration: 600,
         breatheDuration: 1000,
         
-        // false = lalabas ulit kapag nirefresh ang site
+        // false = show again after refresh
         showOncePerSession: false
     },
     
     // Social Media Links
     socials: {
-        facebook: "https://www.facebook.com/profile.php?id=61551038027330&locale=ps_AF#",
+        facebook: "https://www.facebook.com/profile.php?id=61551038027330",
         instagram: "https://www.instagram.com/ultireps.ph/",
         tiktok: "https://www.tiktok.com/@ultireps.ph",
         messenger: "https://m.me/61551038027330"
         
     },
     
-    // Payment Information
+    // Payment Information - replace placeholders before launch
     payments: {
+        preorderDownpayment: 500,
         gcash: {
             number: "09XX XXX XXXX",
             accountName: "ULTI REPS",
@@ -92,6 +93,7 @@ window.CONFIG = {
         label: "Size Chart"
     },
     
+    // Product Catalog
     products: [
         {
             id: 1,
@@ -115,6 +117,21 @@ window.CONFIG = {
             price: 4500,
             category: "NIKE",
             hot: true,
+            reserveAllowed: true,
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13],
+        
+            stockBySize: {
+                "6": 3,
+                "7": 2,
+                "8": 1,
+                "9": 0,    
+                "10": 4,
+                "11": 2,
+                "12": 1,
+                "13": 2
+            },
+        
             image_url: "products/1 (2).png",
             images: [
                 "products/1 (2).png",
@@ -122,15 +139,29 @@ window.CONFIG = {
                 "products/back/2 (2).jpg",
                 "products/back/2 (3).jpg",
                 "products/back/2 (4).jpg"
-            ],
-            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+            ]
         },
         {
             id: 3,
             name: "Nike Mind 001 x NOCTA Black Owl",
             price: 4500,
             category: "NIKE",
-            hot: true,
+            hot: false,
+            reserveAllowed: true,
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13],
+        
+            stockBySize: {
+                "6": 3,
+                "7": 2,
+                "8": 1,
+                "9": 0,   
+                "10": 4,    
+                "11": 2,
+                "12": 1,
+                "13": 2
+            },
+        
             image_url: "products/1 (3).png",
             images: [
                 "products/1 (3).png",
@@ -352,7 +383,7 @@ window.CONFIG = {
     ],
     
     
-    // Ulti Story Images (portrait)
+    // Ulti Story Images
     storyImages: [
         "assets/history/1 (1).png",
         "assets/history/1 (2).webp",
@@ -368,7 +399,7 @@ window.CONFIG = {
     ],
     
     
-    // marquee
+    // Product Marquee Images
     marqueeImages: [
         "products/1 (1).png",
         "products/1 (2).png",
@@ -389,7 +420,7 @@ window.CONFIG = {
     ],
     
     
-    // Default fallback images kung sakaling sakaling magka-issue sa Cloudinary URL
+    // Fallback image used when a product image is unavailable
     fallbackImage: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80"
     
 };

@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Config-Driven Page Title -->
     <title x-text="config.storeName + ' | Minimalist Store'"></title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js CDN -->
-    <!-- Alpine Collapse Plugin -->
-<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-
-<!-- Alpine.js -->
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Alpine.js + Collapse Plugin -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Google Fonts: Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Google Fonts: Space Grotesk -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -20,7 +21,7 @@
             font-family: 'Space Grotesk', sans-serif;
         }
         
-        /* Existing marquee: RIGHT to LEFT */
+        /* ===== MARQUEE ANIMATIONS ===== */
         @keyframes marquee {
             0% {
                 transform: translateX(0%);
@@ -31,7 +32,7 @@
             }
         }
         
-        /* Existing Image Marquee */
+        /* Image Marquee */
         .animate-marquee {
             display: flex;
             width: max-content;
@@ -42,7 +43,7 @@
             animation-play-state: paused;
         }
         
-        /* Existing Sale Text Marquee */
+        /* Sale Text Marquee */
         .animate-marquee-slow {
             display: flex;
             width: max-content;
@@ -50,7 +51,7 @@
             animation-play-state: running !important;
         }
         
-        /* NEW Top Quality Marquee: LEFT to RIGHT */
+        /* Top Quality Marquee: Left to Right */
         @keyframes marquee-reverse {
             0% {
                 transform: translateX(-50%);
@@ -90,43 +91,40 @@
     </style>
 </head>
 <body
-    class="bg-neutral-100 text-neutral-900 antialiased
-           selection:bg-neutral-900 selection:text-white
-           opacity-0 transition-opacity duration-300"
-    x-data="storeApp()"
-    x-init="initHeader(); requestAnimationFrame(() => document.body.classList.remove('opacity-0'))"
+class="bg-neutral-100 text-neutral-900 antialiased
+selection:bg-neutral-900 selection:text-white
+opacity-0 transition-opacity duration-300"
+x-data="storeApp()"
+x-init="initHeader(); requestAnimationFrame(() => document.body.classList.remove('opacity-0'))"
 >
-    
-    <!-- ===== SITE LOADING SCREEN ===== -->
-    <div
-    x-show="siteLoaderVisible"
-    x-init="initSiteLoader()"
-    :class="siteLoaderLeaving
-    ? 'opacity-0'
-    : 'opacity-100'"
-    class="fixed inset-0 z-[9999] flex items-center justify-center transition-opacity ease-out"
-    :style="{
-        backgroundColor: config.siteLoader.background || '#ffffff',
-        transitionDuration: (config.siteLoader.fadeDuration || 600) + 'ms'
-    }"
-    >
-    
-    <img
-    :src="config.siteLoader.logo || config.logo"
-    :alt="config.storeName + ' Loading'"
-    class="ulti-loader-logo h-auto object-contain select-none pointer-events-none"
-    :style="{
-        width: config.siteLoader.logoWidth || 'clamp(180px, 32vw, 340px)',
-        filter: config.siteLoader.logoFilter || 'none',
-        animationDuration: (config.siteLoader.breatheDuration || 1800) + 'ms'
-    }"
-    >
-    
+
+<!-- ===== SITE LOADING SCREEN ===== -->
+<div
+x-show="siteLoaderVisible"
+x-init="initSiteLoader()"
+:class="siteLoaderLeaving
+? 'opacity-0'
+: 'opacity-100'"
+class="fixed inset-0 z-[9999] flex items-center justify-center transition-opacity ease-out"
+:style="{
+    backgroundColor: config.siteLoader.background || '#ffffff',
+    transitionDuration: (config.siteLoader.fadeDuration || 600) + 'ms'
+}"
+>
+
+<img
+:src="config.siteLoader.logo || config.logo"
+:alt="config.storeName + ' Loading'"
+class="ulti-loader-logo h-auto object-contain select-none pointer-events-none"
+:style="{
+    width: config.siteLoader.logoWidth || 'clamp(180px, 32vw, 340px)',
+    filter: config.siteLoader.logoFilter || 'none',
+    animationDuration: (config.siteLoader.breatheDuration || 1800) + 'ms'
+}"
+>
+
 </div>
 <!-- ===== END SITE LOADING SCREEN ===== -->
-
-
-<!-- ===== HEADER ===== -->
 
 <!-- ===== HEADER ===== -->
 <header class="fixed top-0 left-0 right-0 z-50 bg-neutral-950 transition-transform duration-300 ease-out"
@@ -152,17 +150,17 @@
     <a
     href="index.html"
     @click.prevent="
-        sessionStorage.setItem('ulti_skip_loader_once', 'true');
-        document.body.classList.add('opacity-0');
-        setTimeout(() => window.location.href = 'index.html', 250);
+    sessionStorage.setItem('ulti_skip_loader_once', 'true');
+    document.body.classList.add('opacity-0');
+    setTimeout(() => window.location.href = 'index.html', 250);
     "
     class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
->
+    >
     Shop
 </a>
-    <a href="story.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Ulti Story</a>
-    <a href="about.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">About</a>
-    <a href="feedback.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Feedback</a>
+<a href="story.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Ulti Story</a>
+<a href="about.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">About</a>
+<a href="feedback.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Feedback</a>
 </nav>
 </div>
 
@@ -197,91 +195,90 @@ x-text="cartCount">0</span>
 </div>
 
 <!-- Mobile Menu Dropdown -->
-<!-- Mobile Menu Dropdown -->
 <div
-    x-show="mobileMenuOpen"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0 -translate-y-4"
-    x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 -translate-y-4"
-    class="md:hidden absolute top-0 left-0 w-full bg-neutral-950 pt-24 px-6 pb-8 border-b border-neutral-800 shadow-2xl z-10"
-    style="display: none;"
+x-show="mobileMenuOpen"
+x-transition:enter="transition ease-out duration-300"
+x-transition:enter-start="opacity-0 -translate-y-4"
+x-transition:enter-end="opacity-100 translate-y-0"
+x-transition:leave="transition ease-in duration-200"
+x-transition:leave-start="opacity-100 translate-y-0"
+x-transition:leave-end="opacity-0 -translate-y-4"
+class="md:hidden absolute top-0 left-0 w-full bg-neutral-950 pt-24 px-6 pb-8 border-b border-neutral-800 shadow-2xl z-10"
+style="display: none;"
 >
 
-    <nav class="flex flex-col items-center text-center space-y-4 text-base font-bold tracking-[0.15em] uppercase text-white">
-
-        <!-- SHOP -->
-<a
-href="index.html"
-@click.prevent="
+<nav class="flex flex-col items-center text-center space-y-4 text-base font-bold tracking-[0.15em] uppercase text-white">
+    
+    <!-- SHOP -->
+    <a
+    href="index.html"
+    @click.prevent="
     mobileMenuOpen = false;
     sessionStorage.setItem('ulti_skip_loader_once', 'true');
     document.body.classList.add('opacity-0');
     setTimeout(() => window.location.href = 'index.html', 250);
+    "
+    class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
+    >
+    Shop
+</a>
+
+<!-- ULTI STORY -->
+<a
+href="story.html"
+@click.prevent="
+mobileMenuOpen = false;
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'story.html', 150);
 "
 class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
 >
-Shop
+Ulti Story
 </a>
 
-        <!-- ULTI STORY -->
-        <a
-            href="story.html"
-            @click.prevent="
-                mobileMenuOpen = false;
-                document.body.classList.add('opacity-0');
-                setTimeout(() => window.location.href = 'story.html', 150);
-            "
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
-        >
-            Ulti Story
-        </a>
+<!-- ABOUT -->
+<a
+href="about.html"
+@click.prevent="
+mobileMenuOpen = false;
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'about.html', 150);
+"
+class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
+>
+About
+</a>
 
-        <!-- ABOUT -->
-        <a
-            href="about.html"
-            @click.prevent="
-                mobileMenuOpen = false;
-                document.body.classList.add('opacity-0');
-                setTimeout(() => window.location.href = 'about.html', 150);
-            "
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
-        >
-            About
-        </a>
+<!-- FEEDBACK -->
+<a
+href="feedback.html"
+@click.prevent="
+mobileMenuOpen = false;
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'feedback.html', 400);
+"
+class="w-full text-white transition-colors hover:text-neutral-400 py-2"
+>
+Feedback
+</a>
 
-        <!-- FEEDBACK -->
-        <a
-            href="feedback.html"
-            @click.prevent="
-                mobileMenuOpen = false;
-                document.body.classList.add('opacity-0');
-                setTimeout(() => window.location.href = 'feedback.html', 400);
-            "
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2"
-        >
-            Feedback
-        </a>
+<!-- HELP -->
+<button
+@click="mobileMenuOpen = false; helpOpen = true"
+class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-t border-neutral-800/50 pt-4 mt-1"
+>
+Help / FAQs
+</button>
 
-        <!-- HELP -->
-        <button
-            @click="mobileMenuOpen = false; helpOpen = true"
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-t border-neutral-800/50 pt-4 mt-1"
-        >
-            Help / FAQs
-        </button>
-
-    </nav>
+</nav>
 
 </div>
 </header>
 
-<!-- Hero Section na may hiwalay na Desktop at Mobile Image Sliders -->
+<!-- ===== HERO ===== -->
 <section class="relative h-screen w-full overflow-hidden bg-neutral-900 flex flex-col items-center justify-between py-16">
     
-    <!-- DESKTOP SLIDER (Makikita lang sa md screen pataas) -->
+    <!-- Desktop Hero Slider -->
     <div class="absolute inset-0 hidden md:block" x-data="{ activeSlide: 0 }" x-init="setInterval(() => activeSlide = (activeSlide + 1) % config.heroImagesDesktop.length, 4000)">
         <template x-for="(img, index) in config.heroImagesDesktop" :key="index">
             <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
@@ -291,7 +288,7 @@ Shop
     </template>
 </div>
 
-<!-- MOBILE SLIDER (Makikita lang kapag nasa mobile screen) -->
+<!-- Mobile Hero Slider -->
 <div class="absolute inset-0 block md:hidden" x-data="{ activeSlide: 0 }" x-init="setInterval(() => activeSlide = (activeSlide + 1) % config.heroImagesMobile.length, 4000)">
     <template x-for="(img, index) in config.heroImagesMobile" :key="index">
         <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
@@ -429,35 +426,83 @@ Shop
     <template x-for="product in filteredProducts" :key="product.id">
         <div class="group cursor-pointer">
             <!-- Image -->
-            <div class="relative bg-neutral-100 overflow-hidden rounded-lg mb-4 aspect-[4/5]" @click="openQuickView(product)">
-                <!-- HOT badge -->
-                <template x-if="product.hot">
-                    <span class="absolute top-3 left-3 z-10 bg-neutral-900 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-2.5 py-1 rounded-sm">
-                        Hot
-                    </span>
-                </template>
-                <img :src="product.image_url || config.fallbackImage" 
-                :alt="product.name" 
-                class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
-            </div>
+            <div
+            class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5] transition-colors duration-300"
+            :class="Number(product.stock) === 0
+            ? 'bg-neutral-300'
+            : 'bg-neutral-100'"
+            @click="openQuickView(product)"
+            >
             
-            <!-- Name + Price + Add to Cart -->
-            <div class="flex items-start justify-between gap-3">
-                <div class="min-w-0" @click="openQuickView(product)">
-                    <h3 class="text-sm font-medium text-neutral-900 mb-0.5 truncate" x-text="product.name"></h3>
-                    <p class="text-sm text-neutral-500" x-text="config.currency + Number(product.price).toLocaleString()"></p>
-                </div>
-                
-                <!-- Add to Cart (Text + Icon) -->
-                <button @click.stop="addToCart(product)" 
-                class="flex-shrink-0 flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-medium text-neutral-900 hover:text-neutral-600 transition-all duration-200 active:scale-90 pt-0.5">
-                <span>Add</span>
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                </svg>
-            </button>
-        </div>
+            <!-- Product Status Badge -->
+            
+            <!-- SOLD OUT Ribbon -->
+            <template x-if="Number(product.stock) === 0">
+                <span
+                class="absolute top-5 -left-9 z-20 w-36 -rotate-45 text-center
+                text-white text-[10px] font-bold tracking-[0.22em] uppercase
+                py-2 shadow-sm pointer-events-none"
+                style="background-color: #B42318;"
+                >
+                Sold Out
+            </span>
+        </template>
+        
+        <!-- HOT only when product is available -->
+        <template x-if="product.hot && Number(product.stock) !== 0">
+            <span class="absolute top-3 left-3 z-10 bg-neutral-900 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-2.5 py-1 rounded-sm">
+                Hot
+            </span>
+        </template>
+        <img
+        :src="product.image_url || config.fallbackImage"
+        :alt="product.name"
+        class="w-full h-full object-contain transition-all duration-500"
+        :style="Number(product.stock) === 0
+        ? 'opacity: 0.32; filter: grayscale(100%);'
+        : ''"
+        :class="Number(product.stock) === 0
+        ? ''
+        : 'group-hover:scale-105'"
+        >
     </div>
+    
+    <!-- Name + Price + Add to Cart -->
+    <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0" @click="openQuickView(product)">
+            <h3 class="text-sm font-medium text-neutral-900 mb-0.5 truncate" x-text="product.name"></h3>
+            <p class="text-sm text-neutral-500" x-text="config.currency + Number(product.price).toLocaleString()"></p>
+        </div>
+        
+        <!-- Add to Cart (Text + Icon) -->
+        <!-- Available -->
+        <template x-if="Number(product.stock) !== 0">
+            <button
+            @click.stop="addToCart(product)"
+            class="flex-shrink-0 flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-medium text-neutral-900 hover:text-neutral-600 transition-all duration-200 active:scale-90 pt-0.5"
+            >
+            <span>Add</span>
+            
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+        </button>
+    </template>
+    
+    <!-- Pre-order -->
+    <template x-if="Number(product.stock) === 0 && product.reserveAllowed">
+        <button
+        @click.stop="openQuickView(product)"
+        class="flex-shrink-0 text-[11px] uppercase tracking-wider font-semibold pt-0.5 transition-colors"
+        style="color: #B42318;"
+        >
+        Pre-order
+    </button>
+</template>
+
+</div>
+</div>
 </template>
 </div>
 </main>
@@ -470,7 +515,7 @@ x-transition:enter-end="opacity-100"
 x-transition:leave="transition ease-in duration-200"
 x-transition:leave-start="opacity-100"
 x-transition:leave-end="opacity-0"
-class="fixed inset-0 z-[60] overflow-y-auto flex items-center justify-center px-4 py-6 md:py-10"
+class="fixed inset-0 z-[60] overflow-hidden flex items-center justify-center px-4 py-4 md:py-8"
 style="display: none;">
 
 <!-- Backdrop -->
@@ -483,7 +528,9 @@ style="display: none;">
     x-transition:leave="transition ease-in duration-200"
     x-transition:leave-start="opacity-100 scale-100"
     x-transition:leave-end="opacity-0 scale-95 translate-y-2"
-    class="relative bg-white rounded-2xl w-full max-w-lg md:max-w-4xl shadow-2xl z-10 overflow-hidden"
+    x-ref="quickViewScroll"
+    class="relative bg-white rounded-2xl w-full max-w-lg md:max-w-4xl shadow-2xl z-10 overflow-y-auto overscroll-contain"
+    style="max-height: calc(100dvh - 2rem);"
     :class="quickViewClosing ? 'opacity-0 scale-95' : ''">
     
     <!-- Close button -->
@@ -499,46 +546,68 @@ style="display: none;">
     
     <!-- Image Slider -->
     <div class="relative bg-neutral-50 md:w-1/2 aspect-square md:aspect-auto md:min-h-[420px]">
-        <template x-for="(img, index) in (quickViewProduct.images && quickViewProduct.images.length ? quickViewProduct.images : [quickViewProduct.image_url])" :key="index">
-            <img :src="img" 
-            :alt="quickViewProduct.name"
-            x-show="quickViewSlide === index"
-            class="absolute inset-0 w-full h-full object-contain p-6">
-        </template>
         
-        <!-- Arrows + Dots -->
-        <template x-if="quickViewProduct.images && quickViewProduct.images.length > 1">
-            <div>
-                <button @click="prevQuickViewSlide()" 
-                class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center hover:bg-white transition-colors shadow-md">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </button>
-            <button @click="nextQuickViewSlide()" 
-            class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center hover:bg-white transition-colors shadow-md">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </button>
-        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-            <template x-for="(img, index) in quickViewProduct.images" :key="index">
-                <button @click="quickViewSlide = index" 
-                class="w-2 h-2 rounded-full transition-colors"
-                :class="quickViewSlide === index ? 'bg-neutral-900' : 'bg-neutral-300'"></button>
-            </template>
-        </div>
-    </div>
+        <!-- Sold Out Badge (selected size) -->
+        <template
+        x-if="
+        selectedSize &&
+        isSizeSoldOut(
+        quickViewProduct,
+        selectedSize
+        )
+        "
+        >
+        
+        <span
+        x-transition
+        class="absolute top-4 left-4 z-20 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 rounded-sm"
+        style="background-color: #B42318;"
+        >
+        Sold Out
+    </span>
+    
+</template>
+
+<!-- Images always FULL COLOR -->
+<template x-for="(img, index) in (quickViewProduct.images && quickViewProduct.images.length ? quickViewProduct.images : [quickViewProduct.image_url])" :key="index">
+    <img
+    :src="img"
+    :alt="quickViewProduct.name"
+    x-show="quickViewSlide === index"
+    class="absolute inset-0 w-full h-full object-contain p-6"
+    >
+</template>
+
+<!-- Arrows + Dots -->
+<template x-if="quickViewProduct.images && quickViewProduct.images.length > 1">
+    <div>
+        <button @click="prevQuickViewSlide()" 
+        class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center hover:bg-white transition-colors shadow-md">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"></path>
+        </svg>
+    </button>
+    <button @click="nextQuickViewSlide()" 
+    class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center hover:bg-white transition-colors shadow-md">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"></path>
+    </svg>
+</button>
+<div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+    <template x-for="(img, index) in quickViewProduct.images" :key="index">
+        <button @click="quickViewSlide = index" 
+        class="w-2 h-2 rounded-full transition-colors"
+        :class="quickViewSlide === index ? 'bg-neutral-900' : 'bg-neutral-300'"></button>
+    </template>
+</div>
+</div>
 </template>
 </div>
 
 <!-- Product Details -->
 <div
+x-ref="productDetails"
 class="md:w-1/2 p-6 md:p-10 flex flex-col justify-center"
-x-init="
-selectedSize = null;
-sizeChartOpen = false;
-"
 >
 
 <!-- Category -->
@@ -558,7 +627,6 @@ x-text="quickViewProduct.name"
 class="text-lg text-neutral-700 mb-6"
 x-text="config.currency + Number(quickViewProduct.price).toLocaleString()"
 ></p>
-
 
 <!-- ===== SIZE SELECTOR ===== -->
 <template x-if="quickViewProduct.sizes && quickViewProduct.sizes.length">
@@ -585,29 +653,129 @@ x-text="config.currency + Number(quickViewProduct.price).toLocaleString()"
         
     </div>
     
+    <!-- Selected Sold-Out Size Notice -->
+    <div
+    x-show="
+    selectedSize &&
+    canPreOrderSize(
+    quickViewProduct,
+    selectedSize
+    )
+    "
+    x-transition
+    class="mb-3"
+    >
     
-    <!-- Size Buttons -->
-    <div class="grid grid-cols-4 gap-2">
-        
-        <template
-        x-for="size in quickViewProduct.sizes"
-        :key="size"
+    <button
+    type="button"
+    @click="
+    preOrderForm.size = selectedSize;
+    preOrderExpanded = !preOrderExpanded;
+    
+    if (preOrderExpanded) {
+        $nextTick(() => {
+            setTimeout(() => {
+                const modal = $refs.quickViewScroll;
+                const header = $refs.preOrderFormHeader;
+                
+                if (modal && header) {
+                    const modalTop = modal.getBoundingClientRect().top;
+                    const headerTop = header.getBoundingClientRect().top;
+                    
+                    const targetScroll =
+                    modal.scrollTop +
+                    (headerTop - modalTop) -
+                    8;
+                    
+                    modal.scrollTo({
+                        top: targetScroll,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 550);
+        });
+    }
+    "
+    class="w-full flex items-center justify-between gap-3
+    bg-red-50 border border-red-100
+    px-3 py-2.5 text-left"
+    >
+    <div>
+        <p
+        class="text-[9px] font-bold uppercase tracking-[0.16em]"
+        style="color: #B42318;"
         >
-        
-        <button
-        type="button"
-        @click="selectedSize = size"
-        class="h-10 border rounded-lg text-xs font-semibold transition-all duration-200"
-        :class="selectedSize === size
-        ? 'bg-neutral-900 text-white border-neutral-900'
-        : 'bg-white text-neutral-700 border-neutral-300 hover:border-neutral-900'"
-        x-text="size"
-        ></button>
-        
-    </template>
+        Size US
+        <span x-text="selectedSize"></span>
+        · Available for Pre-order
+    </p>
     
+    <p class="text-[10px] text-neutral-500 mt-0.5">
+        Tap to submit a pre-order request
+    </p>
 </div>
 
+<svg
+class="w-4 h-4 flex-shrink-0 transition-transform duration-300"
+:class="preOrderExpanded ? 'rotate-180' : ''"
+fill="none"
+stroke="currentColor"
+viewBox="0 0 24 24"
+>
+<path
+stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="1.5"
+d="M19 9l-7 7-7-7"
+></path>
+</svg>
+</button>
+</div>
+
+<!-- Size Buttons -->
+<div class="grid grid-cols-4 gap-2">
+    
+    <template
+    x-for="size in quickViewProduct.sizes"
+    :key="size"
+    >
+    
+    <button
+    type="button"
+    @click="selectProductSize(size)"
+    :disabled="
+    isSizeSoldOut(quickViewProduct, size) &&
+    quickViewProduct.reserveAllowed !== true
+    "
+    class="relative h-10 border rounded-lg text-xs font-semibold transition-all duration-200"
+    :class="
+    selectedSize === size
+    ? (
+    canPreOrderSize(quickViewProduct, size)
+    ? 'bg-red-50 border-red-600 text-red-700'
+    : 'bg-neutral-900 text-white border-neutral-900'
+    )
+    : (
+    canPreOrderSize(quickViewProduct, size)
+    ? 'bg-red-50/40 border-red-300 text-red-700 hover:border-red-600'
+    : isSizeSoldOut(quickViewProduct, size)
+    ? 'bg-neutral-100 border-neutral-200 text-neutral-300 line-through cursor-not-allowed'
+    : 'bg-white text-neutral-700 border-neutral-300 hover:border-neutral-900'
+    )
+    "
+    >
+    <span x-text="size"></span>
+    
+    <!-- Pre-orderable sold-out indicator -->
+    <span
+    x-show="canPreOrderSize(quickViewProduct, size)"
+    class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full"
+    style="background-color: #B42318;"
+    ></span>
+</button>
+
+</template>
+</div>
 
 <!-- ===== SIZE CHART TOGGLE ===== -->
 <button
@@ -615,7 +783,6 @@ type="button"
 @click="sizeChartOpen = !sizeChartOpen"
 class="mt-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-500 hover:text-neutral-900 transition-colors"
 >
-
 <span x-text="config.sizeChart.label"></span>
 
 <svg
@@ -632,9 +799,7 @@ stroke-width="1.5"
 d="M19 9l-7 7-7-7"
 />
 </svg>
-
 </button>
-
 
 <!-- ===== SLIDE-DOWN SIZE CHART ===== -->
 <div
@@ -643,16 +808,325 @@ class="grid transition-all duration-500 ease-in-out"
 ? 'grid-rows-[1fr] opacity-100'
 : 'grid-rows-[0fr] opacity-0'"
 >
-
 <div class="overflow-hidden">
-    
     <div class="pt-4">
-        
         <img
         :src="config.sizeChart.image"
-        alt="Nike Mind 001 Size Chart"
+        alt="Size Chart"
         class="w-full h-auto rounded-lg border border-neutral-200"
         >
+    </div>
+</div>
+</div>
+
+<!-- ===== SELECTED SIZE PRE-ORDER FORM (below Size Chart) ===== -->
+<div
+x-ref="preOrderSection"
+class="grid transition-all duration-500 ease-in-out"
+:class="
+preOrderExpanded &&
+selectedSize &&
+canPreOrderSize(
+quickViewProduct,
+selectedSize
+)
+? 'grid-rows-[1fr] opacity-100'
+: 'grid-rows-[0fr] opacity-0'
+"
+>
+<div class="overflow-hidden">
+    <div class="pt-4 space-y-4 pb-24 md:pb-4">
+        
+        <!-- Pre-selected Size -->
+        <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+            <div>
+                <p class="text-[9px] uppercase tracking-[0.16em] text-neutral-400">
+                    Pre-order Size
+                </p>
+                <p class="text-sm font-bold text-neutral-900 mt-1">
+                    US <span x-text="preOrderForm.size"></span>
+                </p>
+            </div>
+            <span
+            class="text-[9px] uppercase tracking-[0.14em] font-semibold"
+            style="color: #B42318;"
+            >
+            Sold Out
+        </span>
+    </div>
+    
+    <!-- Pre-order Form Header -->
+    <div
+    x-ref="preOrderFormHeader"
+    class="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3"
+    >
+    <p
+    class="text-[10px] font-bold uppercase tracking-[0.18em]"
+    style="color: #B42318;"
+    >
+    Pre-order Form
+</p>
+
+<p class="text-xs text-neutral-600 mt-1">
+    Complete the details below for Size US
+    <span
+    class="font-semibold text-neutral-900"
+    x-text="preOrderForm.size"
+    ></span>
+</p>
+</div>
+
+<!-- Estimated Delivery -->
+<div
+class="flex items-center justify-between border-b border-neutral-100 pb-3"
+>
+<div>
+    <p
+        class="text-[9px] uppercase tracking-[0.16em] text-neutral-400"
+    >
+        Estimated Delivery
+    </p>
+
+    <p class="text-sm font-bold text-neutral-900 mt-1">
+        5–7 days
+    </p>
+</div>
+
+<p class="text-[10px] text-neutral-400 text-right leading-relaxed">
+    After pre-order<br>
+    confirmation
+</p>
+</div>
+
+
+<!-- Full Name -->
+<div>
+    <label
+    class="block text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-500 mb-1.5"
+    >
+    Full Name
+</label>
+
+<input
+type="text"
+x-model="preOrderForm.name"
+placeholder="Enter your full name"
+class="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-xs focus:outline-none focus:border-neutral-900"
+>
+</div>
+
+<!-- Contact -->
+<div>
+    <label class="block text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-500 mb-1.5">
+        Contact Number
+    </label>
+    <input
+    type="tel"
+    x-model="preOrderForm.contact"
+    placeholder="09XX XXX XXXX"
+    class="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-xs focus:outline-none focus:border-neutral-900"
+    >
+</div>
+
+<!-- Location -->
+<div>
+    <label
+    class="block text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-500 mb-1.5"
+    >
+    Location
+</label>
+
+<input
+type="text"
+x-model="preOrderForm.location"
+placeholder="City / Municipality, Province"
+class="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-xs focus:outline-none focus:border-neutral-900"
+>
+</div>
+
+<!-- Note -->
+<div>
+    <div class="flex items-center justify-between mb-1.5">
+        
+        <label
+        class="text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-500"
+        >
+        Note
+        <span class="font-normal text-neutral-400">
+            (Optional)
+        </span>
+    </label>
+    
+    <span
+    class="text-[9px] text-neutral-400"
+    x-text="`${preOrderForm.note.length} / 150`"
+    ></span>
+    
+</div>
+
+<textarea
+x-model="preOrderForm.note"
+maxlength="150"
+rows="3"
+placeholder="Optional note for your pre-order"
+class="w-full resize-none border border-neutral-200 rounded-lg px-3 py-2.5 text-xs leading-relaxed focus:outline-none focus:border-neutral-900"
+></textarea>
+</div>
+
+<!-- Quantity -->
+<div class="flex items-center justify-between">
+    <p class="text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-500">
+        Quantity
+    </p>
+    <div class="flex items-center gap-3">
+        <button
+        type="button"
+        @click="preOrderForm.quantity = Math.max(1, preOrderForm.quantity - 1)"
+        class="w-8 h-8 border border-neutral-200 rounded-lg text-xs"
+        >−</button>
+        <span class="text-xs font-semibold" x-text="preOrderForm.quantity"></span>
+        <button
+        type="button"
+        @click="preOrderForm.quantity++"
+        class="w-8 h-8 border border-neutral-200 rounded-lg text-xs"
+        >+</button>
+    </div>
+</div>
+
+<!-- ===== PRE-ORDER PAYMENT ===== -->
+<div class="border-t border-neutral-100 pt-4">
+    
+    <div class="flex items-center justify-between mb-3">
+        
+        <div>
+            <p
+            class="text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-500"
+            >
+            Required Downpayment
+        </p>
+        
+        <p
+        class="text-lg font-bold mt-1"
+        style="color: #B42318;"
+        x-text="
+        config.currency +
+        Number(config.payments.preorderDownpayment).toLocaleString()
+        "
+        ></p>
+    </div>
+    
+    <span
+    class="text-[9px] uppercase tracking-[0.14em] font-semibold bg-red-50 px-2.5 py-1.5 rounded"
+    style="color: #B42318;"
+    >
+    Required
+</span>
+
+</div>
+
+
+<!-- GCash Details -->
+<div class="bg-neutral-100 rounded-xl p-4 mb-4">
+    
+    <div class="flex items-start justify-between gap-4">
+        
+        <div class="min-w-0">
+            
+            <p
+            class="text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-500 mb-2"
+            >
+            Pay via GCash
+        </p>
+        
+        <p
+        class="text-sm font-bold text-neutral-900"
+        x-text="config.payments.gcash.number"
+        ></p>
+        
+        <p
+        class="text-[11px] text-neutral-500 mt-1"
+        x-text="config.payments.gcash.accountName"
+        ></p>
+        
+    </div>
+    
+    
+    <!-- QR -->
+    <div
+    class="w-36 h-36 md:w-40 md:h-40 bg-white border border-neutral-200 rounded-xl overflow-hidden flex-shrink-0"
+    >
+    <img
+    :src="config.payments.gcash.qrImage"
+    alt="GCash QR Code"
+    class="w-full h-full object-contain p-0.5"
+    >
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Upload Proof -->
+<div>
+    
+    <label
+    class="block text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-500 mb-2"
+    >
+    Upload Payment Screenshot
+</label>
+
+<label
+class="flex items-center justify-center w-full border border-dashed border-neutral-300 rounded-xl px-4 py-4 cursor-pointer hover:border-neutral-900 transition-colors"
+>
+
+<input
+type="file"
+accept="image/*"
+class="hidden"
+@change="handlePreOrderProof($event)"
+>
+
+<div class="text-center">
+    
+    <p class="text-xs font-semibold text-neutral-800">
+        Choose screenshot
+    </p>
+    
+    <p class="text-[10px] text-neutral-400 mt-1">
+        JPG, PNG or image file · Max 5MB
+    </p>
+    
+</div>
+
+</label>
+
+
+<!-- Selected File -->
+<div
+x-show="preOrderForm.proofFile"
+class="mt-3"
+>
+
+<div class="flex items-center gap-3">
+    
+    <img
+    x-show="preOrderForm.proofPreview"
+    :src="preOrderForm.proofPreview"
+    alt="Payment proof preview"
+    class="w-14 h-14 object-cover rounded-lg border border-neutral-200"
+    >
+    
+    <div class="min-w-0">
+        
+        <p
+        class="text-[11px] font-medium text-neutral-800 truncate"
+        x-text="preOrderForm.proofFile?.name"
+        ></p>
+        
+        <p class="text-[10px] text-neutral-400 mt-0.5">
+            Payment screenshot selected
+        </p>
         
     </div>
     
@@ -662,10 +1136,37 @@ class="grid transition-all duration-500 ease-in-out"
 
 </div>
 
+</div>
+
+<!-- Notice -->
+<p class="text-[10px] text-neutral-500 leading-relaxed">
+    A ₱500 downpayment and payment screenshot are required to submit this pre-order request. Final availability and payment verification will still be confirmed by our team.
+</p>
+
+<!-- Submit -->
+<button
+type="button"
+@click="submitPreOrderPreview()"
+class="w-full text-white text-[10px] uppercase tracking-[0.16em] py-3.5 rounded-full font-semibold"
+style="background-color: #B42318;"
+>
+Submit Pre-order Request
+</button>
+
+</div>
+</div>
+</div>
+
+</div>
 </template>
 
-
-<!-- ===== ADD TO CART ===== -->
+<!-- ===== ADD TO CART (disappears when red/sold-out size is selected) ===== -->
+<template
+x-if="
+!selectedSize ||
+!isSizeSoldOut(quickViewProduct, selectedSize)
+"
+>
 <button
 @click="
 if (!quickViewProduct.sizes || !quickViewProduct.sizes.length || selectedSize) {
@@ -678,7 +1179,7 @@ quickViewProduct.sizes && quickViewProduct.sizes.length && !selectedSize
 ? 'bg-neutral-300 text-neutral-500 cursor-not-allowed'
 : 'bg-neutral-900 text-white hover:bg-neutral-800 active:scale-[0.98]'
 "
-class="w-full text-xs uppercase tracking-wider py-4 rounded-full font-medium transition-all duration-300"
+class="w-full text-xs uppercase tracking-wider py-4 rounded-full font-medium transition-all duration-300 mt-4"
 >
 <span
 x-text="
@@ -690,6 +1191,7 @@ quickViewProduct.sizes.length &&
 "
 ></span>
 </button>
+</template>
 
 </div>
 </div>
@@ -728,10 +1230,10 @@ x-transition:leave-end="opacity-0 scale-95">
     
     <div class="flex-1 overflow-y-auto px-6 py-4 space-y-2">
         <template x-for="(faq, index) in [
-        { q: 'How long is shipping?', a: 'Metro Manila deliveries usually take 1-2 business days. Orders shipped via J&T usually take 2-5 business days. Delivery times may vary slightly during holidays, sale periods, or due to courier delays.' },
-        { q: 'How much is the shipping fee?', a: 'Shipping fee is calculated based on your location and will show up on the checkout page before you confirm your order. Any applicable promo is automatically reflected in the total.' },
+        { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
+        { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
         { q: 'How can I track my order?', a: 'For order status and delivery updates, please message us directly through our Facebook Page via Messenger. Our team will assist you and provide the latest update regarding your order.' },
-        { q: 'What payment methods do you accept?', a: 'We accept GCash, Maya, and Bank Transfer. After completing your payment, please send your proof of payment or receipt directly to our Facebook Page via Messenger for verification.' },
+        { q: 'What payment methods do you accept?', a: 'We accept GCash, Maya, and Bank Transfer. Please send your order through Messenger first so our team can confirm product availability and your final total. Payment instructions will be provided after your order is confirmed.' },
         { q: 'Can I cancel or change my order?', a: 'Yes, as long as it hasn\'t been shipped out yet. Message us on Facebook or Messenger right away so we can assist you.' },
         { q: 'What is your exchange policy?', a: 'We do not offer cash or monetary refunds. Items may only be exchanged for a different shoe or a different size, subject to availability. If you receive a wrong or damaged item, please contact us immediately through our Facebook Page via Messenger and provide your proof of purchase, order details, and clear photos of the item. Once verified, we will arrange a replacement or exchange at no additional cost.' },
         { q: 'How can I reach customer support?', a: 'You can message us through our Facebook Page or Messenger — the links are in our site footer. We respond to messages within business hours.' }
@@ -812,16 +1314,6 @@ x-transition:leave-end="translate-x-full">
                 class="text-sm font-medium text-neutral-900"
                 x-text="item.name"
                 ></h4>
-                <p
-    x-show="item.selectedSize !== null && item.selectedSize !== undefined"
-    class="text-xs text-neutral-500 mt-1"
->
-    Size:
-    <span
-        class="font-medium"
-        x-text="'US ' + item.selectedSize"
-    ></span>
-</p>
                 
                 <!-- Size -->
                 <p

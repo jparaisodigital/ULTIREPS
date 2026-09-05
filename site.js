@@ -3,7 +3,6 @@ document.addEventListener('alpine:init', () => {
         config: window.CONFIG,
         cartOpen: false,
         helpOpen: false,
-        checkoutModalOpen: false,
         mobileMenuOpen: false,
         
         // Products & Filtering
@@ -19,7 +18,6 @@ document.addEventListener('alpine:init', () => {
         quickViewClosing: false,
         headerHidden: false,
         lastScrollY: 0,
-        scrolledPastHero: false,
         
         // Cart State
         cart: JSON.parse(localStorage.getItem('ulti_cart')) || [],
@@ -44,6 +42,21 @@ document.addEventListener('alpine:init', () => {
         hotToastVisible: false,
         selectedSize: null,
         sizeChartOpen: false,
+        preOrderExpanded: false,
+        // Pre-order Modal State
+        preOrderModalOpen: false,
+        preOrderProduct: null,
+        
+        preOrderForm: {
+            name: '',
+            contact: '',
+            location: '',
+            note: '',
+            size: null,
+            quantity: 1,
+            proofFile: null,
+            proofPreview: ''
+        },
         
         // ===== SITE LOADER STATE =====
         siteLoaderVisible: true,
@@ -148,14 +161,7 @@ document.addEventListener('alpine:init', () => {
             }
         },
         
-        // ===== HOT PRODUCTS =====
-        get hotProducts() {
-            return this.products.filter(p => p.hot === true);
-        },
-        
         initShop() {
-            this.initHeader();
-            
             // Load products directly from config.js
             this.products = Array.isArray(this.config.products)
             ? this.config.products
@@ -187,9 +193,6 @@ document.addEventListener('alpine:init', () => {
             
             window.addEventListener('scroll', () => {
                 const currentY = window.scrollY;
-                
-                // Header background change after hero
-                this.scrolledPastHero = currentY > window.innerHeight - 80;
                 
                 // Hide / show logic
                 if (currentY < 80) {
@@ -281,6 +284,18 @@ document.addEventListener('alpine:init', () => {
             this.selectedSize = null;
             this.sizeChartOpen = false;
             
+            this.preOrderExpanded = false;
+            
+            this.preOrderForm = {
+                name: '',
+                contact: '',
+                size: null,
+                quantity: 1,
+                proofFile: null,
+                proofPreview: ''
+            };
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
             this.quickViewOpen = true;
         },
         
@@ -289,6 +304,131 @@ document.addEventListener('alpine:init', () => {
             this.quickViewOpen = false;
             this.quickViewProduct = null;
             this.quickViewClosing = false;
+            
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+        },
+        
+        // ===== PRE-ORDER MODAL =====
+        openPreOrderModal(product) {
+            if (!product) return;
+            
+            if (
+                Number(product.stock) !== 0 ||
+                product.reserveAllowed !== true
+            ) {
+                return;
+            }
+            
+            this.preOrderProduct = product;
+            
+            this.preOrderForm = {
+                name: '',
+                contact: '',
+                size: null,
+                quantity: 1
+            };
+            
+            this.preOrderModalOpen = true;
+            
+        },
+        
+        handlePreOrderProof(event) {
+            const file = event.target.files?.[0];
+            
+            if (!file) {
+                this.preOrderForm.proofFile = null;
+                this.preOrderForm.proofPreview = '';
+                return;
+            }
+            
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file.');
+                event.target.value = '';
+                return;
+            }
+            
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            
+            if (file.size > maxSize) {
+                alert('Payment screenshot must be 5MB or smaller.');
+                event.target.value = '';
+                return;
+            }
+            
+            this.preOrderForm.proofFile = file;
+            
+            if (this.preOrderForm.proofPreview) {
+                URL.revokeObjectURL(this.preOrderForm.proofPreview);
+            }
+            
+            this.preOrderForm.proofPreview =
+            URL.createObjectURL(file);
+        },
+        
+        closePreOrderModal() {
+            this.preOrderModalOpen = false;
+            this.preOrderProduct = null;
+            
+            this.preOrderForm = {
+                name: '',
+                contact: '',
+                size: null,
+                quantity: 1
+            };
+        },
+        
+        submitPreOrderPreview() {
+            if (!this.preOrderProduct) return;
+            
+            if (!this.preOrderForm.name.trim()) {
+                alert('Please enter your name.');
+                return;
+            }
+            
+            if (!this.preOrderForm.contact.trim()) {
+                alert('Please enter your contact number.');
+                return;
+            }
+
+            if (!this.preOrderForm.location.trim()) {
+                alert('Please enter your location.');
+                return;
+            }
+            
+            if (
+                this.preOrderProduct.sizes &&
+                this.preOrderProduct.sizes.length &&
+                !this.preOrderForm.size
+            ) {
+                alert('Please select a size.');
+                return;
+            }
+            
+            if (!this.preOrderForm.proofFile) {
+                alert('Please upload your GCash payment screenshot.');
+                return;
+            }
+            
+            console.log('PRE-ORDER PREVIEW:', {
+                productId: product.id,
+                productName: product.name,
+                size: this.preOrderForm.size,
+                quantity: this.preOrderForm.quantity,
+            
+                name: this.preOrderForm.name,
+                contact: this.preOrderForm.contact,
+                location: this.preOrderForm.location,
+                note: this.preOrderForm.note,
+            
+                requiredDownpayment:
+                    this.config.payments.preorderDownpayment,
+            
+                proofFile:
+                    this.preOrderForm.proofFile.name
+            });
+            
+            alert('Pre-order form is ready. Google Sheet submission will be connected next.');
         },
         
         // Add to cart then close with animation
@@ -342,6 +482,94 @@ document.addEventListener('alpine:init', () => {
             });
         },
         
+        // ===== PER-SIZE INVENTORY =====
+        
+        getSizeStock(product, size) {
+            if (!product) return null;
+            
+            if (product.stockBySize) {
+                const key = String(size);
+                
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        product.stockBySize,
+                        key
+                    )
+                ) {
+                    return Number(product.stockBySize[key]) || 0;
+                }
+            }
+            
+            // Fallback for old global stock format
+            if (
+                product.stock !== undefined &&
+                product.stock !== null &&
+                product.stock !== ''
+            ) {
+                return Number(product.stock) || 0;
+            }
+            
+            // No inventory data yet
+            return null;
+        },
+        
+        isSizeSoldOut(product, size) {
+            const stock = this.getSizeStock(product, size);
+            
+            return stock !== null && stock <= 0;
+        },
+        
+        canPreOrderSize(product, size) {
+            return (
+                this.isSizeSoldOut(product, size) &&
+                product.reserveAllowed === true
+            );
+        },
+        
+        isProductSoldOut(product) {
+            if (!product) return false;
+            
+            if (
+                Array.isArray(product.sizes) &&
+                product.sizes.length &&
+                product.stockBySize
+            ) {
+                return product.sizes.every(size => {
+                    const stock = this.getSizeStock(product, size);
+                    
+                    return stock !== null && stock <= 0;
+                });
+            }
+            
+            if (
+                product.stock !== undefined &&
+                product.stock !== null &&
+                product.stock !== ''
+            ) {
+                return Number(product.stock) <= 0;
+            }
+            
+            return false;
+        },
+        
+        selectProductSize(size) {
+            this.selectedSize = size;
+            
+            if (
+                this.canPreOrderSize(
+                    this.quickViewProduct,
+                    size
+                )
+            ) {
+                // Remember which sold-out size customer wants
+                this.preOrderForm.size = size;
+            } else {
+                // Back to normal purchase mode
+                this.preOrderExpanded = false;
+                this.preOrderForm.size = null;
+            }
+        },
+        
         get cartCount() {
             return this.cart.reduce((sum, item) => sum + item.quantity, 0);
         },
@@ -350,7 +578,8 @@ document.addEventListener('alpine:init', () => {
             return this.cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
         },
         
-        // Same Day Delivery fee (₱150)
+        
+        // Standard shipping fee based on region
         get regionShippingFee() {
             if (this.form.deliveryOption === 'same_day') return 0;
             if (this.form.region === 'luzon') return 100;
@@ -367,6 +596,12 @@ document.addEventListener('alpine:init', () => {
             // Products with sizes must have a selected size
             if (product.sizes && product.sizes.length && !size) {
                 this.openQuickView(product);
+                return;
+            }
+            
+            // Never add a zero-stock size to the normal cart
+            if (size && this.isSizeSoldOut(product, size)) {
+                alert(`Size US ${size} is currently sold out.`);
                 return;
             }
             
@@ -429,13 +664,6 @@ document.addEventListener('alpine:init', () => {
             localStorage.setItem('ulti_cart', JSON.stringify(this.cart));
         },
         
-        // Used by checkout.html
-        initCheckoutPage() {
-            this.initHeader();
-            // Reload cart from localStorage in case it changed
-            this.cart = JSON.parse(localStorage.getItem('ulti_cart')) || [];
-        },
-        
         openPaymentModal() {
             
             if (
@@ -491,7 +719,6 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
             
-            // Standard delivery requires payment method.
             // Same-day is arranged separately via Messenger / COD.
             if (
                 this.form.deliveryOption !== 'same_day' &&
@@ -511,7 +738,7 @@ document.addEventListener('alpine:init', () => {
             // ===== PAYMENT LABEL =====
             const paymentLabel =
             this.form.deliveryOption === 'same_day'
-            ? 'Cash on Delivery / Arrange via Messenger'
+            ? 'Payment arrangement via Messenger'
             : ({
                 gcash: 'GCash',
                 maya: 'Maya',
@@ -590,9 +817,13 @@ document.addEventListener('alpine:init', () => {
             `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
             
             // ===== MESSENGER =====
-            const messengerBase =
-            this.config.socials?.messenger ||
-            "https://m.me/61551038027330";
+            const messengerBase = this.config.socials?.messenger;
+            
+            if (!messengerBase) {
+                this.isSubmitting = false;
+                alert("Messenger link is not configured.");
+                return;
+            }
             
             this.messengerLink =
             messengerBase +

@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title x-text="'About Us | ' + config.storeName"></title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js CDN -->
-    <!-- Alpine Collapse Plugin -->
-<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Alpine.js -->
+<!-- Alpine.js + Collapse Plugin -->
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- Google Fonts: Space Grotesk para makuha ang vibe ng image -->
+
+<!-- Google Fonts: Space Grotesk -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Space Grotesk', sans-serif; }
@@ -94,7 +93,6 @@
 </div>
 </div>
 
-<!-- Mobile Menu -->
 <!-- Mobile Menu Dropdown -->
 <div
     x-show="mobileMenuOpen"
@@ -186,7 +184,7 @@ Shop
         <div class="flex-grow border-t border-neutral-400"></div>
     </div>
     
-    <!-- Teksto mula sa image ng client -->
+    <!-- About Copy -->
     <div class="space-y-6 text-sm md:text-base font-medium tracking-[0.15em] leading-relaxed text-neutral-800 uppercase max-w-2xl mx-auto">
         <p>Welcome to Ulti.</p>
         <p>We offer premium-quality footwear, bags, slides, and fashion accessories at affordable prices.</p>
@@ -226,10 +224,10 @@ Shop
 
             <div class="flex-1 overflow-y-auto px-6 py-4 space-y-2">
                 <template x-for="(faq, index) in [
-    { q: 'How long is shipping?', a: 'Metro Manila deliveries usually take 1-2 business days. Orders shipped via J&T usually take 2-5 business days. Delivery times may vary slightly during holidays, sale periods, or due to courier delays.' },
-    { q: 'How much is the shipping fee?', a: 'Shipping fee is calculated based on your location and will show up on the checkout page before you confirm your order. Any applicable promo is automatically reflected in the total.' },
+    { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
+    { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
     { q: 'How can I track my order?', a: 'For order status and delivery updates, please message us directly through our Facebook Page via Messenger. Our team will assist you and provide the latest update regarding your order.' },
-    { q: 'What payment methods do you accept?', a: 'We accept GCash, Maya, and Bank Transfer. After completing your payment, please send your proof of payment or receipt directly to our Facebook Page via Messenger for verification.' },
+    { q: 'What payment methods do you accept?', a: 'We accept GCash, Maya, and Bank Transfer. Please send your order through Messenger first so our team can confirm product availability and your final total. Payment instructions will be provided after your order is confirmed.' },
     { q: 'Can I cancel or change my order?', a: 'Yes, as long as it hasn\'t been shipped out yet. Message us on Facebook or Messenger right away so we can assist you.' },
     { q: 'What is your exchange policy?', a: 'We do not offer cash or monetary refunds. Items may only be exchanged for a different shoe or a different size, subject to availability. If you receive a wrong or damaged item, please contact us immediately through our Facebook Page via Messenger and provide your proof of purchase, order details, and clear photos of the item. Once verified, we will arrange a replacement or exchange at no additional cost.' },
     { q: 'How can I reach customer support?', a: 'You can message us through our Facebook Page or Messenger — the links are in our site footer. We respond to messages within business hours.' }
