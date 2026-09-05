@@ -304,19 +304,32 @@ x-transition:leave-end="translate-x-full">
     </div>
     
     <div class="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-        <template x-for="item in cart" :key="item.id">
+        <template
+    x-for="item in cart"
+    :key="`${item.id}-${item.selectedSize ?? 'no-size'}`"
+>
             <div class="flex items-center space-x-4 border-b border-neutral-100 pb-4">
                 <img :src="item.image_url || config.fallbackImage" class="w-16 h-20 object-cover rounded bg-neutral-100">
                 <div class="flex-1">
                     <h4 class="text-sm font-medium text-neutral-900" x-text="item.name"></h4>
+                    <p
+    x-show="item.selectedSize !== null && item.selectedSize !== undefined"
+    class="text-xs text-neutral-500 mt-1"
+>
+    Size:
+    <span
+        class="font-medium"
+        x-text="'US ' + item.selectedSize"
+    ></span>
+</p>
                     <p class="text-xs text-neutral-500 mt-1" x-text="config.currency + Number(item.price).toLocaleString()"></p>
                     <div class="flex items-center space-x-3 mt-2">
-                        <button @click="updateQuantity(item.id, -1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">-</button>
+                        <button @click="updateQuantity(item.id, item.selectedSize, -1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">-</button>
                         <span class="text-xs font-medium" x-text="item.quantity"></span>
-                        <button @click="updateQuantity(item.id, 1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">+</button>
+                        <button @click="updateQuantity(item.id, item.selectedSize, 1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">+</button>
                     </div>
                 </div>
-                <button @click="removeFromCart(item.id)" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors">Remove</button>
+                <button @click="removeFromCart(item.id, item.selectedSize)" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors">Remove</button>
             </div>
         </template>
         <div x-show="cart.length === 0" class="text-center py-12 text-neutral-400 text-sm">

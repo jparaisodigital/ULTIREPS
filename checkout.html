@@ -202,17 +202,19 @@ Shop
             <div class="max-w-md mx-auto text-center py-20 space-y-6">
                 <div class="w-14 h-14 bg-neutral-900 text-white rounded-full flex items-center justify-center mx-auto text-xl">✓</div>
                 
-                <h2 class="text-xl font-bold tracking-wide uppercase">Order Submitted</h2>
+                <h2 class="text-xl font-bold tracking-wide uppercase">
+                    Continue in Messenger
+                </h2>
                 
                 <p class="text-sm text-neutral-600 leading-relaxed">
-                    You are being redirected to Messenger.<br>
-                    If it didn’t open automatically, click the button below.
+                    Your order details are ready.<br>
+                    Please send the prepared message in Messenger to complete your order request.
                 </p>
                 
                 <a :href="messengerLink" 
                 target="_blank"
                 class="inline-flex items-center justify-center w-full bg-[#0084FF] text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-[#006AFF] transition-colors">
-                Open Messenger
+                Send Order via Messenger
             </a>
             
             <a href="index.html" class="inline-block text-xs uppercase tracking-wider text-neutral-500 hover:text-neutral-900 transition-colors">
@@ -467,51 +469,25 @@ Shop
 </label>
 </div>
 
-<!-- Payment Instructions -->
-<div class="bg-neutral-50 rounded-xl p-5 text-sm space-y-2 border border-neutral-200" x-show="form.paymentMethod">
-    <template x-if="form.paymentMethod === 'gcash'">
-        <div>
-            <p class="font-bold uppercase tracking-wide text-xs mb-2">
-                GCash Payment Details
-            </p>
-            
-            <p class="text-neutral-700">
-                Send payment to: <strong>09XX XXX XXXX</strong>
-            </p>
-            
-            <!-- GCASH SCREENSHOT -->
-            <div class="mt-4 flex justify-center">
-                <img
-                src="assets/gcash.jpg"
-                alt="GCash Payment Details"
-                class="w-full max-w-[280px] h-auto rounded-xl border border-neutral-200 object-contain"
-                >
-            </div>
-            
-            <div class="mt-4 text-xs text-neutral-500 space-y-1">
-                <p>1. Scan QR & pay.</p>
-                <p>2. Click Place Order.</p>
-                <p>3. Send screenshot in Messenger.</p>
-            </div>
-        </div>
-    </template>
-    <template x-if="form.paymentMethod === 'maya'">
-        <div>
-            <p class="font-bold uppercase tracking-wide text-xs mb-2">Maya Payment Details</p>
-            <p class="text-neutral-700">Send payment to: <strong>09XX XXX XXXX</strong></p>
-            <p class="text-neutral-700">Account Name: <strong>ULTI</strong></p>
-            <p class="text-xs text-neutral-500 mt-2">After clicking Place Order, you will be redirected to Messenger.</p>
-        </div>
-    </template>
-    <template x-if="form.paymentMethod === 'bank'">
-        <div>
-            <p class="font-bold uppercase tracking-wide text-xs mb-2">Bank Transfer Details</p>
-            <p class="text-neutral-700">Bank: <strong>BDO / BPI / Metrobank</strong></p>
-            <p class="text-neutral-700">Account Name: <strong>ULTI</strong></p>
-            <p class="text-neutral-700">Account Number: <strong>XXXX XXXX XXXX</strong></p>
-            <p class="text-xs text-neutral-500 mt-2">After clicking Place Order, you will be redirected to Messenger.</p>
-        </div>
-    </template>
+<!-- Payment Method Notice -->
+<div
+    class="bg-neutral-50 rounded-xl p-5 text-sm border border-neutral-200"
+    x-show="form.paymentMethod"
+>
+    <p class="font-bold uppercase tracking-wide text-xs mb-2">
+        Payment Confirmation
+    </p>
+
+    <p class="text-neutral-600 text-xs leading-relaxed">
+        Your selected payment method will be included in your order request.
+        Please send your order through Messenger first.
+        Our team will verify product availability and your final order total
+        before providing payment instructions.
+    </p>
+
+    <p class="text-neutral-500 text-xs mt-3">
+        Please do not send payment until your order has been confirmed through Messenger.
+    </p>
 </div>
 </section>
 
@@ -611,23 +587,9 @@ Shop
 </button>
 
 
-<!-- Desktop Place Order Button -->
+<!-- Place Order Button -->
 <button
-@click="openPaymentModal()"
-:disabled="
-!form.email ||
-!form.firstName ||
-!form.lastName ||
-!form.address ||
-!form.contact ||
-!form.region ||
-(form.deliveryOption !== 'same_day' && !form.paymentMethod)
-"
-class="hidden lg:block w-full mt-10 bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
->
-Place Order
-</button>
-
+    @click="openPaymentModal()"
 <p class="text-[11px] text-neutral-500 text-center mt-4 leading-relaxed">
     By submitting, you agree that your order details will be sent for verification.
 </p>
@@ -752,6 +714,16 @@ x-transition:leave-end="translate-x-full">
                 class="text-sm font-medium text-neutral-900"
                 x-text="item.name"
                 ></h4>
+                <p
+    x-show="item.selectedSize !== null && item.selectedSize !== undefined"
+    class="text-xs text-neutral-500 mt-1"
+>
+    Size:
+    <span
+        class="font-medium"
+        x-text="'US ' + item.selectedSize"
+    ></span>
+</p>
                 
                 <!-- Selected Size -->
                 <p

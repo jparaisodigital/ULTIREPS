@@ -39,31 +39,52 @@ window.CONFIG = {
     // Logo (PNG or SVG with transparent background recommended)
     logo: "assets/logo.png",          
     logoWhite: "assets/logo-white.png", 
-
+    
     // ===== SITE LOADING SCREEN =====
-siteLoader: {
-    enabled: true,
-
-    logo: "assets/logo.png",
-    background: "#ffffff",
-    logoFilter: "brightness(0)",
-
-    logoWidth: "clamp(90px, 16vw, 170px)",
-
-    minDuration: 1500,
-    fadeDuration: 600,
-    breatheDuration: 1000,
-
-    // false = lalabas ulit kapag nirefresh ang site
-    showOncePerSession: false
-},
+    siteLoader: {
+        enabled: true,
+        
+        logo: "assets/logo.png",
+        background: "#ffffff",
+        logoFilter: "brightness(0)",
+        
+        logoWidth: "clamp(90px, 16vw, 170px)",
+        
+        minDuration: 1500,
+        fadeDuration: 600,
+        breatheDuration: 1000,
+        
+        // false = lalabas ulit kapag nirefresh ang site
+        showOncePerSession: false
+    },
     
     // Social Media Links
     socials: {
-        facebook: "https://www.facebook.com/profile.php?id=61551038027330",
+        facebook: "https://www.facebook.com/profile.php?id=61551038027330&locale=ps_AF#",
         instagram: "https://www.instagram.com/ultireps.ph/",
-        tiktok: "https://tiktok.com/@YOUR_PAGE",
+        tiktok: "https://www.tiktok.com/@ultireps.ph",
         messenger: "https://m.me/61551038027330"
+        
+    },
+    
+    // Payment Information
+    payments: {
+        gcash: {
+            number: "09XX XXX XXXX",
+            accountName: "ULTI REPS",
+            qrImage: "assets/gcash.jpg"
+        },
+        
+        maya: {
+            number: "09XX XXX XXXX",
+            accountName: "ULTI REPS"
+        },
+        
+        bank: {
+            bankName: "YOUR BANK",
+            accountName: "ULTI REPS",
+            accountNumber: "XXXX XXXX XXXX"
+        }
     },
     
     sizeChart: {

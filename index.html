@@ -812,6 +812,16 @@ x-transition:leave-end="translate-x-full">
                 class="text-sm font-medium text-neutral-900"
                 x-text="item.name"
                 ></h4>
+                <p
+    x-show="item.selectedSize !== null && item.selectedSize !== undefined"
+    class="text-xs text-neutral-500 mt-1"
+>
+    Size:
+    <span
+        class="font-medium"
+        x-text="'US ' + item.selectedSize"
+    ></span>
+</p>
                 
                 <!-- Size -->
                 <p
@@ -897,60 +907,6 @@ Your cart is empty.
 </div>
 </div>
 </div>
-</div>
-
-<!-- Checkout Modal with GCash Upload -->
-<div x-show="checkoutModalOpen" class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center px-4" style="display: none;">
-    <!-- Backdrop -->
-    <div @click="checkoutModalOpen = false" class="absolute inset-0 bg-neutral-900/50 backdrop-blur-sm"></div>
-    
-    <div class="relative bg-white rounded-2xl max-w-lg w-full p-8 shadow-2xl z-10 overflow-hidden">
-        <div class="flex justify-between items-center mb-6 border-b border-neutral-100 pb-4">
-            <h3 class="text-lg font-medium tracking-tight">Checkout Details</h3>
-            <button @click="checkoutModalOpen = false" class="text-neutral-400 hover:text-neutral-900">✕</button>
-        </div>
-        
-        <!-- Success State View -->
-        <template x-if="orderSuccess">
-            <div class="text-center py-8 space-y-4">
-                <div class="w-12 h-12 bg-neutral-900 text-white rounded-full flex items-center justify-center mx-auto text-xl">✓</div>
-                <h4 class="text-lg font-medium">Order Submitted Successfully!</h4>
-                <p class="text-sm text-neutral-500">Naipadala na ang detalye ng order mo. Susuriin na ng ULTI REPS team ang iyong GCash payment.</p>
-                <button @click="orderSuccess = false; checkoutModalOpen = false" class="mt-4 bg-neutral-900 text-white text-xs uppercase tracking-wider px-6 py-3 rounded-full">Close</button>
-            </div>
-        </template>
-        
-        <!-- Form View -->
-        <template x-if="!orderSuccess">
-            <form @submit.prevent="submitOrder()" class="space-y-4">
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-neutral-600 mb-1">Full Name</label>
-                    <input type="text" x-model="form.name" required class="w-full px-4 py-2.5 text-sm border border-neutral-200 rounded-lg focus:outline-none focus:border-neutral-900">
-                </div>
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-neutral-600 mb-1">Complete Delivery Address</label>
-                    <textarea x-model="form.address" required rows="2" class="w-full px-4 py-2.5 text-sm border border-neutral-200 rounded-lg focus:outline-none focus:border-neutral-900"></textarea>
-                </div>
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-neutral-600 mb-1">Contact Number</label>
-                    <input type="text" x-model="form.contact" required class="w-full px-4 py-2.5 text-sm border border-neutral-200 rounded-lg focus:outline-none focus:border-neutral-900">
-                </div>
-                
-                <!-- GCash Upload Box -->
-                <div class="pt-2 border-t border-neutral-100">
-                    <label class="block text-xs uppercase tracking-wider text-neutral-600 mb-1">Upload GCash Payment Screenshot</label>
-                    <input type="file" @change="handleFileUpload($event)" accept="image/*" required class="w-full text-xs text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-medium file:bg-neutral-100 file:text-neutral-900 hover:file:bg-neutral-200 cursor-pointer">
-                </div>
-                
-                <div class="pt-4">
-                    <button type="submit" :disabled="isSubmitting" class="w-full bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50">
-                        <span x-show="!isSubmitting">Confirm and Submit Order</span>
-                        <span x-show="isSubmitting">Sending Order...</span>
-                    </button>
-                </div>
-            </form>
-        </template>
-    </div>
 </div>
 
 <!-- Footer -->

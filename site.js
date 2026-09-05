@@ -6,14 +6,6 @@ document.addEventListener('alpine:init', () => {
         checkoutModalOpen: false,
         mobileMenuOpen: false,
         
-        // Hero Slider State (3 images nagpapalitan)
-        activeSlide: 0,
-        heroImages: [
-            "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
-            "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=80",
-            "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1600&q=80"
-        ],
-        
         // Products & Filtering
         products: [],
         categories: ['All'],
@@ -42,8 +34,6 @@ document.addEventListener('alpine:init', () => {
             contact: '',
             postalCode: '',
             orderNotes: '',
-            
-            receiptFile: null,
             paymentMethod: 'gcash',
             deliveryOption: 'standard'
         },
@@ -55,7 +45,7 @@ document.addEventListener('alpine:init', () => {
         selectedSize: null,
         sizeChartOpen: false,
         
-        // ===== SITE LOADER =====
+        // ===== SITE LOADER STATE =====
         siteLoaderVisible: true,
         siteLoaderLeaving: false,
         
@@ -64,7 +54,7 @@ document.addEventListener('alpine:init', () => {
         hotToastTimer: null,
         hotToastSwitching: false,
         
-        // ===== SITE LOADER =====
+        // ===== SITE LOADER LOGIC =====
         initSiteLoader() {
             const settings = this.config.siteLoader || {};
             // Skip loader once kapag galing sa internal/header navigation
@@ -165,10 +155,6 @@ document.addEventListener('alpine:init', () => {
         
         initShop() {
             this.initHeader();
-            
-            setInterval(() => {
-                this.activeSlide = (this.activeSlide + 1) % this.heroImages.length;
-            }, 5000);
             
             // Load products directly from config.js
             this.products = Array.isArray(this.config.products)
@@ -340,57 +326,6 @@ document.addEventListener('alpine:init', () => {
             this.quickViewSlide = (this.quickViewSlide - 1 + images.length) % images.length;
         },
         
-        async fetchProducts() {
-            // Priority 1: Use the hardcoded products already defined in config.js
-            // (this is where your 4 real products with their actual image_url paths live)
-            if (Array.isArray(this.config.products) && this.config.products.length > 0) {
-                this.products = this.config.products;
-                this.extractCategories();
-                return;
-            }
-            
-            // Priority 2: Google Sheets CSV (only used if config.products is empty)
-            if (!this.config.googleSheetCSV || this.config.googleSheetCSV.includes("YOUR_GOOGLE")) {
-                // Mock data kung wala pang nakalagay na Google Sheet link para makita agad ang UI
-                this.products = [
-                    { id: '1', name: 'Heavyweight Boxy Tee', category: 'Apparel', price: '1200', stock: 'In Stock', image_url: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80' },
-                    { id: '2', name: 'Vintage Washed Hoodie', category: 'Apparel', price: '2500', stock: 'In Stock', image_url: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80' },
-                    { id: '3', name: 'Premium Leather Crossbody', category: 'Accessories', price: '1800', stock: 'In Stock', image_url: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80' },
-                    { id: '4', name: 'Minimalist Runner Sneakers', category: 'Footwear', price: '3200', stock: 'In Stock', image_url: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80' }
-                ];
-                this.extractCategories();
-                return;
-            }
-            
-            try {
-                const response = await fetch(this.config.googleSheetCSV);
-                const csvText = await response.text();
-                this.parseCSV(csvText);
-            } catch (error) {
-                console.error("Error fetching Google Sheets data:", error);
-            }
-        },
-        
-        parseCSV(text) {
-            const lines = text.split('\n');
-            const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
-            
-            const result = [];
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                const obj = {};
-                for (let j = 0; j < headers.length; j++) {
-                    let val = currentline[j] ? currentline[j].trim() : '';
-                    val = val.replace(/^["']|["']$/g, ''); // remove quotes
-                    obj[headers[j]] = val;
-                }
-                result.push(obj);
-            }
-            this.products = result;
-            this.extractCategories();
-        },
-        
         extractCategories() {
             this.categories = ['All', 'HOT', ...(this.config.categories || [])];
         },
@@ -425,15 +360,6 @@ document.addEventListener('alpine:init', () => {
         
         get grandTotal() {
             return this.cartTotal + this.regionShippingFee;
-        },
-        
-        get canSubmit() {
-            return this.form.name && 
-            this.form.address && 
-            this.form.contact && 
-            this.form.paymentMethod && 
-            this.form.deliveryOption &&
-            this.form.receiptFile;
         },
         
         addToCart(product, size = null) {
@@ -503,10 +429,6 @@ document.addEventListener('alpine:init', () => {
             localStorage.setItem('ulti_cart', JSON.stringify(this.cart));
         },
         
-        handleFileUpload(event) {
-            this.form.receiptFile = event.target.files[0];
-        },
-        
         // Used by checkout.html
         initCheckoutPage() {
             this.initHeader();
@@ -540,99 +462,158 @@ document.addEventListener('alpine:init', () => {
         },
         
         async submitOrder() {
+            // ===== BASIC CHECKOUT VALIDATION =====
+            const email = this.form.email.trim();
+            const contact = this.form.contact.replace(/[\s-]/g, '');
+            
+            const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const phoneValid = /^(?:\+63|0)9\d{9}$/.test(contact);
+            
             if (
-                !this.form.email ||
-                !this.form.firstName ||
-                !this.form.lastName ||
-                !this.form.address ||
-                !this.form.contact ||
+                !email ||
+                !this.form.firstName.trim() ||
+                !this.form.lastName.trim() ||
+                !this.form.address.trim() ||
+                !contact ||
                 !this.form.region
             ) {
                 alert("Please complete all required checkout details.");
                 return;
             }
-            if (!this.form.paymentMethod) {
+            
+            if (!emailValid) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+            
+            if (!phoneValid) {
+                alert("Please enter a valid Philippine mobile number.");
+                return;
+            }
+            
+            // Standard delivery requires payment method.
+            // Same-day is arranged separately via Messenger / COD.
+            if (
+                this.form.deliveryOption !== 'same_day' &&
+                !this.form.paymentMethod
+            ) {
                 alert("Please select a payment method.");
                 return;
             }
-            // Receipt is optional now (uploaded in the modal)
+            
+            if (!this.cart.length) {
+                alert("Your cart is empty.");
+                return;
+            }
             
             this.isSubmitting = true;
             
-            const paymentLabel = {
+            // ===== PAYMENT LABEL =====
+            const paymentLabel =
+            this.form.deliveryOption === 'same_day'
+            ? 'Cash on Delivery / Arrange via Messenger'
+            : ({
                 gcash: 'GCash',
                 maya: 'Maya',
                 bank: 'Bank Transfer'
-            }[this.form.paymentMethod] || this.form.paymentMethod;
+            }[this.form.paymentMethod] || this.form.paymentMethod);
             
-            const deliveryLabel = this.form.deliveryOption === 'same_day' 
-            ? 'Same Day Delivery (+₱150)' 
+            // ===== DELIVERY LABEL =====
+            const deliveryLabel =
+            this.form.deliveryOption === 'same_day'
+            ? 'Same Day Delivery - Shipping fee arranged via Messenger'
             : 'Standard Delivery';
             
-            // Clean order summary (no emojis)
-            let orderSummary = `NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
+            // ===== REGION LABEL =====
+            const regionLabel = {
+                luzon: 'Luzon',
+                vismin: 'Visayas / Mindanao'
+            }[this.form.region] || this.form.region;
             
-            orderSummary += `Name: ${this.form.firstName} ${this.form.lastName}\n`;
-            orderSummary += `Email: ${this.form.email}\n`;
-            orderSummary += `Phone: ${this.form.contact}\n`;
-            orderSummary += `Address: ${this.form.address}\n`;
-            orderSummary += `Region: ${this.form.region}\n`;
+            // ===== ORDER SUMMARY =====
+            let orderSummary =
+            `NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
             
-            if (this.form.postalCode) {
-                orderSummary += `Postal Code: ${this.form.postalCode}\n`;
+            orderSummary +=
+            `CUSTOMER DETAILS\n` +
+            `Name: ${this.form.firstName.trim()} ${this.form.lastName.trim()}\n` +
+            `Email: ${email}\n` +
+            `Phone: ${contact}\n` +
+            `Address: ${this.form.address.trim()}\n` +
+            `Region: ${regionLabel}\n`;
+            
+            if (this.form.postalCode.trim()) {
+                orderSummary +=
+                `Postal Code: ${this.form.postalCode.trim()}\n`;
             }
             
-            if (this.form.orderNotes) {
-                orderSummary += `Order Notes: ${this.form.orderNotes}\n`;
+            if (this.form.orderNotes.trim()) {
+                orderSummary +=
+                `Order Notes: ${this.form.orderNotes.trim()}\n`;
             }
             
-            orderSummary += `Delivery: ${deliveryLabel}\n`;
-            orderSummary += `Payment: ${paymentLabel}\n\n`;
-            orderSummary += `Address: ${this.form.address}\n`;
-            orderSummary += `Contact: ${this.form.contact}\n`;
-            orderSummary += `Delivery: ${deliveryLabel}\n`;
-            orderSummary += `Payment: ${paymentLabel}\n\n`;
+            orderSummary +=
+            `\nDELIVERY & PAYMENT\n` +
+            `Delivery: ${deliveryLabel}\n` +
+            `Payment: ${paymentLabel}\n\n`;
             
-            orderSummary += `Items:\n`;
+            orderSummary += `ITEMS\n`;
             
             this.cart.forEach(item => {
-                
                 const sizeText =
                 item.selectedSize !== null &&
                 item.selectedSize !== undefined
                 ? ` | Size: US ${item.selectedSize}`
                 : '';
                 
-                orderSummary +=
-                `- ${item.name}${sizeText} | Qty: ${item.quantity} - ₱${(item.price * item.quantity).toLocaleString()}\n`;
+                const lineTotal =
+                Number(item.price) * Number(item.quantity);
                 
+                orderSummary +=
+                `- ${item.name}${sizeText} | Qty: ${item.quantity} | ₱${lineTotal.toLocaleString()}\n`;
             });
             
-            orderSummary += `\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
+            orderSummary +=
+            `\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
             
-            if (this.deliveryFee > 0) {
-                orderSummary += `\nSame Day Fee: ₱${this.deliveryFee}`;
+            if (this.regionShippingFee > 0) {
+                orderSummary +=
+                `\nShipping: ₱${this.regionShippingFee.toLocaleString()}`;
             }
             
-            orderSummary += `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
+            if (this.form.deliveryOption === 'same_day') {
+                orderSummary +=
+                `\nSame-Day Shipping: To be arranged via Messenger`;
+            }
             
-            // Success state
+            orderSummary +=
+            `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
+            
+            // ===== MESSENGER =====
+            const messengerBase =
+            this.config.socials?.messenger ||
+            "https://m.me/61551038027330";
+            
+            this.messengerLink =
+            messengerBase +
+            "?text=" +
+            encodeURIComponent(orderSummary);
+            
             this.isSubmitting = false;
+            
+            /*
+            * IMPORTANT:
+            * Do NOT clear the cart here.
+            * Opening Messenger does NOT guarantee
+            * that the customer actually sent the message.
+            */
             this.orderSuccess = true;
-            this.cart = [];
-            this.saveCart();
             
-            // Messenger link
-            const messengerBase = (this.config.socials && this.config.socials.messenger) 
-            ? this.config.socials.messenger 
-            : "https://m.me/61551038027330";
-            
-            this.messengerLink = messengerBase + "?text=" + encodeURIComponent(orderSummary);
-            
-            // Auto open Messenger
-            setTimeout(() => {
-                window.open(this.messengerLink, "_blank");
-            }, 600);
+            window.open(
+                this.messengerLink,
+                "_blank",
+                "noopener,noreferrer"
+            );
         },
     }));
 });
