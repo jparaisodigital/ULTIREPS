@@ -511,7 +511,7 @@ Help / FAQs
         
         <!-- Add to Cart (Text + Icon) -->
         <!-- Available -->
-        <template x-if="Number(product.stock) !== 0">
+        <template x-if="!isProductSoldOut(product)">
             <button
             @click.stop="addToCart(product)"
             class="flex-shrink-0 flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-medium text-neutral-900 hover:text-neutral-600 transition-all duration-200 active:scale-90 pt-0.5"
@@ -523,10 +523,10 @@ Help / FAQs
                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
             </svg>
         </button>
-    </template>
+    </template> 
     
     <!-- Pre-order -->
-    <template x-if="Number(product.stock) === 0 && product.reserveAllowed">
+    <template x-if="isProductSoldOut(product) && product.reserveAllowed">
         <button
         @click.stop="openQuickView(product)"
         class="flex-shrink-0 text-[11px] uppercase tracking-wider font-semibold pt-0.5 transition-colors"

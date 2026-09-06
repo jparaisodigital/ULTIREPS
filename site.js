@@ -273,14 +273,14 @@ document.addEventListener('alpine:init', () => {
                         String(row.ProductID || '').trim() ===
                         expectedProductId
                     );
-
+                    
                     if (!sheetProduct) {
                         return product;
                     }
-                          
+                    
                     const productId =
                     String(sheetProduct.ProductID || '').trim();
-                            
+                    
                     return {
                         
                         ...product,
@@ -594,6 +594,39 @@ document.addEventListener('alpine:init', () => {
                 quantity: 1
             };
         },
+
+        fileToBase64(file) {
+
+            return new Promise((resolve, reject) => {
+        
+                const reader = new FileReader();
+        
+                reader.onload = () => {
+        
+                    const result =
+                        String(reader.result || '');
+        
+                    const base64 =
+                        result.includes(',')
+                            ? result.split(',')[1]
+                            : result;
+        
+                    resolve(base64);
+                };
+        
+                reader.onerror = () => {
+                    reject(
+                        new Error(
+                            'Unable to read payment screenshot.'
+                        )
+                    );
+                };
+        
+                reader.readAsDataURL(file);
+        
+            });
+        
+        },
         
         async submitPreOrderPreview() {
             
@@ -659,6 +692,13 @@ document.addEventListener('alpine:init', () => {
                 // Lock submit button
                 this.isPreOrderSubmitting = true;
                 
+                // ===== PREPARE PAYMENT PROOF =====
+                const proofFile =
+                this.preOrderForm.proofFile;
+                
+                const proofBase64 =
+                await this.fileToBase64(proofFile);
+                
                 const payload = {
                     name: this.preOrderForm.name.trim(),
                     contact: this.preOrderForm.contact.trim(),
@@ -690,7 +730,16 @@ document.addEventListener('alpine:init', () => {
                     this.preOrderForm.note || '',
                     
                     website:
-                    this.preOrderForm.website || ''
+                    this.preOrderForm.website || '',
+                    
+                    proofBase64:
+                    proofBase64,
+                    
+                    proofMimeType:
+                    proofFile.type,
+                    
+                    proofFileName:
+                    proofFile.name
                 };
                 
                 const response = await fetch(
@@ -804,20 +853,20 @@ document.addEventListener('alpine:init', () => {
         
         get filteredProducts() {
             return this.products.filter(product => {
-        
+                
                 // FALSE = completely hidden from storefront
                 const isActive =
-                    product.active !== false;
-        
+                product.active !== false;
+                
                 const matchesCategory = 
-                    this.selectedCategory === 'All' || 
-                    (this.selectedCategory === 'HOT' && product.hot === true) ||
-                    product.category === this.selectedCategory;
-        
+                this.selectedCategory === 'All' || 
+                (this.selectedCategory === 'HOT' && product.hot === true) ||
+                product.category === this.selectedCategory;
+                
                 const matchesSearch = product.name
-                    .toLowerCase()
-                    .includes(this.searchQuery.toLowerCase());
-        
+                .toLowerCase()
+                .includes(this.searchQuery.toLowerCase());
+                
                 return (
                     isActive &&
                     matchesCategory &&
