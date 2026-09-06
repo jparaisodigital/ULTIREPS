@@ -273,18 +273,14 @@ document.addEventListener('alpine:init', () => {
                         String(row.ProductID || '').trim() ===
                         expectedProductId
                     );
-                    
-                    // Product not found in Sheet:
-                    // keep original config.js product
+
                     if (!sheetProduct) {
                         return product;
                     }
-                    
-                    
+                          
                     const productId =
                     String(sheetProduct.ProductID || '').trim();
-                    
-                    
+                            
                     return {
                         
                         ...product,
@@ -808,13 +804,25 @@ document.addEventListener('alpine:init', () => {
         
         get filteredProducts() {
             return this.products.filter(product => {
+        
+                // FALSE = completely hidden from storefront
+                const isActive =
+                    product.active !== false;
+        
                 const matchesCategory = 
-                this.selectedCategory === 'All' || 
-                (this.selectedCategory === 'HOT' && product.hot === true) ||
-                product.category === this.selectedCategory;
-                
-                const matchesSearch = product.name.toLowerCase().includes(this.searchQuery.toLowerCase());
-                return matchesCategory && matchesSearch;
+                    this.selectedCategory === 'All' || 
+                    (this.selectedCategory === 'HOT' && product.hot === true) ||
+                    product.category === this.selectedCategory;
+        
+                const matchesSearch = product.name
+                    .toLowerCase()
+                    .includes(this.searchQuery.toLowerCase());
+        
+                return (
+                    isActive &&
+                    matchesCategory &&
+                    matchesSearch
+                );
             });
         },
         

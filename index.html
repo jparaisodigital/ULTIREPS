@@ -469,29 +469,45 @@ Help / FAQs
     </div>
     
     <!-- Name + Price + Add to Cart -->
-    <div class="flex items-start justify-between gap-3">
+<div class="flex items-start justify-between gap-3">
+
+    <!-- Product Name + Price -->
+    <div
+        class="min-w-0"
+        @click="openQuickView(product)"
+    >
+
+        <!-- Product Name -->
+        <h3
+            class="text-sm font-medium text-neutral-900 mb-1 truncate"
+            x-text="product.name"
+        ></h3>
+
+        <!-- Price -->
         <div class="flex items-center gap-2">
-            
+
             <span
-            x-show="hasProductDiscount(product)"
-            class="text-[11px] text-neutral-400 line-through"
-            x-text="
-            config.currency +
-            Number(product.price).toLocaleString()
-            "
+                x-show="hasProductDiscount(product)"
+                class="text-[11px] text-neutral-400 line-through"
+                x-text="
+                    config.currency +
+                    Number(product.price).toLocaleString()
+                "
             ></span>
-            
+
             <span
-            class="text-sm font-semibold text-neutral-900"
-            x-text="
-            config.currency +
-            Number(
-            getProductFinalPrice(product)
-            ).toLocaleString()
-            "
+                class="text-sm font-semibold text-neutral-900"
+                x-text="
+                    config.currency +
+                    Number(
+                        getProductFinalPrice(product)
+                    ).toLocaleString()
+                "
             ></span>
-            
+
         </div>
+
+    </div>
         
         <!-- Add to Cart (Text + Icon) -->
         <!-- Available -->

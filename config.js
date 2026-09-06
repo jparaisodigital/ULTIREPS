@@ -2,9 +2,9 @@ window.CONFIG = {
     // Store Metadata
     storeName: "Ulti Reps",
     currency: "₱",
-
+    
     // Google Sheets / Apps Script API
-googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQfkRAQpZ55ssvjUo-xLIw42eDn41e_FiERw53HWM8wdGWdZ50axw/exec",
+    googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQfkRAQpZ55ssvjUo-xLIw42eDn41e_FiERw53HWM8wdGWdZ50axw/exec",
     
     // Product Categories
     categories: [
@@ -104,7 +104,10 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
             price: 3495,
             category: "NIKE",
             hot: true,
+            reserveAllowed: true,
+            
             image_url: "products/1 (1).png",
+            
             images: [
                 "products/1 (1).png",
                 "products/back/1 (1).jpg",
@@ -112,62 +115,41 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/1 (3).jpg",
                 "products/back/1 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 2,
             name: "Nike Mind 001 x NOCTA Blue Owl",
             price: 4500,
-            discountAmount: 200,
             category: "NIKE",
             hot: true,
             reserveAllowed: true,
-        
-            sizes: [6, 7, 8, 9, 10, 11, 12, 13],
-        
-            stockBySize: {
-                "6": 3,
-                "7": 2,
-                "8": 1,
-                "9": 0,    
-                "10": 4,
-                "11": 2,
-                "12": 1,
-                "13": 2
-            },
-        
+            
             image_url: "products/1 (2).png",
+            
             images: [
                 "products/1 (2).png",
                 "products/back/2 (1).jpg",
                 "products/back/2 (2).jpg",
                 "products/back/2 (3).jpg",
                 "products/back/2 (4).jpg"
-            ]
+            ],
+            
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 3,
             name: "Nike Mind 001 x NOCTA Black Owl",
             price: 4500,
-            discountAmount: 0,
             category: "NIKE",
             hot: false,
             reserveAllowed: true,
-        
-            sizes: [6, 7, 8, 9, 10, 11, 12, 13],
-        
-            stockBySize: {
-                "6": 3,
-                "7": 2,
-                "8": 1,
-                "9": 0,   
-                "10": 4,    
-                "11": 2,
-                "12": 1,
-                "13": 2
-            },
-        
+            
             image_url: "products/1 (3).png",
+            
             images: [
                 "products/1 (3).png",
                 "products/back/3 (1).jpg",
@@ -175,16 +157,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/3 (3).jpg",
                 "products/back/3 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 4,
             name: "Nike Mind 001 x NOCTA Real Tree",
             price: 4500,
-            discountAmount: 0,
             category: "NIKE",
             hot: false,
+            reserveAllowed: true,
+            
             image_url: "products/1 (4).png",
+            
             images: [
                 "products/1 (4).png",
                 "products/back/4 (1).jpg",
@@ -192,15 +178,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/4 (3).jpg",
                 "products/back/4 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 5,
             name: "Nike Mind 001 | Blackened Blue",
             price: 3495,
             category: "NIKE",
             hot: true,
+            reserveAllowed: true,
+            
             image_url: "products/1 (5).png",
+            
             images: [
                 "products/1 (5).png",
                 "products/back/5 (1).jpg",
@@ -208,15 +199,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/5 (3).jpg",
                 "products/back/5 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 6,
             name: "Nike Mind 001 | Light Smoke Grey",
             price: 3495,
             category: "NIKE",
             hot: false,
+            reserveAllowed: true,
+            
             image_url: "products/1 (6).png",
+            
             images: [
                 "products/1 (6).png",
                 "products/back/6 (1).jpg",
@@ -224,15 +220,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/6 (3).jpg",
                 "products/back/6 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 7,
             name: "Nike Mind 001 | Black Chrome",
             price: 3495,
             category: "NIKE",
             hot: false,
+            reserveAllowed: true,
+            
             image_url: "products/1 (7).png",
+            
             images: [
                 "products/1 (7).png",
                 "products/back/7 (1).jpg",
@@ -240,15 +241,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/7 (3).jpg",
                 "products/back/7 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 8,
             name: "Nike Mind 001 | Crimson Purple",
             price: 3495,
             category: "NIKE",
             hot: true,
+            reserveAllowed: true,
+            
             image_url: "products/1 (8).png",
+            
             images: [
                 "products/1 (8).png",
                 "products/back/8 (1).jpg",
@@ -256,15 +262,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/8 (3).jpg",
                 "products/back/8 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 9,
             name: "Nike Mind 001 | Pearl Pink",
             price: 3495,
             category: "NIKE",
             hot: false,
+            reserveAllowed: true,
+            
             image_url: "products/1 (9).png",
+            
             images: [
                 "products/1 (9).png",
                 "products/back/9 (1).jpg",
@@ -272,15 +283,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/9 (3).jpg",
                 "products/back/9 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 10,
             name: "Nike Mind 001 x FRAGMENT",
             price: 3495,
             category: "NIKE",
             hot: true,
+            reserveAllowed: true,
+            
             image_url: "products/1 (10).png",
+            
             images: [
                 "products/1 (10).png",
                 "products/back/10 (1).jpg",
@@ -288,15 +304,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/10 (3).jpg",
                 "products/back/10 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 11,
             name: "Nike Mind 001 | Geode Teal",
             price: 3495,
             category: "NIKE",
             hot: false,
+            reserveAllowed: true,
+            
             image_url: "products/1 (11).png",
+            
             images: [
                 "products/1 (11).png",
                 "products/back/11 (1).jpg",
@@ -304,15 +325,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/11 (3).jpg",
                 "products/back/11 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 12,
             name: "Nike Mind 001 | Team Red",
             price: 3495,
             category: "NIKE",
             hot: false,
+            reserveAllowed: true,
+            
             image_url: "products/1 (12).png",
+            
             images: [
                 "products/1 (12).png",
                 "products/back/12 (1).jpg",
@@ -320,15 +346,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/12 (3).jpg",
                 "products/back/12 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 13,
             name: "Nike Mind 001 | Speed Red",
             price: 3495,
             category: "NIKE",
             hot: true,
+            reserveAllowed: true,
+            
             image_url: "products/1 (13).png",
+            
             images: [
                 "products/1 (13).png",
                 "products/back/13 (1).jpg",
@@ -336,15 +367,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/13 (3).jpg",
                 "products/back/13 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 14,
             name: "Nike Mind 001 | Triple Black",
             price: 3495,
             category: "NIKE",
             hot: true,
+            reserveAllowed: true,
+            
             image_url: "products/1 (14).png",
+            
             images: [
                 "products/1 (14).png",
                 "products/back/14 (1).jpg",
@@ -352,15 +388,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/14 (3).jpg",
                 "products/back/14 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 15,
             name: "Nike Mind 001 | Hemp",
             price: 3495,
             category: "NIKE",
             hot: false,
+            reserveAllowed: true,
+            
             image_url: "products/1 (15).png",
+            
             images: [
                 "products/1 (15).png",
                 "products/back/15 (1).jpg",
@@ -368,15 +409,20 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/15 (3).jpg",
                 "products/back/15 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        
         {
             id: 16,
             name: "Nike Mind 001 | Indigo Burst",
             price: 3495,
             category: "NIKE",
             hot: false,
+            reserveAllowed: true,
+            
             image_url: "products/1 (16).png",
+            
             images: [
                 "products/1 (16).png",
                 "products/back/16 (1).jpg",
@@ -384,6 +430,7 @@ googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQ
                 "products/back/16 (3).jpg",
                 "products/back/16 (4).jpg"
             ],
+            
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         }
     ],
