@@ -1729,7 +1729,7 @@ Your cart is empty.
     <!-- Backdrop -->
     <div
         class="absolute inset-0 bg-black/75 backdrop-blur-[2px]"
-        @click="closeSaleModal(false)"
+        @click="closeSaleModal()"
     ></div>
 
     <!-- Modal Card -->
@@ -1781,7 +1781,7 @@ Your cart is empty.
 
                 <button
                     type="button"
-                    @click="closeSaleModal(false)"
+                    @click="closeSaleModal()"
                     aria-label="Close sale"
                     class="w-10 h-10 flex items-center justify-center
                            rounded-full hover:bg-black/5
@@ -1905,7 +1905,7 @@ Your cart is empty.
             <!-- Don't Show Again -->
             <button
                 type="button"
-                @click="closeSaleModal(true)"
+                @click="closeSaleModal()"
                 class="block mx-auto mt-6
                        text-[10px] uppercase
                        tracking-[0.28em]

@@ -511,8 +511,7 @@ window.CONFIG = {
         "assets/history/1 (10).webp",
         "assets/history/1 (11).webp"
     ],
-    
-    
+       
     // Product Marquee Images
     marqueeImages: [
         "products/1 (1).png",
@@ -529,8 +528,7 @@ window.CONFIG = {
         "products/1 (12).png",
         "products/1 (13).png",
         "products/1 (14).png",
-        "products/1 (15).png",
-        "products/1 (16).png"
+        "products/1 (15).png"
     ],
     
     

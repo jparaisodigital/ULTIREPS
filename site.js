@@ -203,7 +203,7 @@ document.addEventListener('alpine:init', () => {
                 
                 // Sale modal gets priority
                 if (this.saleModalVisible) {
-                    this.closeSaleModal(false);
+                    this.closeSaleModal();
                     return;
                 }
                 
@@ -484,125 +484,62 @@ document.addEventListener('alpine:init', () => {
         // ===== MONTHLY SALE MODAL =====
         
         initSaleModal() {
-            
+
             const settings =
-            this.config.saleModal || {};
-            
-            // Sale feature disabled
+                this.config.saleModal || {};
+        
             if (settings.enabled === false) {
                 this.scheduleHotToast();
                 return;
             }
-            
-            const promoId =
-            String(settings.promoId || 'default-promo');
-            
-            // Permanently hidden for THIS specific promo
-            const permanentlyDismissed =
-            localStorage.getItem(
-                'ulti_sale_modal_dismissed'
-            );
-            
-            // Closed during THIS browser session
-            const sessionDismissed =
-            sessionStorage.getItem(
-                'ulti_sale_modal_session_closed'
-            );
-            
-            if (
-                permanentlyDismissed === promoId ||
-                sessionDismissed === promoId
-            ) {
-                this.scheduleHotToast();
-                return;
-            }
-            
+        
             if (this.saleModalTimer) {
                 clearTimeout(this.saleModalTimer);
             }
-            
+        
             const delay =
-            Math.max(
-                0,
-                Number(settings.showDelay) || 0
-            );
-            
+                Math.max(
+                    0,
+                    Number(settings.showDelay) || 0
+                );
+        
             const openWhenReady = () => {
-                
-                /*
-                * Huwag mag-open habang nasa ibabaw pa
-                * ang Ulti loading screen.
-                */
+        
                 if (this.siteLoaderVisible) {
                     this.saleModalTimer =
-                    setTimeout(openWhenReady, 100);
+                        setTimeout(openWhenReady, 100);
                     return;
                 }
-                
-                // Make sure Hot Style is not visible
+        
                 this.stopHotToastLoop();
                 this.hotToastVisible = false;
-                
-                // Lock page scrolling
+        
                 document.documentElement.style.overflow =
-                'hidden';
-                
+                    'hidden';
+        
                 document.body.style.overflow =
-                'hidden';
-                
+                    'hidden';
+        
                 this.saleModalVisible = true;
             };
-            
+        
             this.saleModalTimer =
-            setTimeout(
-                openWhenReady,
-                delay
-            );
+                setTimeout(
+                    openWhenReady,
+                    delay
+                );
         },
         
         
-        closeSaleModal(permanent = false) {
-            
-            const settings =
-            this.config.saleModal || {};
-            
-            const promoId =
-            String(settings.promoId || 'default-promo');
-            
+        closeSaleModal() {
+
             this.saleModalVisible = false;
-            
-            // DON'T SHOW AGAIN
-            if (permanent) {
-                
-                /*
-                * Only this PromoID is remembered.
-                * New PromoID = modal can show again.
-                */
-                localStorage.setItem(
-                    'ulti_sale_modal_dismissed',
-                    promoId
-                );
-                
-            } else {
-                
-                /*
-                * X / backdrop / ESC:
-                * don't bother the visitor again
-                * during this browser session.
-                */
-                sessionStorage.setItem(
-                    'ulti_sale_modal_session_closed',
-                    promoId
-                );
-            }
-            
-            // Restore scrolling
+        
             if (!this.quickViewOpen) {
                 document.documentElement.style.overflow = '';
                 document.body.style.overflow = '';
             }
-            
-            // Existing Hot Style waits before appearing
+        
             this.scheduleHotToast();
         },
         
@@ -610,7 +547,7 @@ document.addEventListener('alpine:init', () => {
         shopSale() {
             
             // Close without permanently hiding promo
-            this.closeSaleModal(false);
+            this.closeSaleModal();
             
             // Show discounted products only
             this.selectedCategory = 'SALE';
@@ -1747,7 +1684,7 @@ document.addEventListener('alpine:init', () => {
             if (this._checkoutNoticeTimer) {
                 clearTimeout(this._checkoutNoticeTimer);
             }
-            
+
             this.checkoutNotice.message = message;
             this.checkoutNotice.type = type;
             this.checkoutNotice.show = true;
