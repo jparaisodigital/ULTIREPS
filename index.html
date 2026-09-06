@@ -874,36 +874,39 @@ selectedSize
 "
 >
 <div class="overflow-hidden">
-    <div class="pt-4 space-y-4 pb-24 md:pb-4">
-        
-        <!-- Pre-selected Size -->
-        <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
-            <div>
-                <p class="text-[9px] uppercase tracking-[0.16em] text-neutral-400">
-                    Pre-order Size
-                </p>
-                <p class="text-sm font-bold text-neutral-900 mt-1">
-                    US <span x-text="preOrderForm.size"></span>
-                </p>
-            </div>
-            <span
-            class="text-[9px] uppercase tracking-[0.14em] font-semibold"
-            style="color: #B42318;"
-            >
-            Sold Out
-        </span>
-    </div>
-    
-    <!-- Pre-order Form Header -->
     <div
-    x-ref="preOrderFormHeader"
-    class="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3"
+    x-show="!preOrderSuccess"
+    class="pt-4 space-y-4 pb-24 md:pb-4"
     >
-    <p
-    class="text-[10px] font-bold uppercase tracking-[0.18em]"
-    style="color: #B42318;"
-    >
-    Pre-order Form
+    
+    <!-- Pre-selected Size -->
+    <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+        <div>
+            <p class="text-[9px] uppercase tracking-[0.16em] text-neutral-400">
+                Pre-order Size
+            </p>
+            <p class="text-sm font-bold text-neutral-900 mt-1">
+                US <span x-text="preOrderForm.size"></span>
+            </p>
+        </div>
+        <span
+        class="text-[9px] uppercase tracking-[0.14em] font-semibold"
+        style="color: #B42318;"
+        >
+        Sold Out
+    </span>
+</div>
+
+<!-- Pre-order Form Header -->
+<div
+x-ref="preOrderFormHeader"
+class="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3"
+>
+<p
+class="text-[10px] font-bold uppercase tracking-[0.18em]"
+style="color: #B42318;"
+>
+Pre-order Form
 </p>
 
 <p class="text-xs text-neutral-600 mt-1">
@@ -926,9 +929,10 @@ class="flex items-center justify-between border-b border-neutral-100 pb-3"
     Estimated Delivery
 </p>
 
-<p class="text-sm font-bold text-neutral-900 mt-1">
-    5–7 days
-</p>
+<p
+class="text-sm font-bold text-neutral-900 mt-1"
+x-text="config.payments.preorderDelivery || '5–7 days'"
+></p>
 </div>
 
 <p class="text-[10px] text-neutral-400 text-right leading-relaxed">
@@ -937,6 +941,21 @@ class="flex items-center justify-between border-b border-neutral-100 pb-3"
 </p>
 </div>
 
+<!-- Anti-bot Honeypot -->
+<div
+aria-hidden="true"
+style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;"
+>
+<label>
+    Website
+    <input
+    type="text"
+    x-model="preOrderForm.website"
+    tabindex="-1"
+    autocomplete="off"
+    >
+</label>
+</div>
 
 <!-- Full Name -->
 <div>
@@ -998,7 +1017,7 @@ class="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-xs focus:out
     
     <span
     class="text-[9px] text-neutral-400"
-    x-text="`${preOrderForm.note.length} / 150`"
+    x-text="`${(preOrderForm.note || '').length} / 150`"
     ></span>
     
 </div>
@@ -1049,7 +1068,10 @@ class="w-full resize-none border border-neutral-200 rounded-lg px-3 py-2.5 text-
         style="color: #B42318;"
         x-text="
         config.currency +
-        Number(config.payments.preorderDownpayment).toLocaleString()
+        (
+        Number(config.payments.preorderDownpayment || 0) *
+        Number(preOrderForm.quantity || 1)
+        ).toLocaleString()
         "
         ></p>
     </div>
@@ -1128,9 +1150,14 @@ class="hidden"
 
 <div class="text-center">
     
-    <p class="text-xs font-semibold text-neutral-800">
-        Choose screenshot
-    </p>
+    <p
+    class="text-xs font-semibold text-neutral-800"
+    x-text="
+    preOrderForm.proofFile
+    ? 'Change screenshot'
+    : 'Choose screenshot'
+    "
+    ></p>
     
     <p class="text-[10px] text-neutral-400 mt-1">
         JPG, PNG or image file · Max 5MB
@@ -1179,17 +1206,140 @@ class="mt-3"
 
 <!-- Notice -->
 <p class="text-[10px] text-neutral-500 leading-relaxed">
-    A ₱500 downpayment and payment screenshot are required to submit this pre-order request. Final availability and payment verification will still be confirmed by our team.
+    A
+    <span
+    class="font-semibold"
+    x-text="
+    config.currency +
+    (
+    Number(config.payments.preorderDownpayment || 0) *
+    Number(preOrderForm.quantity || 1)
+    ).toLocaleString()
+    "
+    ></span>
+    downpayment and payment screenshot are required to submit this pre-order request.
+    Final availability and payment verification will still be confirmed by our team.
 </p>
+
+<!-- Pre-order Validation Warning -->
+<div
+x-show="preOrderError"
+x-transition
+class="rounded-xl border border-red-200 bg-red-50 px-4 py-3"
+style="display: none;"
+>
+<div class="flex items-start gap-2.5">
+    
+    <svg
+    class="w-4 h-4 mt-0.5 flex-shrink-0"
+    style="color: #B42318;"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    >
+    <path
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1.8"
+    d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+    ></path>
+</svg>
+
+<p
+class="text-[11px] leading-relaxed"
+style="color: #B42318;"
+x-text="preOrderError"
+></p>
+
+</div>
+</div>
 
 <!-- Submit -->
 <button
 type="button"
 @click="submitPreOrderPreview()"
+:disabled="isPreOrderSubmitting"
+:class="isPreOrderSubmitting ? 'opacity-60 cursor-not-allowed' : ''"
 class="w-full text-white text-[10px] uppercase tracking-[0.16em] py-3.5 rounded-full font-semibold"
 style="background-color: #B42318;"
 >
-Submit Pre-order Request
+<span
+x-text="
+isPreOrderSubmitting
+? 'Submitting...'
+: 'Submit Pre-order Request'
+"
+></span>
+</button>
+
+</div>
+
+<!-- ===== PRE-ORDER SUCCESS STATE ===== -->
+<div
+x-show="preOrderSuccess"
+x-transition
+class="pt-10 pb-24 md:pb-10 px-4 text-center"
+style="display: none;"
+>
+
+<!-- Success Icon -->
+<div
+class="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-5"
+style="background-color: #ecfdf3; color: #15803d;"
+>
+<svg
+class="w-7 h-7"
+fill="none"
+stroke="currentColor"
+viewBox="0 0 24 24"
+>
+<path
+stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2"
+d="M5 13l4 4L19 7"
+></path>
+</svg>
+</div>
+
+<p
+class="text-[10px] font-bold uppercase tracking-[0.18em]"
+style="color: #15803d;"
+>
+Pre-order Request Submitted
+</p>
+
+<h3 class="text-lg font-bold text-neutral-900 mt-2">
+    Thank you!
+</h3>
+
+<p class="text-xs text-neutral-500 leading-relaxed mt-2">
+    Your pre-order request has been received.
+    Final availability and payment verification will still be confirmed by our team.
+</p>
+
+<!-- Reservation ID -->
+<div class="bg-neutral-100 rounded-xl px-4 py-4 mt-6">
+    <p class="text-[9px] uppercase tracking-[0.16em] text-neutral-400">
+        Reservation ID
+    </p>
+    
+    <p
+    class="text-sm font-bold text-neutral-900 mt-1"
+    x-text="preOrderReservationId"
+    ></p>
+</div>
+
+<button
+type="button"
+@click="
+preOrderSuccess = false;
+preOrderReservationId = '';
+closeQuickView();
+"
+class="w-full mt-6 bg-neutral-900 text-white text-[10px] uppercase tracking-[0.16em] py-3.5 rounded-full font-semibold"
+>
+Done
 </button>
 
 </div>
@@ -1367,28 +1517,28 @@ x-transition:leave-end="translate-x-full">
             </p>
             
             <!-- Price -->
-<div class="flex items-center gap-2 mt-1">
-
-    <span
-        x-show="hasProductDiscount(item)"
-        class="text-[10px] text-neutral-400 line-through"
-        x-text="
-            config.currency +
-            Number(item.price).toLocaleString()
-        "
-    ></span>
-
-    <span
-        class="text-xs font-medium text-neutral-700"
-        x-text="
-            config.currency +
-            Number(
+            <div class="flex items-center gap-2 mt-1">
+                
+                <span
+                x-show="hasProductDiscount(item)"
+                class="text-[10px] text-neutral-400 line-through"
+                x-text="
+                config.currency +
+                Number(item.price).toLocaleString()
+                "
+                ></span>
+                
+                <span
+                class="text-xs font-medium text-neutral-700"
+                x-text="
+                config.currency +
+                Number(
                 getProductFinalPrice(item)
-            ).toLocaleString()
-        "
-    ></span>
-
-</div>
+                ).toLocaleString()
+                "
+                ></span>
+                
+            </div>
             
             <!-- Quantity -->
             <div class="flex items-center space-x-3 mt-2">

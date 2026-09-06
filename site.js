@@ -36,6 +36,13 @@ document.addEventListener('alpine:init', () => {
             deliveryOption: 'standard'
         },
         isSubmitting: false,
+        isPreOrderSubmitting: false,
+        
+        // Pre-order validation / success state
+        preOrderError: '',
+        preOrderSuccess: false,
+        preOrderReservationId: '',
+        
         orderSuccess: false,
         messengerLink: "",
         paymentModalOpen: false,
@@ -52,6 +59,7 @@ document.addEventListener('alpine:init', () => {
             contact: '',
             location: '',
             note: '',
+            website: '',
             size: null,
             quantity: 1,
             proofFile: null,
@@ -161,13 +169,16 @@ document.addEventListener('alpine:init', () => {
             }
         },
         
-        initShop() {
+        async initShop() {
             // Load products directly from config.js
             this.products = Array.isArray(this.config.products)
             ? this.config.products
             : [];
             
             this.extractCategories();
+            
+            // Load Google Sheet data, config.js stays as fallback
+            await this.loadGoogleSheetData();
             
             // HOT STYLE toast 
             const dismissed = localStorage.getItem('ulti_hot_toast_dismissed');
@@ -186,6 +197,196 @@ document.addEventListener('alpine:init', () => {
                     this.closeQuickView();
                 }
             });
+        },
+        
+        async loadGoogleSheetData() {
+            
+            const url = this.config.googleAppsScriptUrl;
+            
+            // Walang API URL = gamitin lang ang config.js
+            if (!url) {
+                console.log('Google Sheet API not configured. Using config.js.');
+                return;
+            }
+            
+            try {
+                
+                const response = await fetch(
+                    `${url}?_=${Date.now()}`,
+                    {
+                        cache: 'no-store'
+                    }
+                );
+                
+                if (!response.ok) {
+                    throw new Error(
+                        `HTTP ${response.status}`
+                    );
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(
+                        'Google Sheet API returned success: false'
+                    );
+                }
+                
+                
+                // ===== BUILD INVENTORY PER PRODUCT =====
+                
+                const inventoryByProduct = {};
+                
+                (data.inventory || []).forEach(row => {
+                    
+                    const productId =
+                    String(row.ProductID || '').trim();
+                    
+                    const size =
+                    String(row.Size || '').trim();
+                    
+                    const stock =
+                    Number(row.Stock) || 0;
+                    
+                    if (!productId || !size) return;
+                    
+                    if (!inventoryByProduct[productId]) {
+                        inventoryByProduct[productId] = {};
+                    }
+                    
+                    inventoryByProduct[productId][size] = stock;
+                    
+                });
+                
+                
+                // ===== MERGE SHEET DATA INTO CONFIG PRODUCTS =====
+                
+                this.products = this.products.map(product => {
+                    
+                    // TEMPORARY TEST:
+                    // Match muna by exact product name
+                    const expectedProductId =
+                    'NK' + String(product.id).padStart(3, '0');
+                    
+                    const sheetProduct =
+                    (data.products || []).find(row =>
+                        String(row.ProductID || '').trim() ===
+                        expectedProductId
+                    );
+                    
+                    // Product not found in Sheet:
+                    // keep original config.js product
+                    if (!sheetProduct) {
+                        return product;
+                    }
+                    
+                    
+                    const productId =
+                    String(sheetProduct.ProductID || '').trim();
+                    
+                    
+                    return {
+                        
+                        ...product,
+                        
+                        // Stable Google Sheet Product ID
+                        productId: productId,
+                        
+                        // Google Sheet controlled values
+                        price:
+                        Number(sheetProduct.RegularPrice) ||
+                        Number(product.price) ||
+                        0,
+                        
+                        discountAmount:
+                        Number(sheetProduct.DiscountAmount) || 0,
+                        
+                        category:
+                        sheetProduct.Category ||
+                        product.category,
+                        
+                        hot:
+                        sheetProduct.Hot === true ||
+                        String(sheetProduct.Hot).toLowerCase() === 'true',
+                        
+                        active:
+                        sheetProduct.Active === true ||
+                        String(sheetProduct.Active).toLowerCase() === 'true',
+                        
+                        reserveAllowed:
+                        sheetProduct.ReserveAllowed === true ||
+                        String(sheetProduct.ReserveAllowed).toLowerCase() === 'true',
+                        
+                        // Per-size inventory from WEB_INVENTORY
+                        stockBySize:
+                        inventoryByProduct[productId] ||
+                        product.stockBySize
+                        
+                    };
+                    
+                });
+                
+                
+                this.extractCategories();
+                
+                // ===== PAYMENT SETTINGS FROM GOOGLE SHEET =====
+                const paymentSettings = data.paymentSettings || {};
+                
+                if (!this.config.payments) {
+                    this.config.payments = {};
+                }
+                
+                if (!this.config.payments.gcash) {
+                    this.config.payments.gcash = {};
+                }
+                
+                if (paymentSettings.PreorderDownpayment !== undefined) {
+                    this.config.payments.preorderDownpayment =
+                    Number(paymentSettings.PreorderDownpayment) || 500;
+                }
+                
+                if (paymentSettings.PreorderDelivery) {
+                    this.config.payments.preorderDelivery =
+                    String(paymentSettings.PreorderDelivery).trim();
+                }
+                
+                if (paymentSettings.GCashNumber) {
+                    this.config.payments.gcash.number =
+                    String(paymentSettings.GCashNumber).trim();
+                }
+                
+                if (paymentSettings.GCashAccountName) {
+                    this.config.payments.gcash.accountName =
+                    String(paymentSettings.GCashAccountName).trim();
+                }
+                
+                if (
+                    paymentSettings.GCashQR &&
+                    paymentSettings.GCashQR !== 'TEST_URL_MUNA'
+                ) {
+                    this.config.payments.gcash.qrImage =
+                    String(paymentSettings.GCashQR).trim();
+                }
+                
+                
+                console.log(
+                    'ULTI GOOGLE SHEET MERGE SUCCESS:',
+                    data
+                );
+                
+            } catch (error) {
+                
+                // IMPORTANT:
+                // Kapag pumalya ang Google Sheet,
+                // hindi mawawala products.
+                // config.js remains the fallback.
+                console.warn(
+                    'Google Sheet unavailable. Using config.js fallback.',
+                    error
+                );
+                
+            }
+            
         },
         
         initHeader() {
@@ -279,24 +480,44 @@ document.addEventListener('alpine:init', () => {
         
         // Open the Quick View modal for a clicked product
         openQuickView(product) {
+            
+            // Clean old preview URL first
+            if (this.preOrderForm?.proofPreview) {
+                URL.revokeObjectURL(
+                    this.preOrderForm.proofPreview
+                );
+            }
+            
             this.quickViewProduct = product;
             this.quickViewSlide = 0;
+            
             this.selectedSize = null;
             this.sizeChartOpen = false;
             
+            // Reset pre-order UI state
             this.preOrderExpanded = false;
+            this.preOrderError = '';
+            this.preOrderSuccess = false;
+            this.preOrderReservationId = '';
             
+            // Reset complete pre-order form
             this.preOrderForm = {
                 name: '',
                 contact: '',
+                location: '',
+                note: '',
+                website: '',
                 size: null,
                 quantity: 1,
                 proofFile: null,
                 proofPreview: ''
             };
+            
             document.documentElement.style.overflow = 'hidden';
             document.body.style.overflow = 'hidden';
+            
             this.quickViewOpen = true;
+            
         },
         
         // Close the Quick View modal
@@ -378,57 +599,172 @@ document.addEventListener('alpine:init', () => {
             };
         },
         
-        submitPreOrderPreview() {
-            if (!this.preOrderProduct) return;
+        async submitPreOrderPreview() {
+            
+            const product = this.quickViewProduct;
+            
+            // Prevent double submit
+            if (this.isPreOrderSubmitting) return;
+            
+            // Clear previous warning
+            this.preOrderError = '';
+            
+            if (!product) {
+                this.preOrderError = 'Product information is missing.';
+                return;
+            }
             
             if (!this.preOrderForm.name.trim()) {
-                alert('Please enter your name.');
+                this.preOrderError = 'Please enter your full name.';
                 return;
             }
             
             if (!this.preOrderForm.contact.trim()) {
-                alert('Please enter your contact number.');
+                this.preOrderError = 'Please enter your contact number.';
+                return;
+            }
+            
+            const contact =
+            this.preOrderForm.contact.replace(/[\s-]/g, '');
+            
+            const phoneValid =
+            /^(?:\+63|0)9\d{9}$/.test(contact);
+            
+            if (!phoneValid) {
+                this.preOrderError =
+                'Please enter a valid Philippine mobile number.';
                 return;
             }
             
             if (!this.preOrderForm.location.trim()) {
-                alert('Please enter your location.');
+                this.preOrderError =
+                'Please enter your location.';
                 return;
             }
             
             if (
-                this.preOrderProduct.sizes &&
-                this.preOrderProduct.sizes.length &&
+                product.sizes &&
+                product.sizes.length &&
                 !this.preOrderForm.size
             ) {
-                alert('Please select a size.');
+                this.preOrderError =
+                'Please select a pre-order size.';
                 return;
             }
             
             if (!this.preOrderForm.proofFile) {
-                alert('Please upload your GCash payment screenshot.');
+                this.preOrderError =
+                'Please upload your GCash payment screenshot.';
                 return;
             }
             
-            console.log('PRE-ORDER PREVIEW:', {
-                productId: product.id,
-                productName: product.name,
-                size: this.preOrderForm.size,
-                quantity: this.preOrderForm.quantity,
+            try {
                 
-                name: this.preOrderForm.name,
-                contact: this.preOrderForm.contact,
-                location: this.preOrderForm.location,
-                note: this.preOrderForm.note,
+                // Lock submit button
+                this.isPreOrderSubmitting = true;
                 
-                requiredDownpayment:
-                this.config.payments.preorderDownpayment,
+                const payload = {
+                    name: this.preOrderForm.name.trim(),
+                    contact: this.preOrderForm.contact.trim(),
+                    location: this.preOrderForm.location.trim(),
+                    
+                    productId:
+                    product.productId || product.id,
+                    
+                    productName:
+                    product.name,
+                    
+                    size:
+                    this.preOrderForm.size,
+                    
+                    quantity:
+                    Number(this.preOrderForm.quantity) || 1,
+                    
+                    downpayment:
+                    (
+                        Number(
+                            this.config.payments.preorderDownpayment
+                        ) || 0
+                    ) *
+                    (
+                        Number(this.preOrderForm.quantity) || 1
+                    ),
+                    
+                    note:
+                    this.preOrderForm.note || '',
+                    
+                    website:
+                    this.preOrderForm.website || ''
+                };
                 
-                proofFile:
-                this.preOrderForm.proofFile.name
-            });
+                const response = await fetch(
+                    this.config.googleAppsScriptUrl,
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    }
+                );
+                
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(
+                        result.message ||
+                        'Reservation submission failed.'
+                    );
+                }
+                
+                console.log(
+                    'RESERVATION SUBMITTED:',
+                    result
+                );
+                
+                
+                // ===== SHOW PRE-ORDER SUCCESS STATE =====
+                this.preOrderReservationId =
+                result.reservationId || '';
+                
+                this.preOrderSuccess = true;
+                
+                
+                // Release old screenshot preview from browser memory
+                if (this.preOrderForm.proofPreview) {
+                    URL.revokeObjectURL(
+                        this.preOrderForm.proofPreview
+                    );
+                }
+                
+                
+                // Reset customer form data
+                this.preOrderForm = {
+                    name: '',
+                    contact: '',
+                    location: '',
+                    note: '',
+                    website: '',
+                    size: null,
+                    quantity: 1,
+                    proofFile: null,
+                    proofPreview: ''
+                };
+                
+            } catch (error) {
+                
+                console.error(
+                    'PRE-ORDER SUBMISSION ERROR:',
+                    error
+                );
+                
+                this.preOrderError =
+                error.message ||
+                'Unable to submit your pre-order request. Please try again.';
+                
+            } finally {
+                
+                this.isPreOrderSubmitting = false;
+                
+            }
             
-            alert('Pre-order form is ready. Google Sheet submission will be connected next.');
         },
         
         // Add to cart then close with animation
@@ -583,7 +919,11 @@ document.addEventListener('alpine:init', () => {
         },
         
         selectProductSize(size) {
+            
             this.selectedSize = size;
+            
+            // Clear old validation warning when changing size
+            this.preOrderError = '';
             
             if (
                 this.canPreOrderSize(
@@ -591,13 +931,18 @@ document.addEventListener('alpine:init', () => {
                     size
                 )
             ) {
-                // Remember which sold-out size customer wants
+                // Sold-out but allowed for pre-order
                 this.preOrderForm.size = size;
+                
             } else {
-                // Back to normal purchase mode
+                
+                // Available / non-preorder size
+                // Close any previously opened pre-order form
                 this.preOrderExpanded = false;
                 this.preOrderForm.size = null;
+                
             }
+            
         },
         
         get cartCount() {
@@ -605,15 +950,15 @@ document.addEventListener('alpine:init', () => {
         },
         
         get cartTotal() {
-
+            
             return this.cart.reduce((sum, item) => {
-        
+                
                 const finalPrice = this.getProductFinalPrice(item);
-        
+                
                 return sum + (finalPrice * item.quantity);
-        
+                
             }, 0);
-        
+            
         },
         
         // Standard shipping fee based on region
@@ -831,7 +1176,8 @@ document.addEventListener('alpine:init', () => {
                 : '';
                 
                 const lineTotal =
-                Number(item.price) * Number(item.quantity);
+                this.getProductFinalPrice(item) *
+                Number(item.quantity);
                 
                 orderSummary +=
                 `- ${item.name}${sizeText} | Qty: ${item.quantity} | ₱${lineTotal.toLocaleString()}\n`;
