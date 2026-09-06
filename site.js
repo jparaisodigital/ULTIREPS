@@ -551,36 +551,63 @@ document.addEventListener('alpine:init', () => {
         },
         
         handlePreOrderProof(event) {
+
             const file = event.target.files?.[0];
-            
+        
+            // Clear previous error
+            this.preOrderError = '';
+        
             if (!file) {
                 this.preOrderForm.proofFile = null;
                 this.preOrderForm.proofPreview = '';
                 return;
             }
-            
-            if (!file.type.startsWith('image/')) {
-                alert('Please upload an image file.');
+        
+            const allowedTypes = [
+                'image/jpeg',
+                'image/png',
+                'image/webp'
+            ];
+        
+            if (!allowedTypes.includes(file.type)) {
+        
+                this.preOrderError =
+                    'Please upload a JPG, PNG, or WEBP image.';
+        
                 event.target.value = '';
+        
+                this.preOrderForm.proofFile = null;
+                this.preOrderForm.proofPreview = '';
+        
                 return;
             }
-            
-            const maxSize = 5 * 1024 * 1024; // 5MB
-            
+        
+            const maxSize =
+                5 * 1024 * 1024;
+        
             if (file.size > maxSize) {
-                alert('Payment screenshot must be 5MB or smaller.');
+        
+                this.preOrderError =
+                    'Payment screenshot must be 5MB or smaller.';
+        
                 event.target.value = '';
+        
+                this.preOrderForm.proofFile = null;
+                this.preOrderForm.proofPreview = '';
+        
                 return;
             }
-            
+        
             this.preOrderForm.proofFile = file;
-            
+        
             if (this.preOrderForm.proofPreview) {
-                URL.revokeObjectURL(this.preOrderForm.proofPreview);
+                URL.revokeObjectURL(
+                    this.preOrderForm.proofPreview
+                );
             }
-            
+        
             this.preOrderForm.proofPreview =
-            URL.createObjectURL(file);
+                URL.createObjectURL(file);
         },
         
         closePreOrderModal() {
