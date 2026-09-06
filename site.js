@@ -47,6 +47,13 @@ document.addEventListener('alpine:init', () => {
         messengerLink: "",
         preparedOrderDetails: "",
         paymentModalOpen: false,
+        
+        checkoutNotice: {
+            show: false,
+            message: '',
+            type: 'info'
+        },
+        
         hotToastVisible: false,
         selectedSize: null,
         sizeChartOpen: false,
@@ -1156,6 +1163,95 @@ document.addEventListener('alpine:init', () => {
             this.paymentModalOpen = true;
         },
         
+        buildOrderSummary() {
+            
+            const email =
+            this.form.email.trim();
+            
+            const contact =
+            this.form.contact.replace(/[\s-]/g, '');
+            
+            const paymentLabel =
+            this.form.deliveryOption === 'same_day'
+            ? 'Payment arrangement via Messenger'
+            : ({
+                gcash: 'GCash',
+                bank: 'Bank Transfer'
+            }[this.form.paymentMethod] || this.form.paymentMethod);
+            
+            const deliveryLabel =
+            this.form.deliveryOption === 'same_day'
+            ? 'Same Day Delivery - Shipping fee arranged via Messenger'
+            : 'Standard Delivery';
+            
+            const regionLabel = {
+                luzon: 'Luzon',
+                vismin: 'Visayas / Mindanao'
+            }[this.form.region] || this.form.region;
+            
+            let orderSummary =
+            `NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
+            
+            orderSummary +=
+            `CUSTOMER DETAILS\n` +
+            `Name: ${this.form.firstName.trim()} ${this.form.lastName.trim()}\n` +
+            `Email: ${email}\n` +
+            `Phone: ${contact}\n` +
+            `Address: ${this.form.address.trim()}\n` +
+            `Region: ${regionLabel}\n`;
+            
+            if (this.form.postalCode.trim()) {
+                orderSummary +=
+                `Postal Code: ${this.form.postalCode.trim()}\n`;
+            }
+            
+            if (this.form.orderNotes.trim()) {
+                orderSummary +=
+                `Order Notes: ${this.form.orderNotes.trim()}\n`;
+            }
+            
+            orderSummary +=
+            `\nDELIVERY & PAYMENT\n` +
+            `Delivery: ${deliveryLabel}\n` +
+            `Payment: ${paymentLabel}\n\n`;
+            
+            orderSummary += `ITEMS\n`;
+            
+            this.cart.forEach(item => {
+                
+                const sizeText =
+                item.selectedSize !== null &&
+                item.selectedSize !== undefined
+                ? ` | Size: US ${item.selectedSize}`
+                : '';
+                
+                const lineTotal =
+                this.getProductFinalPrice(item) *
+                Number(item.quantity);
+                
+                orderSummary +=
+                `- ${item.name}${sizeText} | Qty: ${item.quantity} | ₱${lineTotal.toLocaleString()}\n`;
+            });
+            
+            orderSummary +=
+            `\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
+            
+            if (this.regionShippingFee > 0) {
+                orderSummary +=
+                `\nShipping: ₱${this.regionShippingFee.toLocaleString()}`;
+            }
+            
+            if (this.form.deliveryOption === 'same_day') {
+                orderSummary +=
+                `\nSame-Day Shipping: To be arranged via Messenger`;
+            }
+            
+            orderSummary +=
+            `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
+            
+            return orderSummary;
+        },
+        
         async submitOrder() {
             // ===== BASIC CHECKOUT VALIDATION =====
             const email = this.form.email.trim();
@@ -1202,86 +1298,9 @@ document.addEventListener('alpine:init', () => {
             
             this.isSubmitting = true;
             
-            // ===== PAYMENT LABEL =====
-            const paymentLabel =
-            this.form.deliveryOption === 'same_day'
-            ? 'Payment arrangement via Messenger'
-            : ({
-                gcash: 'GCash',
-                bank: 'Bank Transfer'
-            }[this.form.paymentMethod] || this.form.paymentMethod);
-            
-            // ===== DELIVERY LABEL =====
-            const deliveryLabel =
-            this.form.deliveryOption === 'same_day'
-            ? 'Same Day Delivery - Shipping fee arranged via Messenger'
-            : 'Standard Delivery';
-            
-            // ===== REGION LABEL =====
-            const regionLabel = {
-                luzon: 'Luzon',
-                vismin: 'Visayas / Mindanao'
-            }[this.form.region] || this.form.region;
-            
             // ===== ORDER SUMMARY =====
-            let orderSummary =
-            `NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
-            
-            orderSummary +=
-            `CUSTOMER DETAILS\n` +
-            `Name: ${this.form.firstName.trim()} ${this.form.lastName.trim()}\n` +
-            `Email: ${email}\n` +
-            `Phone: ${contact}\n` +
-            `Address: ${this.form.address.trim()}\n` +
-            `Region: ${regionLabel}\n`;
-            
-            if (this.form.postalCode.trim()) {
-                orderSummary +=
-                `Postal Code: ${this.form.postalCode.trim()}\n`;
-            }
-            
-            if (this.form.orderNotes.trim()) {
-                orderSummary +=
-                `Order Notes: ${this.form.orderNotes.trim()}\n`;
-            }
-            
-            orderSummary +=
-            `\nDELIVERY & PAYMENT\n` +
-            `Delivery: ${deliveryLabel}\n` +
-            `Payment: ${paymentLabel}\n\n`;
-            
-            orderSummary += `ITEMS\n`;
-            
-            this.cart.forEach(item => {
-                const sizeText =
-                item.selectedSize !== null &&
-                item.selectedSize !== undefined
-                ? ` | Size: US ${item.selectedSize}`
-                : '';
-                
-                const lineTotal =
-                this.getProductFinalPrice(item) *
-                Number(item.quantity);
-                
-                orderSummary +=
-                `- ${item.name}${sizeText} | Qty: ${item.quantity} | ₱${lineTotal.toLocaleString()}\n`;
-            });
-            
-            orderSummary +=
-            `\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
-            
-            if (this.regionShippingFee > 0) {
-                orderSummary +=
-                `\nShipping: ₱${this.regionShippingFee.toLocaleString()}`;
-            }
-            
-            if (this.form.deliveryOption === 'same_day') {
-                orderSummary +=
-                `\nSame-Day Shipping: To be arranged via Messenger`;
-            }
-            
-            orderSummary +=
-            `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
+            const orderSummary =
+            this.buildOrderSummary();
             
             // ===== MESSENGER =====
             const messengerBase = this.config.socials?.messenger;
@@ -1314,30 +1333,62 @@ document.addEventListener('alpine:init', () => {
                 "noopener,noreferrer"
             );
         },
-
+        
         async copyOrderDetails() {
-
-            if (!this.preparedOrderDetails) {
-                alert("Order details are not ready yet.");
+            
+            if (!this.cart.length) {
+                this.showCheckoutNotice(
+                    "Your cart is empty.",
+                    "error"
+                );
                 return;
             }
-        
+            
+            const orderDetails =
+            this.buildOrderSummary();
+            
+            this.preparedOrderDetails =
+            orderDetails;
+            
             try {
-        
+                
                 await navigator.clipboard.writeText(
-                    this.preparedOrderDetails
+                    orderDetails
                 );
-        
-                alert("Order details copied.");
-        
+                
+                this.showCheckoutNotice(
+                    "Order details copied. You can paste them in Messenger.",
+                    "success"
+                );
+                
             } catch (error) {
-        
-                alert(
-                    "Unable to copy automatically. Please copy the order details manually."
+                
+                this.showCheckoutNotice(
+                    "Unable to copy automatically. Please try again.",
+                    "error"
                 );
-        
+                
             }
-        
+            
         },
+        
+        showCheckoutNotice(message, type = 'info') {
+            
+            // Cancel previous auto-hide timer
+            if (this._checkoutNoticeTimer) {
+                clearTimeout(this._checkoutNoticeTimer);
+            }
+            
+            this.checkoutNotice.message = message;
+            this.checkoutNotice.type = type;
+            this.checkoutNotice.show = true;
+            
+            // Auto hide after 3 seconds
+            this._checkoutNoticeTimer = setTimeout(() => {
+                this.checkoutNotice.show = false;
+            }, 3000);
+            
+        },
+        
     }));
 });
