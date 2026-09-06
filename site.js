@@ -78,6 +78,10 @@ document.addEventListener('alpine:init', () => {
         siteLoaderVisible: true,
         siteLoaderLeaving: false,
         
+        // ===== MONTHLY SALE MODAL STATE =====
+        saleModalVisible: false,
+        saleModalTimer: null,
+        
         // HOT STYLE <-> FEEDBACK popup state
         hotToastMode: 'hot',
         hotToastTimer: null,
@@ -188,22 +192,26 @@ document.addEventListener('alpine:init', () => {
             // Load Google Sheet data, config.js stays as fallback
             await this.loadGoogleSheetData();
             
-            // HOT STYLE toast 
-            const dismissed = localStorage.getItem('ulti_hot_toast_dismissed');
+            // Monthly Sale Modal first.
+            // Hot Style toast will wait until the Sale modal is closed.
+            this.initSaleModal();
             
-            if (!dismissed) {
-                setTimeout(() => {
-                    this.hotToastVisible = true;
-                    this.hotToastMode = 'hot';
-                    this.startHotToastLoop();
-                }, 4000);
-            }
-            
-            // Esc key closes Quick View (existing)
+            // ESC key behavior
             window.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && this.quickViewOpen) {
+                
+                if (e.key !== 'Escape') return;
+                
+                // Sale modal gets priority
+                if (this.saleModalVisible) {
+                    this.closeSaleModal(false);
+                    return;
+                }
+                
+                // Existing Quick View
+                if (this.quickViewOpen) {
                     this.closeQuickView();
                 }
+                
             });
         },
         
@@ -371,6 +379,68 @@ document.addEventListener('alpine:init', () => {
                     String(paymentSettings.GCashQR).trim();
                 }
                 
+                // ===== PROMO SETTINGS FROM GOOGLE SHEET =====
+                const promoSettings = data.promoSettings || {};
+                
+                if (!this.config.saleModal) {
+                    this.config.saleModal = {};
+                }
+                
+                // Enabled
+                if (promoSettings.Enabled !== undefined) {
+                    this.config.saleModal.enabled =
+                    promoSettings.Enabled === true ||
+                    String(promoSettings.Enabled).toLowerCase() === 'true';
+                }
+                
+                // Promo ID
+                if (promoSettings.PromoID) {
+                    this.config.saleModal.promoId =
+                    String(promoSettings.PromoID).trim();
+                }
+                
+                // Eyebrow
+                if (promoSettings.Eyebrow) {
+                    this.config.saleModal.eyebrow =
+                    String(promoSettings.Eyebrow).trim();
+                }
+                
+                // Main sale number
+                if (promoSettings.SaleNumber) {
+                    this.config.saleModal.saleNumber =
+                    String(promoSettings.SaleNumber).trim();
+                }
+                
+                // SALE label
+                if (promoSettings.SaleLabel) {
+                    this.config.saleModal.saleLabel =
+                    String(promoSettings.SaleLabel).trim();
+                }
+                
+                // Discount text
+                if (promoSettings.DiscountText) {
+                    this.config.saleModal.discountText =
+                    String(promoSettings.DiscountText).trim();
+                }
+                
+                // Message
+                if (promoSettings.Message) {
+                    this.config.saleModal.message =
+                    String(promoSettings.Message).trim();
+                }
+                
+                // Button text
+                if (promoSettings.ButtonText) {
+                    this.config.saleModal.buttonText =
+                    String(promoSettings.ButtonText).trim();
+                }
+                
+                // Footer text
+                if (promoSettings.FooterText) {
+                    this.config.saleModal.footerText =
+                    String(promoSettings.FooterText).trim();
+                }
+                
                 
                 console.log(
                     'ULTI GOOGLE SHEET MERGE SUCCESS:',
@@ -409,6 +479,185 @@ document.addEventListener('alpine:init', () => {
                 
                 this.lastScrollY = currentY;
             }, { passive: true });
+        },
+        
+        // ===== MONTHLY SALE MODAL =====
+        
+        initSaleModal() {
+            
+            const settings =
+            this.config.saleModal || {};
+            
+            // Sale feature disabled
+            if (settings.enabled === false) {
+                this.scheduleHotToast();
+                return;
+            }
+            
+            const promoId =
+            String(settings.promoId || 'default-promo');
+            
+            // Permanently hidden for THIS specific promo
+            const permanentlyDismissed =
+            localStorage.getItem(
+                'ulti_sale_modal_dismissed'
+            );
+            
+            // Closed during THIS browser session
+            const sessionDismissed =
+            sessionStorage.getItem(
+                'ulti_sale_modal_session_closed'
+            );
+            
+            if (
+                permanentlyDismissed === promoId ||
+                sessionDismissed === promoId
+            ) {
+                this.scheduleHotToast();
+                return;
+            }
+            
+            if (this.saleModalTimer) {
+                clearTimeout(this.saleModalTimer);
+            }
+            
+            const delay =
+            Math.max(
+                0,
+                Number(settings.showDelay) || 0
+            );
+            
+            const openWhenReady = () => {
+                
+                /*
+                * Huwag mag-open habang nasa ibabaw pa
+                * ang Ulti loading screen.
+                */
+                if (this.siteLoaderVisible) {
+                    this.saleModalTimer =
+                    setTimeout(openWhenReady, 100);
+                    return;
+                }
+                
+                // Make sure Hot Style is not visible
+                this.stopHotToastLoop();
+                this.hotToastVisible = false;
+                
+                // Lock page scrolling
+                document.documentElement.style.overflow =
+                'hidden';
+                
+                document.body.style.overflow =
+                'hidden';
+                
+                this.saleModalVisible = true;
+            };
+            
+            this.saleModalTimer =
+            setTimeout(
+                openWhenReady,
+                delay
+            );
+        },
+        
+        
+        closeSaleModal(permanent = false) {
+            
+            const settings =
+            this.config.saleModal || {};
+            
+            const promoId =
+            String(settings.promoId || 'default-promo');
+            
+            this.saleModalVisible = false;
+            
+            // DON'T SHOW AGAIN
+            if (permanent) {
+                
+                /*
+                * Only this PromoID is remembered.
+                * New PromoID = modal can show again.
+                */
+                localStorage.setItem(
+                    'ulti_sale_modal_dismissed',
+                    promoId
+                );
+                
+            } else {
+                
+                /*
+                * X / backdrop / ESC:
+                * don't bother the visitor again
+                * during this browser session.
+                */
+                sessionStorage.setItem(
+                    'ulti_sale_modal_session_closed',
+                    promoId
+                );
+            }
+            
+            // Restore scrolling
+            if (!this.quickViewOpen) {
+                document.documentElement.style.overflow = '';
+                document.body.style.overflow = '';
+            }
+            
+            // Existing Hot Style waits before appearing
+            this.scheduleHotToast();
+        },
+        
+        
+        shopSale() {
+            
+            // Close without permanently hiding promo
+            this.closeSaleModal(false);
+            
+            // Show discounted products only
+            this.selectedCategory = 'SALE';
+            
+            const shop =
+            document.getElementById('shop');
+            
+            if (shop) {
+                setTimeout(() => {
+                    
+                    shop.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                }, 250);
+            }
+            
+        },
+        
+        
+        scheduleHotToast() {
+            
+            const dismissed =
+            localStorage.getItem(
+                'ulti_hot_toast_dismissed'
+            );
+            
+            if (dismissed) return;
+            
+            const delay =
+            Number(
+                this.config.saleModal?.hotToastDelay
+            ) || 2500;
+            
+            setTimeout(() => {
+                
+                // Never overlap the Sale modal
+                if (this.saleModalVisible) return;
+                
+                this.hotToastVisible = true;
+                this.hotToastMode = 'hot';
+                
+                this.startHotToastLoop();
+                
+            }, delay);
+            
         },
         
         // ===== TOAST ACTIONS =====
@@ -882,7 +1131,12 @@ document.addEventListener('alpine:init', () => {
         },
         
         extractCategories() {
-            this.categories = ['All', 'HOT', ...(this.config.categories || [])];
+            this.categories = [
+                'All',
+                'HOT',
+                'SALE',
+                ...(this.config.categories || [])
+            ];
         },
         
         get filteredProducts() {
@@ -892,9 +1146,19 @@ document.addEventListener('alpine:init', () => {
                 const isActive =
                 product.active !== false;
                 
-                const matchesCategory = 
-                this.selectedCategory === 'All' || 
-                (this.selectedCategory === 'HOT' && product.hot === true) ||
+                const matchesCategory =
+                this.selectedCategory === 'All' ||
+                
+                (
+                    this.selectedCategory === 'HOT' &&
+                    product.hot === true
+                ) ||
+                
+                (
+                    this.selectedCategory === 'SALE' &&
+                    Number(product.discountAmount || 0) > 0
+                ) ||
+                
                 product.category === this.selectedCategory;
                 
                 const matchesSearch = product.name
@@ -1157,7 +1421,10 @@ document.addEventListener('alpine:init', () => {
                 !this.form.lastName.trim() ||
                 !this.form.address.trim() ||
                 !contact ||
-                !this.form.region
+                (
+    this.form.deliveryOption !== 'same_day' &&
+    !this.form.region
+)
             ) {
                 this.showCheckoutNotice(
                     "Please complete all required checkout details.",
@@ -1303,7 +1570,10 @@ document.addEventListener('alpine:init', () => {
                 !this.form.lastName.trim() ||
                 !this.form.address.trim() ||
                 !contact ||
-                !this.form.region
+                (
+    this.form.deliveryOption !== 'same_day' &&
+    !this.form.region
+)
             ) {
                 this.showCheckoutNotice(
                     "Please complete all required checkout details.",
@@ -1410,7 +1680,10 @@ document.addEventListener('alpine:init', () => {
                 !this.form.lastName.trim() ||
                 !this.form.address.trim() ||
                 !contact ||
-                !this.form.region
+                (
+    this.form.deliveryOption !== 'same_day' &&
+    !this.form.region
+)
             ) {
                 this.showCheckoutNotice(
                     "Please complete all required checkout details first.",
