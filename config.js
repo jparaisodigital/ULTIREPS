@@ -22,7 +22,10 @@ window.CONFIG = {
     heroImagesMobile: [
         "assets/mobile1.png",
         "assets/mobile2.jpg",
-        "assets/mobile3.jpg"
+        "assets/mobile3.jpg",
+        "assets/mobile4.jpg",
+        "assets/mobile5.jpg",
+        "assets/mobile6.jpg"
     ],
     
     // Customer Feedback / Review Screenshots
@@ -75,7 +78,7 @@ window.CONFIG = {
         preorderDownpayment: 500,
         gcash: {
             number: "0927 601 3928",
-            accountName: "ULTI REPS",
+            accountName: "FR**K NI****S J.",
             qrImage: "assets/gcash.jpg"
         },
         

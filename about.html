@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+<link rel="icon" type="image/png" href="assets/fav.png">
     <title x-text="'About Us | ' + config.storeName"></title>
     <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -225,9 +227,7 @@ Shop
             <div class="flex-1 overflow-y-auto px-6 py-4 space-y-2">
                 <template x-for="(faq, index) in [
     { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
-    { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
-    { q: 'How can I track my order?', a: 'For order status and delivery updates, please message us directly through our Facebook Page via Messenger. Our team will assist you and provide the latest update regarding your order.' },
-    { q: 'What payment methods do you accept?', a: 'We accept GCash and Bank Transfer. Please send your order through Messenger first so our team can confirm product availability and your final total. Payment instructions will be provided after your order is confirmed.' },
+    { q: 'What payment methods do you accept?', a: 'We accept GCash and Bank Transfer for standard delivery. Complete your payment during checkout, then send your prepared order details and payment screenshot through Messenger for review and confirmation. Same-day payment arrangements are handled through Messenger.' },
     { q: 'Can I cancel or change my order?', a: 'Yes, as long as it hasn\'t been shipped out yet. Message us on Facebook or Messenger right away so we can assist you.' },
     { q: 'What is your exchange policy?', a: 'We do not offer cash or monetary refunds. Items may only be exchanged for a different shoe or a different size, subject to availability. If you receive a wrong or damaged item, please contact us immediately through our Facebook Page via Messenger and provide your proof of purchase, order details, and clear photos of the item. Once verified, we will arrange a replacement or exchange at no additional cost.' },
     { q: 'How can I reach customer support?', a: 'You can message us through our Facebook Page or Messenger — the links are in our site footer. We respond to messages within business hours.' }

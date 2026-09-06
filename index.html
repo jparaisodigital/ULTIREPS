@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+<link rel="icon" type="image/png" href="assets/fav.png">
     <!-- Config-Driven Page Title -->
     <title x-text="config.storeName + ' | Minimalist Store'"></title>
     <!-- Tailwind CSS -->
@@ -469,73 +471,92 @@ Help / FAQs
     </div>
     
     <!-- Name + Price + Add to Cart -->
-<div class="flex items-start justify-between gap-3">
-
-    <!-- Product Name + Price -->
-    <div
+    <div class="flex items-start justify-between gap-3">
+        
+        <!-- Product Name + Price -->
+        <div
         class="min-w-0"
         @click="openQuickView(product)"
-    >
-
+        >
+        
         <!-- Product Name -->
         <h3
-            class="text-sm font-medium text-neutral-900 mb-1 truncate"
-            x-text="product.name"
+        class="text-sm font-medium text-neutral-900 mb-1 truncate"
+        x-text="product.name"
         ></h3>
-
+        
         <!-- Price -->
         <div class="flex items-center gap-2">
-
-            <span
-                x-show="hasProductDiscount(product)"
-                class="text-[11px] text-neutral-400 line-through"
-                x-text="
-                    config.currency +
-                    Number(product.price).toLocaleString()
-                "
-            ></span>
-
-            <span
-                class="text-sm font-semibold text-neutral-900"
-                x-text="
-                    config.currency +
-                    Number(
-                        getProductFinalPrice(product)
-                    ).toLocaleString()
-                "
-            ></span>
-
-        </div>
-
-    </div>
-        
-        <!-- Add to Cart (Text + Icon) -->
-        <!-- Available -->
-        <template x-if="!isProductSoldOut(product)">
-            <button
-            @click.stop="addToCart(product)"
-            class="flex-shrink-0 flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-medium text-neutral-900 hover:text-neutral-600 transition-all duration-200 active:scale-90 pt-0.5"
-            >
-            <span>Add</span>
             
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-            </svg>
-        </button>
-    </template> 
+            <span
+            x-show="hasProductDiscount(product)"
+            class="text-[11px] text-neutral-400 line-through"
+            x-text="
+            config.currency +
+            Number(product.price).toLocaleString()
+            "
+            ></span>
+            
+            <span
+            class="text-sm font-semibold text-neutral-900"
+            x-text="
+            config.currency +
+            Number(
+            getProductFinalPrice(product)
+            ).toLocaleString()
+            "
+            ></span>
+            
+        </div>
+        
+    </div>
     
-    <!-- Pre-order -->
-    <template x-if="isProductSoldOut(product) && product.reserveAllowed">
+    <!-- Add to Cart (Text + Icon) -->
+    <!-- Available -->
+    <template x-if="!isProductSoldOut(product)">
         <button
-        @click.stop="openQuickView(product)"
-        class="flex-shrink-0 text-[11px] uppercase tracking-wider font-semibold pt-0.5 transition-colors"
-        style="color: #B42318;"
+        @click.stop="addToCart(product)"
+        class="flex-shrink-0 flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-medium text-neutral-900 hover:text-neutral-600 transition-all duration-200 active:scale-90 pt-0.5"
         >
-        Pre-order
+        <span>Add</span>
+        
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+        </svg>
     </button>
-</template>
+</template> 
 
+<!-- Pre-order -->
+<template x-if="isProductSoldOut(product) && product.reserveAllowed">
+    <button
+    @click.stop="openQuickView(product)"
+    class="flex-shrink-0 inline-flex items-center gap-1.5
+    px-3 py-2 rounded-full border
+    text-[10px] uppercase tracking-[0.14em] font-bold
+    transition-all duration-200 active:scale-95
+    text-[#B42318] border-[#B42318] bg-red-50
+    hover:bg-[#B42318] hover:text-white
+    focus:outline-none focus:ring-0
+    focus-visible:ring-2 focus-visible:ring-[#B42318] focus-visible:ring-offset-2"
+>
+    Pre-order
+    
+    <svg
+    class="w-3 h-3"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    >
+    <path
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1.8"
+    d="M9 5l7 7-7 7"
+    ></path>
+</svg>
+</button>
+</template>
 </div>
 </div>
 </template>
@@ -582,13 +603,16 @@ style="display: none;">
     <!-- Image Slider -->
     <div class="relative bg-neutral-50 md:w-1/2 aspect-square md:aspect-auto md:min-h-[420px]">
         
-        <!-- Sold Out Badge (selected size) -->
+        <!-- Sold Out Badge -->
         <template
         x-if="
+        isProductSoldOut(quickViewProduct) ||
+        (
         selectedSize &&
         isSizeSoldOut(
         quickViewProduct,
         selectedSize
+        )
         )
         "
         >
@@ -708,13 +732,19 @@ x-text="quickViewProduct.name"
         
     </div>
     
-    <!-- Selected Sold-Out Size Notice -->
+    <!-- ===== PRE-ORDER NOTICE / DROPDOWN ===== -->
     <div
     x-show="
+    quickViewProduct.reserveAllowed === true &&
+    (
+    isProductSoldOut(quickViewProduct) ||
+    (
     selectedSize &&
     canPreOrderSize(
     quickViewProduct,
     selectedSize
+    )
+    )
     )
     "
     x-transition
@@ -723,54 +753,81 @@ x-text="quickViewProduct.name"
     
     <button
     type="button"
+    :disabled="!selectedSize"
     @click="
-    preOrderForm.size = selectedSize;
-    preOrderExpanded = !preOrderExpanded;
-    
-    if (preOrderExpanded) {
-        $nextTick(() => {
-            setTimeout(() => {
-                const modal = $refs.quickViewScroll;
-                const header = $refs.preOrderFormHeader;
-                
-                if (modal && header) {
-                    const modalTop = modal.getBoundingClientRect().top;
-                    const headerTop = header.getBoundingClientRect().top;
+    if (selectedSize && canPreOrderSize(quickViewProduct, selectedSize)) {
+        
+        preOrderForm.size = selectedSize;
+        preOrderExpanded = !preOrderExpanded;
+        
+        if (preOrderExpanded) {
+            $nextTick(() => {
+                setTimeout(() => {
                     
-                    const targetScroll =
-                    modal.scrollTop +
-                    (headerTop - modalTop) -
-                    8;
+                    const modal = $refs.quickViewScroll;
+                    const header = $refs.preOrderFormHeader;
                     
-                    modal.scrollTo({
-                        top: targetScroll,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 550);
-        });
+                    if (modal && header) {
+                        
+                        const modalTop =
+                        modal.getBoundingClientRect().top;
+                        
+                        const headerTop =
+                        header.getBoundingClientRect().top;
+                        
+                        const targetScroll =
+                        modal.scrollTop +
+                        (headerTop - modalTop) -
+                        8;
+                        
+                        modal.scrollTo({
+                            top: targetScroll,
+                            behavior: 'smooth'
+                        });
+                        
+                    }
+                    
+                }, 550);
+            });
+        }
     }
     "
     class="w-full flex items-center justify-between gap-3
     bg-red-50 border border-red-100
-    px-3 py-2.5 text-left"
+    px-3 py-2.5 text-left transition-opacity"
+    :class="!selectedSize ? 'cursor-default' : 'cursor-pointer'"
     >
+    
     <div>
+        
         <p
         class="text-[9px] font-bold uppercase tracking-[0.16em]"
         style="color: #B42318;"
         >
-        Size US
-        <span x-text="selectedSize"></span>
-        · Available for Pre-order
+        <span x-show="!selectedSize">
+            Available for Pre-order
+        </span>
+        
+        <span x-show="selectedSize">
+            Size US
+            <span x-text="selectedSize"></span>
+            · Available for Pre-order
+        </span>
     </p>
     
-    <p class="text-[10px] text-neutral-500 mt-0.5">
-        Tap to submit a pre-order request
-    </p>
+    <p
+    class="text-[10px] text-neutral-500 mt-0.5"
+    x-text="
+    selectedSize
+    ? 'Tap to submit a pre-order request'
+    : 'Select your preferred size below to continue'
+    "
+    ></p>
+    
 </div>
 
 <svg
+x-show="selectedSize"
 class="w-4 h-4 flex-shrink-0 transition-transform duration-300"
 :class="preOrderExpanded ? 'rotate-180' : ''"
 fill="none"
@@ -784,7 +841,9 @@ stroke-width="1.5"
 d="M19 9l-7 7-7-7"
 ></path>
 </svg>
+
 </button>
+
 </div>
 
 <!-- Size Buttons -->
@@ -1436,9 +1495,8 @@ x-transition:leave-end="opacity-0 scale-95">
     <div class="flex-1 overflow-y-auto px-6 py-4 space-y-2">
         <template x-for="(faq, index) in [
         { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
-        { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
         { q: 'How can I track my order?', a: 'For order status and delivery updates, please message us directly through our Facebook Page via Messenger. Our team will assist you and provide the latest update regarding your order.' },
-        { q: 'What payment methods do you accept?', a: 'We accept GCash and Bank Transfer. Please send your order through Messenger first so our team can confirm product availability and your final total. Payment instructions will be provided after your order is confirmed.' },
+        { q: 'What payment methods do you accept?', a: 'We accept GCash and Bank Transfer for standard delivery. Complete your payment during checkout, then send your prepared order details and payment screenshot through Messenger for review and confirmation. Same-day payment arrangements are handled through Messenger.' },
         { q: 'Can I cancel or change my order?', a: 'Yes, as long as it hasn\'t been shipped out yet. Message us on Facebook or Messenger right away so we can assist you.' },
         { q: 'What is your exchange policy?', a: 'We do not offer cash or monetary refunds. Items may only be exchanged for a different shoe or a different size, subject to availability. If you receive a wrong or damaged item, please contact us immediately through our Facebook Page via Messenger and provide your proof of purchase, order details, and clear photos of the item. Once verified, we will arrange a replacement or exchange at no additional cost.' },
         { q: 'How can I reach customer support?', a: 'You can message us through our Facebook Page or Messenger — the links are in our site footer. We respond to messages within business hours.' }

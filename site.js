@@ -1139,28 +1139,67 @@ document.addEventListener('alpine:init', () => {
         },
         
         openPaymentModal() {
-            
+
+            const email =
+                this.form.email.trim();
+        
+            const contact =
+                this.form.contact.replace(/[\s-]/g, '');
+        
+            const emailValid =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        
+            const phoneValid =
+                /^(?:\+63|0)9\d{9}$/.test(contact);
+        
+            // ===== REQUIRED DETAILS =====
             if (
-                !this.form.email ||
-                !this.form.firstName ||
-                !this.form.lastName ||
-                !this.form.address ||
-                !this.form.contact ||
+                !email ||
+                !this.form.firstName.trim() ||
+                !this.form.lastName.trim() ||
+                !this.form.address.trim() ||
+                !contact ||
                 !this.form.region
             ) {
-                alert("Please complete all required checkout details.");
+                this.showCheckoutNotice(
+                    "Please complete all required checkout details.",
+                    "error"
+                );
                 return;
             }
-            
+        
+            // ===== EMAIL =====
+            if (!emailValid) {
+                this.showCheckoutNotice(
+                    "Please enter a valid email address.",
+                    "error"
+                );
+                return;
+            }
+        
+            // ===== PHONE =====
+            if (!phoneValid) {
+                this.showCheckoutNotice(
+                    "Please enter a valid Philippine mobile number.",
+                    "error"
+                );
+                return;
+            }
+        
+            // ===== PAYMENT METHOD =====
             if (
                 this.form.deliveryOption !== 'same_day' &&
                 !this.form.paymentMethod
             ) {
-                alert("Please select a payment method.");
+                this.showCheckoutNotice(
+                    "Please select a payment method.",
+                    "error"
+                );
                 return;
             }
-            
+        
             this.paymentModalOpen = true;
+        
         },
         
         buildOrderSummary() {
@@ -1268,17 +1307,26 @@ document.addEventListener('alpine:init', () => {
                 !contact ||
                 !this.form.region
             ) {
-                alert("Please complete all required checkout details.");
+                this.showCheckoutNotice(
+                    "Please complete all required checkout details.",
+                    "error"
+                );
                 return;
             }
             
             if (!emailValid) {
-                alert("Please enter a valid email address.");
+                this.showCheckoutNotice(
+                    "Please enter a valid email address.",
+                    "error"
+                );
                 return;
             }
             
             if (!phoneValid) {
-                alert("Please enter a valid Philippine mobile number.");
+                this.showCheckoutNotice(
+                    "Please enter a valid Philippine mobile number.",
+                    "error"
+                );
                 return;
             }
             
@@ -1287,12 +1335,18 @@ document.addEventListener('alpine:init', () => {
                 this.form.deliveryOption !== 'same_day' &&
                 !this.form.paymentMethod
             ) {
-                alert("Please select a payment method.");
+                this.showCheckoutNotice(
+                    "Please select a payment method.",
+                    "error"
+                );
                 return;
             }
             
             if (!this.cart.length) {
-                alert("Your cart is empty.");
+                this.showCheckoutNotice(
+                    "Your cart is empty.",
+                    "error"
+                );
                 return;
             }
             
@@ -1307,7 +1361,10 @@ document.addEventListener('alpine:init', () => {
             
             if (!messengerBase) {
                 this.isSubmitting = false;
-                alert("Messenger link is not configured.");
+                this.showCheckoutNotice(
+                    "Messenger link is not configured.",
+                    "error"
+                );
                 return;
             }
             
@@ -1335,7 +1392,66 @@ document.addEventListener('alpine:init', () => {
         },
         
         async copyOrderDetails() {
-            
+
+            const email =
+                this.form.email.trim();
+        
+            const contact =
+                this.form.contact.replace(/[\s-]/g, '');
+        
+            const emailValid =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        
+            const phoneValid =
+                /^(?:\+63|0)9\d{9}$/.test(contact);
+        
+            // ===== REQUIRED DETAILS =====
+            if (
+                !email ||
+                !this.form.firstName.trim() ||
+                !this.form.lastName.trim() ||
+                !this.form.address.trim() ||
+                !contact ||
+                !this.form.region
+            ) {
+                this.showCheckoutNotice(
+                    "Please complete all required checkout details first.",
+                    "error"
+                );
+                return;
+            }
+        
+            // ===== EMAIL =====
+            if (!emailValid) {
+                this.showCheckoutNotice(
+                    "Please enter a valid email address.",
+                    "error"
+                );
+                return;
+            }
+        
+            // ===== PHONE =====
+            if (!phoneValid) {
+                this.showCheckoutNotice(
+                    "Please enter a valid Philippine mobile number.",
+                    "error"
+                );
+                return;
+            }
+        
+            // ===== PAYMENT METHOD =====
+            if (
+                this.form.deliveryOption !== 'same_day' &&
+                !this.form.paymentMethod
+            ) {
+                this.showCheckoutNotice(
+                    "Please select a payment method.",
+                    "error"
+                );
+                return;
+            }
+        
+            // ===== CART =====
             if (!this.cart.length) {
                 this.showCheckoutNotice(
                     "Your cart is empty.",
@@ -1343,33 +1459,33 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-            
+        
             const orderDetails =
-            this.buildOrderSummary();
-            
+                this.buildOrderSummary();
+        
             this.preparedOrderDetails =
-            orderDetails;
-            
+                orderDetails;
+        
             try {
-                
+        
                 await navigator.clipboard.writeText(
                     orderDetails
                 );
-                
+        
                 this.showCheckoutNotice(
                     "Order details copied. You can paste them in Messenger.",
                     "success"
                 );
-                
+        
             } catch (error) {
-                
+        
                 this.showCheckoutNotice(
                     "Unable to copy automatically. Please try again.",
                     "error"
                 );
-                
+        
             }
-            
+        
         },
         
         showCheckoutNotice(message, type = 'info') {
