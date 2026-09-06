@@ -1316,16 +1316,15 @@ document.addEventListener('alpine:init', () => {
             
         },
         
-        // Standard shipping fee based on region
-        get regionShippingFee() {
-            if (this.form.deliveryOption === 'same_day') return 0;
-            if (this.form.region === 'luzon') return 100;
-            if (this.form.region === 'vismin') return 150;
-            return 0;
+        // Same-day priority fee
+        get sameDayPriorityFee() {
+            return this.form.deliveryOption === 'same_day'
+            ? 100
+            : 0;
         },
         
         get grandTotal() {
-            return this.cartTotal + this.regionShippingFee;
+            return this.cartTotal + this.sameDayPriorityFee;
         },
         
         addToCart(product, size = null) {
@@ -1420,14 +1419,10 @@ document.addEventListener('alpine:init', () => {
                 !this.form.firstName.trim() ||
                 !this.form.lastName.trim() ||
                 !this.form.address.trim() ||
-                !contact ||
-                (
-    this.form.deliveryOption !== 'same_day' &&
-    !this.form.region
-)
+                !contact
             ) {
                 this.showCheckoutNotice(
-                    "Please complete all required checkout details.",
+                    "Please complete all required checkout details first.",
                     "error"
                 );
                 return;
@@ -1485,29 +1480,18 @@ document.addEventListener('alpine:init', () => {
             
             const deliveryLabel =
             this.form.deliveryOption === 'same_day'
-            ? 'Same Day Delivery - Shipping fee arranged via Messenger'
+            ? 'Same Day Delivery - PRIO'
             : 'Standard Delivery';
-            
-            const regionLabel = {
-                luzon: 'Luzon',
-                vismin: 'Visayas / Mindanao'
-            }[this.form.region] || this.form.region;
             
             let orderSummary =
             `NEW ORDER - ${this.config.storeName || 'Ulti'}\n\n`;
             
             orderSummary +=
-            `CUSTOMER DETAILS\n` +
-            `Name: ${this.form.firstName.trim()} ${this.form.lastName.trim()}\n` +
-            `Email: ${email}\n` +
-            `Phone: ${contact}\n` +
-            `Address: ${this.form.address.trim()}\n` +
-            `Region: ${regionLabel}\n`;
-            
-            if (this.form.postalCode.trim()) {
-                orderSummary +=
-                `Postal Code: ${this.form.postalCode.trim()}\n`;
-            }
+`CUSTOMER DETAILS\n` +
+`Name: ${this.form.firstName.trim()} ${this.form.lastName.trim()}\n` +
+`Email: ${email}\n` +
+`Phone: ${contact}\n` +
+`Address: ${this.form.address.trim()}\n`;
             
             if (this.form.orderNotes.trim()) {
                 orderSummary +=
@@ -1536,22 +1520,23 @@ document.addEventListener('alpine:init', () => {
                 orderSummary +=
                 `- ${item.name}${sizeText} | Qty: ${item.quantity} | ₱${lineTotal.toLocaleString()}\n`;
             });
-            
+
             orderSummary +=
-            `\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
-            
-            if (this.regionShippingFee > 0) {
-                orderSummary +=
-                `\nShipping: ₱${this.regionShippingFee.toLocaleString()}`;
-            }
+`\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
             
             if (this.form.deliveryOption === 'same_day') {
                 orderSummary +=
-                `\nSame-Day Shipping: To be arranged via Messenger`;
+                `\nPriority Fee: +₱${this.sameDayPriorityFee.toLocaleString()}`;
+                
+                orderSummary +=
+                `\nDelivery Fee: To be confirmed via Messenger`;
+            } else {
+                orderSummary +=
+                `\nDelivery Fee: To be confirmed via Messenger`;
             }
             
             orderSummary +=
-            `\nTOTAL: ₱${this.grandTotal.toLocaleString()}`;
+`\nTOTAL BEFORE DELIVERY FEE: ₱${this.grandTotal.toLocaleString()}`;
             
             return orderSummary;
         },
@@ -1559,21 +1544,22 @@ document.addEventListener('alpine:init', () => {
         async submitOrder() {
             // ===== BASIC CHECKOUT VALIDATION =====
             const email = this.form.email.trim();
-            const contact = this.form.contact.replace(/[\s-]/g, '');
             
-            const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            const phoneValid = /^(?:\+63|0)9\d{9}$/.test(contact);
+            const contact =
+            this.form.contact.replace(/[\s-]/g, '');
+            
+            const emailValid =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            
+            const phoneValid =
+            /^(?:\+63|0)9\d{9}$/.test(contact);
             
             if (
                 !email ||
                 !this.form.firstName.trim() ||
                 !this.form.lastName.trim() ||
                 !this.form.address.trim() ||
-                !contact ||
-                (
-    this.form.deliveryOption !== 'same_day' &&
-    !this.form.region
-)
+                !contact
             ) {
                 this.showCheckoutNotice(
                     "Please complete all required checkout details.",
@@ -1679,11 +1665,7 @@ document.addEventListener('alpine:init', () => {
                 !this.form.firstName.trim() ||
                 !this.form.lastName.trim() ||
                 !this.form.address.trim() ||
-                !contact ||
-                (
-    this.form.deliveryOption !== 'same_day' &&
-    !this.form.region
-)
+                !contact
             ) {
                 this.showCheckoutNotice(
                     "Please complete all required checkout details first.",

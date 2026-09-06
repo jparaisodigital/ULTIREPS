@@ -18,6 +18,43 @@
     <style>
         body { font-family: 'Space Grotesk', sans-serif; }
     </style>
+    
+    <style>
+        @keyframes prioNudge {
+            0%, 58%, 100% {
+                transform: translateY(0);
+            }
+            
+            64% {
+                transform: translateY(-8px);
+            }
+            
+            69% {
+                transform: translateY(0);
+            }
+            
+            73% {
+                transform: translateY(-4px);
+            }
+            
+            77% {
+                transform: translateY(0);
+            }
+            
+            81% {
+                transform: translateY(-6px);
+            }
+            
+            86% {
+                transform: translateY(0);
+            }
+        }
+        
+        .prio-badge {
+            animation: prioNudge 2.4s ease-in-out infinite;
+            will-change: transform;
+        }
+    </style>
 </head>
 <body
 class="bg-neutral-100 text-neutral-900 antialiased
@@ -365,162 +402,225 @@ style="display: none;"
                     focus:outline-none focus:border-neutral-900 transition-colors"
                     >
                     
-                    
-                    <!-- Region -->
-                    <div x-show="form.deliveryOption !== 'same_day'">
-                        <select
-                        x-model="form.region"
-                        :required="form.deliveryOption !== 'same_day'"
-                        class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl
-                        focus:outline-none focus:border-neutral-900 transition-colors bg-white"
-                        >
-                        <option value="">Select region</option>
-                        <option value="luzon">Luzon (₱100)</option>
-                        <option value="vismin">Visayas / Mindanao (₱150)</option>
-                    </select>
-                </div>
-                
-                
-                <!-- Phone + Postal Code -->
-                <div class="grid grid-cols-2 gap-3">
-                    
+                    <!-- Phone Number -->
                     <input
                     type="tel"
                     x-model="form.contact"
                     required
                     placeholder="Phone number"
-                    class="w-full min-w-0 px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                    class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl
                     focus:outline-none focus:border-neutral-900 transition-colors"
                     >
                     
-                    <input
-                    type="text"
-                    x-model="form.postalCode"
-                    placeholder="Postal code (optional)"
-                    class="w-full min-w-0 px-4 py-3 text-sm border border-neutral-200 rounded-xl
-                    focus:outline-none focus:border-neutral-900 transition-colors"
-                    >
+                    
+                    <!-- Order Notes -->
+                    <textarea
+                    x-model="form.orderNotes"
+                    rows="3"
+                    placeholder="Order notes (optional) — e.g. landmark, special instructions"
+                    class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl
+                    focus:outline-none focus:border-neutral-900 transition-colors resize-none"
+                    ></textarea>
                     
                 </div>
                 
-                
-                <!-- Order Notes -->
-                <textarea
-                x-model="form.orderNotes"
-                rows="3"
-                placeholder="Order notes (optional) — e.g. landmark, special instructions"
-                class="w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl
-                focus:outline-none focus:border-neutral-900 transition-colors resize-none"
-                ></textarea>
-                
-            </div>
+            </section>
             
-        </section>
-        
-        <!-- Shipping Info -->
-        <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200">
-            <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-4 text-neutral-900">
-                Shipping Info
-            </h3>
-            
-            <div class="bg-neutral-50 rounded-xl p-4 border border-neutral-200 space-y-4">
+            <!-- Delivery & Shipping Info -->
+            <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200">
                 
-                <!-- J&T Express -->
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center flex-shrink-0">
-                        <span class="text-[10px] font-bold text-white">J&T</span>
-                    </div>
-                    
-                    <div>
-                        <p class="text-sm font-bold">J&T Express</p>
-                        <p class="text-xs text-neutral-500">
-                            Standard nationwide delivery
-                        </p>
-                    </div>
-                </div>
+                <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-2 text-neutral-900">
+                    2. Delivery & Shipping Info
+                </h3>
                 
-                <!-- Divider -->
-                <div class="border-t border-neutral-200"></div>
-                
-                <!-- Lalamove -->
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0">
-                        <span class="text-[10px] font-bold text-white">LALA</span>
-                    </div>
-                    
-                    <div>
-                        <p class="text-sm font-bold">Lalamove</p>
-                        <p class="text-xs text-neutral-500">
-                            Same-day delivery
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Divider -->
-                <div class="border-t border-neutral-200"></div>
-                
-                <!-- GrabExpress -->
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-lg bg-green-600 flex items-center justify-center flex-shrink-0">
-                        <span class="text-[10px] font-bold text-white">GRAB</span>
-                    </div>
-                    
-                    <div>
-                        <p class="text-sm font-bold">GrabExpress</p>
-                        <p class="text-xs text-neutral-500">
-                            Same-day delivery
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Shipping Fee Note -->
-                <div class="border-t border-neutral-200 pt-3">
-                    <p class="text-xs text-neutral-500">
-                        Shipping fees are calculated based on your region or arranged via Messenger for same-day delivery.
-                    </p>
-                </div>
-                
-            </div>
-        </section>
-        
-        <!-- Delivery Option -->
-        <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200">
-            <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-6 text-neutral-900">2. Delivery Option</h3>
-            
-            <div class="space-y-3">
-                <!-- Standard Delivery -->
-                <label class="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all"
-                :class="form.deliveryOption === 'standard' ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-200 hover:border-neutral-400'">
-                <input type="radio" name="delivery" value="standard" x-model="form.deliveryOption" class="mt-1 accent-neutral-900">
-                <div class="flex-1">
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm font-bold uppercase tracking-wide">Standard Delivery</span>
-                        <span class="text-xs font-medium text-neutral-600">Region-based rate</span>
-                    </div>
-                    <p class="text-xs text-neutral-500 mt-1">
-                        Metro Manila: 1–2 business days. J&T deliveries: 2–5 business days.
-                        Shipping fee is based on your selected region.
-                    </p>
-                </div>
-            </label>
-            
-            <!-- Same Day Delivery -->
-            <label class="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all"
-            :class="form.deliveryOption === 'same_day' ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-200 hover:border-neutral-400'">
-            <input type="radio" name="delivery" value="same_day" x-model="form.deliveryOption" class="mt-1 accent-neutral-900">
-            <div class="flex-1">
-                <div class="flex items-center justify-between">
-                    <span class="text-sm font-bold uppercase tracking-wide">Same Day Delivery</span>
-                    <span class="text-xs font-medium text-neutral-600">Via Messenger</span>
-                </div>
-                <p class="text-xs text-neutral-500 mt-1">
-                    Same-day delivery via Lalamove or Grab Express.
-                    Delivery fee and payment arrangement will be confirmed through Messenger.
+                <p class="text-xs text-neutral-500 mb-6 leading-relaxed">
+                    Choose your preferred delivery option.
+                    Delivery arrangements and applicable fees will be confirmed via Messenger.
                 </p>
+                
+                <div class="space-y-3">
+                    
+                    <!-- Same Day Delivery -->
+                    <label
+                    class="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all"
+                    :class="form.deliveryOption === 'same_day'
+                    ? 'border-neutral-900 bg-neutral-50'
+                    : 'border-neutral-200 hover:border-neutral-400'"
+                    >
+                    <input
+                    type="radio"
+                    name="delivery"
+                    value="same_day"
+                    x-model="form.deliveryOption"
+                    class="mt-1 accent-neutral-900"
+                    >
+                    
+                    <div class="flex-1">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="text-sm font-bold uppercase tracking-wide block">
+                                    Same Day Delivery
+                                </span>
+                            </div>
+                            
+                            <span
+                            class="prio-badge shrink-0 inline-flex items-center rounded-md
+                            bg-neutral-900 text-white text-[10px] font-bold uppercase
+                            tracking-[0.18em] px-3 py-1"
+                            >
+                            PRIO
+                        </span>
+                    </div>
+                    
+                    <p class="text-xs text-neutral-500 mt-2 leading-relaxed">
+                        Final delivery arrangement and fee will be confirmed via Messenger.
+                    </p>
+                    
+                    <!-- Same Day Couriers -->
+                    <div class="flex items-center gap-3 mt-3">
+                        
+                        <div class="inline-flex items-center gap-2">
+                            <div
+                            class="w-6 h-6 rounded-md bg-orange-500
+                            flex items-center justify-center"
+                            >
+                            <span class="text-[6px] font-bold text-white">
+                                LALA
+                            </span>
+                        </div>
+                        
+                        <span class="text-[10px] font-medium text-neutral-600">
+                            Lalamove
+                        </span>
+                    </div>
+                    
+                    <div class="h-4 w-px bg-neutral-200"></div>
+                    
+                    <div class="inline-flex items-center gap-2">
+                        <div
+                        class="w-6 h-6 rounded-md bg-green-600
+                        flex items-center justify-center"
+                        >
+                        <span class="text-[6px] font-bold text-white">
+                            GRAB
+                        </span>
+                    </div>
+                    
+                    <span class="text-[10px] font-medium text-neutral-600">
+                        GrabExpress
+                    </span>
+                </div>
+                
             </div>
-        </label>
+            
+            <p class="text-xs font-medium text-neutral-900 mt-3 leading-relaxed">
+                Additional +₱100 applies for same-day delivery, on top of the delivery fee.
+            </p>
+        </div>
+    </label>
+    
+    
+    <!-- Standard Delivery -->
+    <label
+    class="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all"
+    :class="
+    form.deliveryOption === 'standard'
+    ? 'border-neutral-900 bg-neutral-50'
+    : 'border-neutral-200 hover:border-neutral-400'
+    "
+    >
+    <input
+    type="radio"
+    name="delivery"
+    value="standard"
+    x-model="form.deliveryOption"
+    class="mt-1 accent-neutral-900"
+    >
+    
+    <div class="flex-1">
+        
+        <div class="flex items-center justify-between gap-3">
+            <span class="text-sm font-bold uppercase tracking-wide">
+                Standard Delivery
+            </span>
+            
+            <span class="text-xs font-medium text-neutral-500 whitespace-nowrap">
+                J&T Express
+            </span>
+        </div>
+        
+        <p class="text-xs text-neutral-500 mt-2 leading-relaxed">
+            J&T deliveries usually arrive within 2–3 business days.
+            Delivery fee may apply depending on your location.
+        </p>
+        
+        <!-- Standard Courier -->
+        <div class="flex items-center mt-3">
+            <div class="inline-flex items-center gap-2">
+                
+                <div
+                class="w-6 h-6 rounded-md bg-red-600
+                flex items-center justify-center"
+                >
+                <span class="text-[6px] font-bold text-white">
+                    J&T
+                </span>
+            </div>
+            
+            <span class="text-[10px] font-medium text-neutral-600">
+                J&T Express
+            </span>
+            
+        </div>
     </div>
+    
+</div>
+</label>
+
+</div>
+
+
+<!-- Delivery Fee Notice -->
+<div class="mt-4 bg-neutral-50 border border-neutral-200 rounded-xl p-4">
+
+    <div class="flex items-start gap-3">
+
+        <div
+            class="w-9 h-9 rounded-full bg-neutral-200
+                   flex items-center justify-center flex-shrink-0"
+        >
+            <svg
+                class="w-4 h-4 text-neutral-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M3 7h11v10H3V7zm11 3h4l3 3v4h-7v-7zM7 19a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4z"
+                />
+            </svg>
+        </div>
+
+        <div>
+            <p class="text-xs font-bold text-neutral-900">
+                Delivery fee may apply
+            </p>
+
+            <p class="text-[11px] text-neutral-500 mt-1 leading-relaxed">
+                Final delivery fee depends on your location.
+                Applicable fees and delivery arrangements will be confirmed via Messenger.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
 </section>
+
 
 <!-- Payment Method -->
 <section x-show="form.deliveryOption !== 'same_day'" 
@@ -796,8 +896,10 @@ class="mb-6"
             <span x-text="config.currency + Number(grandTotal).toLocaleString()"></span>
         </div>
         
-        <!-- Place Order Button -->
-        <button
+        <!-- Place Order CTA -->
+        <div class="pt-1 sm:pt-2">
+
+    <button
         @click="openPaymentModal()"
         :disabled="
         !form.email ||
@@ -805,20 +907,23 @@ class="mb-6"
         !form.lastName ||
         !form.address ||
         !form.contact ||
-        (
-        form.deliveryOption !== 'same_day' &&
-        !form.region
-        ) ||
         (form.deliveryOption !== 'same_day' && !form.paymentMethod)
         "
-        class="w-full mt-6 bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+        class="w-full mt-4 sm:mt-5
+               bg-neutral-900 text-white
+               text-xs uppercase tracking-wider
+               py-4 rounded-full font-medium
+               hover:bg-neutral-800 transition-colors
+               disabled:opacity-50 disabled:cursor-not-allowed"
+    >
         Place Order
     </button>
-    
-    <p class="text-[11px] text-neutral-500 text-center mt-4 leading-relaxed">
+
+    <p class="text-[11px] text-neutral-500 text-center mt-5 mb-1 leading-relaxed px-2">
         By submitting, you agree that your order details will be sent for verification.
     </p>
+
+</div>
 </div>
 </div> <!-- END RIGHT COLUMN -->
 
@@ -1090,19 +1195,6 @@ style="display: none;">
         <p>
             <span class="text-neutral-500">Address:</span>
             <span x-text="form.address"></span>
-        </p>
-        
-        <p>
-            <span class="text-neutral-500">Region:</span>
-            <span
-            x-text="
-            form.region === 'luzon'
-            ? 'Luzon'
-            : form.region === 'vismin'
-            ? 'Visayas / Mindanao'
-            : form.region
-            "
-            ></span>
         </p>
         
         <p x-show="form.postalCode">
