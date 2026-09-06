@@ -28,7 +28,7 @@ ARCHWAY/
 3. **Site Loader** - Configurable logo loader with timing/animation settings.
 4. **Feedback Popup** - Bottom-right popup alternating Hot Style/Reviews with localStorage dismissal.
 5. **Cart System** - localStorage persistence, quantity controls, size variants as separate lines.
-6. **Checkout Flow** - Customer details, region-based shipping, payment options (GCash/Maya/Bank), order summary.
+6. **Checkout Flow** - Customer details, region-based shipping, payment options (GCash/Bank), order summary.
 7. **Messenger Handoff** - Text order summary via Messenger link, cart cleared after submission.
 8. **Supporting Pages** - Story, About, Feedback galleries with shared header/footer.
 

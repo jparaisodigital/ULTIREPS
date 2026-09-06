@@ -456,12 +456,6 @@ Help / FAQs
         <input type="radio" name="payment" value="gcash" x-model="form.paymentMethod" class="sr-only">
         <span class="text-sm font-bold uppercase tracking-wide">GCash</span>
     </label>
-    
-    <label class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all text-center"
-    :class="form.paymentMethod === 'maya' ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-200 hover:border-neutral-400'">
-    <input type="radio" name="payment" value="maya" x-model="form.paymentMethod" class="sr-only">
-    <span class="text-sm font-bold uppercase tracking-wide">Maya</span>
-</label>
 
 <label class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all text-center"
 :class="form.paymentMethod === 'bank' ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-200 hover:border-neutral-400'">
@@ -470,10 +464,164 @@ Help / FAQs
 </label>
 </div>
 
+<!-- ===== GCASH PAYMENT DETAILS ===== -->
+<div
+    x-show="form.paymentMethod === 'gcash'"
+    x-collapse
+    class="mb-6"
+>
+    <div class="bg-neutral-50 rounded-xl border border-neutral-200 p-5 text-center">
+
+        <p class="text-xs font-bold uppercase tracking-[0.18em] mb-4">
+            GCash Payment
+        </p>
+
+        <!-- QR Code -->
+        <div class="flex justify-center mb-4">
+            <img
+                :src="config.payments.gcash.qrImage"
+                alt="GCash QR Code"
+                class="w-48 h-48 object-contain rounded-xl bg-white border border-neutral-200 p-2"
+            >
+        </div>
+
+        <!-- Account Details -->
+        <div class="space-y-1 mb-4">
+            <p
+                class="text-sm font-bold"
+                x-text="config.payments.gcash.accountName"
+            ></p>
+
+            <p
+                class="text-sm text-neutral-600"
+                x-text="config.payments.gcash.number"
+            ></p>
+        </div>
+
+        <div class="text-left space-y-3 mt-5">
+
+            <p class="text-xs font-bold uppercase tracking-[0.15em] text-neutral-900">
+                How to Pay
+            </p>
+        
+            <ol class="space-y-2 text-xs text-neutral-600 leading-relaxed">
+                <li>
+                    <span class="font-bold text-neutral-900">1.</span>
+                    Scan the QR code using your GCash app.
+                </li>
+        
+                <li>
+                    <span class="font-bold text-neutral-900">2.</span>
+                    Complete your payment and save a screenshot of the successful transaction.
+                </li>
+        
+                <li>
+                    <span class="font-bold text-neutral-900">3.</span>
+                    Click <span class="font-bold text-neutral-900">PLACE ORDER</span> below.
+                </li>
+        
+                <li>
+                    <span class="font-bold text-neutral-900">4.</span>
+                    Send the prepared order details and your payment screenshot through Messenger.
+                </li>
+            </ol>
+        
+            <p class="text-[11px] text-neutral-500 leading-relaxed pt-2 border-t border-neutral-200">
+                Please keep your payment screenshot until your order has been confirmed.
+            </p>
+        
+        </div>
+
+    </div>
+</div>
+
+<!-- ===== BANK TRANSFER DETAILS ===== -->
+<div
+    x-show="form.paymentMethod === 'bank'"
+    x-collapse
+    class="mb-6"
+>
+    <div class="bg-neutral-50 rounded-xl border border-neutral-200 p-5">
+
+        <p class="text-xs font-bold uppercase tracking-[0.18em] mb-4">
+            Bank Transfer
+        </p>
+
+        <div class="space-y-3 text-sm">
+
+            <div>
+                <p class="text-[10px] uppercase tracking-wider text-neutral-400">
+                    Bank
+                </p>
+                <p
+                    class="font-bold text-neutral-900"
+                    x-text="config.payments.bank.bankName"
+                ></p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase tracking-wider text-neutral-400">
+                    Account Name
+                </p>
+                <p
+                    class="font-bold text-neutral-900"
+                    x-text="config.payments.bank.accountName"
+                ></p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase tracking-wider text-neutral-400">
+                    Account Number
+                </p>
+                <p
+                    class="font-bold text-neutral-900"
+                    x-text="config.payments.bank.accountNumber"
+                ></p>
+            </div>
+
+            <div class="text-left space-y-3 mt-5 pt-4 border-t border-neutral-200">
+
+                <p class="text-xs font-bold uppercase tracking-[0.15em] text-neutral-900">
+                    How to Pay
+                </p>
+            
+                <ol class="space-y-2 text-xs text-neutral-600 leading-relaxed">
+                    <li>
+                        <span class="font-bold text-neutral-900">1.</span>
+                        Transfer the payment to the bank account shown above.
+                    </li>
+            
+                    <li>
+                        <span class="font-bold text-neutral-900">2.</span>
+                        Save a screenshot of the successful transaction.
+                    </li>
+            
+                    <li>
+                        <span class="font-bold text-neutral-900">3.</span>
+                        Click <span class="font-bold text-neutral-900">PLACE ORDER</span> below.
+                    </li>
+            
+                    <li>
+                        <span class="font-bold text-neutral-900">4.</span>
+                        Send the prepared order details and your payment screenshot through Messenger.
+                    </li>
+                </ol>
+            
+                <p class="text-[11px] text-neutral-500 leading-relaxed pt-2">
+                    Please keep your payment screenshot until your order has been confirmed.
+                </p>
+            
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 <!-- Payment Method Notice -->
 <div
 class="bg-neutral-50 rounded-xl p-5 text-sm border border-neutral-200"
-x-show="form.paymentMethod"
+x-show="form.paymentMethod === 'bank'"
 >
 <p class="font-bold uppercase tracking-wide text-xs mb-2">
     Payment Confirmation
@@ -640,7 +788,7 @@ x-transition:leave-end="opacity-0 scale-95">
         { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
         { q: 'How much is the shipping fee?', a: 'Standard shipping fee is based on your selected region and will appear in the checkout total. Same-day delivery fees are arranged separately through Messenger.' },
         { q: 'How can I track my order?', a: 'For order status and delivery updates, please message us directly through our Facebook Page via Messenger. Our team will assist you and provide the latest update regarding your order.' },
-        { q: 'What payment methods do you accept?', a: 'We accept GCash, Maya, and Bank Transfer. Please send your order through Messenger first so our team can confirm product availability and your final total. Payment instructions will be provided after your order is confirmed.' },
+        { q: 'What payment methods do you accept?', a: 'We accept GCash and Bank Transfer. Please send your order through Messenger first so our team can confirm product availability and your final total. Payment instructions will be provided after your order is confirmed.' },
         { q: 'Can I cancel or change my order?', a: 'Yes, as long as it hasn\'t been shipped out yet. Message us on Facebook or Messenger right away so we can assist you.' },
         { q: 'What is your exchange policy?', a: 'We do not offer cash or monetary refunds. Items may only be exchanged for a different shoe or a different size, subject to availability. If you receive a wrong or damaged item, please contact us immediately through our Facebook Page via Messenger and provide your proof of purchase, order details, and clear photos of the item. Once verified, we will arrange a replacement or exchange at no additional cost.' },
         { q: 'How can I reach customer support?', a: 'You can message us through our Facebook Page or Messenger — the links are in our site footer. We respond to messages within business hours.' }
@@ -848,7 +996,7 @@ style="display: none;">
     
     <p class="text-lg font-bold mb-1" x-text="config.currency + Number(grandTotal).toLocaleString()"></p>
     <p class="text-xs text-neutral-500 uppercase tracking-wider mb-6"
-    x-text="form.deliveryOption === 'same_day' ? 'Same Day Delivery' : (form.paymentMethod === 'gcash' ? 'GCash' : form.paymentMethod === 'maya' ? 'Maya' : 'Bank Transfer')"></p>
+    x-text="form.deliveryOption === 'same_day' ? 'Same Day Delivery' : (form.paymentMethod === 'gcash' ? 'GCash' : 'Bank Transfer')"></p>
     
     <div class="bg-neutral-100 rounded-xl p-4 mb-6 text-left text-sm space-y-2">
         

@@ -45,6 +45,7 @@ document.addEventListener('alpine:init', () => {
         
         orderSuccess: false,
         messengerLink: "",
+        preparedOrderDetails: "",
         paymentModalOpen: false,
         hotToastVisible: false,
         selectedSize: null,
@@ -551,63 +552,63 @@ document.addEventListener('alpine:init', () => {
         },
         
         handlePreOrderProof(event) {
-
+            
             const file = event.target.files?.[0];
-        
+            
             // Clear previous error
             this.preOrderError = '';
-        
+            
             if (!file) {
                 this.preOrderForm.proofFile = null;
                 this.preOrderForm.proofPreview = '';
                 return;
             }
-        
+            
             const allowedTypes = [
                 'image/jpeg',
                 'image/png',
                 'image/webp'
             ];
-        
+            
             if (!allowedTypes.includes(file.type)) {
-        
+                
                 this.preOrderError =
-                    'Please upload a JPG, PNG, or WEBP image.';
-        
+                'Please upload a JPG, PNG, or WEBP image.';
+                
                 event.target.value = '';
-        
+                
                 this.preOrderForm.proofFile = null;
                 this.preOrderForm.proofPreview = '';
-        
+                
                 return;
             }
-        
+            
             const maxSize =
-                5 * 1024 * 1024;
-        
+            5 * 1024 * 1024;
+            
             if (file.size > maxSize) {
-        
+                
                 this.preOrderError =
-                    'Payment screenshot must be 5MB or smaller.';
-        
+                'Payment screenshot must be 5MB or smaller.';
+                
                 event.target.value = '';
-        
+                
                 this.preOrderForm.proofFile = null;
                 this.preOrderForm.proofPreview = '';
-        
+                
                 return;
             }
-        
+            
             this.preOrderForm.proofFile = file;
-        
+            
             if (this.preOrderForm.proofPreview) {
                 URL.revokeObjectURL(
                     this.preOrderForm.proofPreview
                 );
             }
-        
+            
             this.preOrderForm.proofPreview =
-                URL.createObjectURL(file);
+            URL.createObjectURL(file);
         },
         
         closePreOrderModal() {
@@ -621,26 +622,26 @@ document.addEventListener('alpine:init', () => {
                 quantity: 1
             };
         },
-
+        
         fileToBase64(file) {
-
+            
             return new Promise((resolve, reject) => {
-        
+                
                 const reader = new FileReader();
-        
+                
                 reader.onload = () => {
-        
+                    
                     const result =
-                        String(reader.result || '');
-        
+                    String(reader.result || '');
+                    
                     const base64 =
-                        result.includes(',')
-                            ? result.split(',')[1]
-                            : result;
-        
+                    result.includes(',')
+                    ? result.split(',')[1]
+                    : result;
+                    
                     resolve(base64);
                 };
-        
+                
                 reader.onerror = () => {
                     reject(
                         new Error(
@@ -648,11 +649,11 @@ document.addEventListener('alpine:init', () => {
                         )
                     );
                 };
-        
+                
                 reader.readAsDataURL(file);
-        
+                
             });
-        
+            
         },
         
         async submitPreOrderPreview() {
@@ -1207,7 +1208,6 @@ document.addEventListener('alpine:init', () => {
             ? 'Payment arrangement via Messenger'
             : ({
                 gcash: 'GCash',
-                maya: 'Maya',
                 bank: 'Bank Transfer'
             }[this.form.paymentMethod] || this.form.paymentMethod);
             
@@ -1296,6 +1296,7 @@ document.addEventListener('alpine:init', () => {
             messengerBase +
             "?text=" +
             encodeURIComponent(orderSummary);
+            this.preparedOrderDetails = orderSummary;
             
             this.isSubmitting = false;
             
@@ -1312,6 +1313,31 @@ document.addEventListener('alpine:init', () => {
                 "_blank",
                 "noopener,noreferrer"
             );
+        },
+
+        async copyOrderDetails() {
+
+            if (!this.preparedOrderDetails) {
+                alert("Order details are not ready yet.");
+                return;
+            }
+        
+            try {
+        
+                await navigator.clipboard.writeText(
+                    this.preparedOrderDetails
+                );
+        
+                alert("Order details copied.");
+        
+            } catch (error) {
+        
+                alert(
+                    "Unable to copy automatically. Please copy the order details manually."
+                );
+        
+            }
+        
         },
     }));
 });
