@@ -84,8 +84,9 @@ window.CONFIG = {
         
         bank: {
             bankName: "BPI",
-            accountName: "ULTI REPS",
-            accountNumber: "0080032808"
+            accountName: "FR••K NI••••S PE••Z J.",
+            accountNumber: "•••••••808",
+            qrImage: "assets/bpi.jpg"
         }
     },
     

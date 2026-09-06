@@ -271,10 +271,9 @@ document.addEventListener('alpine:init', () => {
                 
                 this.products = this.products.map(product => {
                     
-                    // TEMPORARY TEST:
-                    // Match muna by exact product name
+                    // Match config product ID to Google Sheet ProductID
                     const expectedProductId =
-                    'NK' + String(product.id).padStart(3, '0');
+'NK' + String(product.id).padStart(3, '0');
                     
                     const sheetProduct =
                     (data.products || []).find(row =>
@@ -1075,7 +1074,6 @@ document.addEventListener('alpine:init', () => {
             
             // Never add a zero-stock size to the normal cart
             if (size && this.isSizeSoldOut(product, size)) {
-                alert(`Size US ${size} is currently sold out.`);
                 return;
             }
             
@@ -1139,19 +1137,19 @@ document.addEventListener('alpine:init', () => {
         },
         
         openPaymentModal() {
-
+            
             const email =
-                this.form.email.trim();
-        
+            this.form.email.trim();
+            
             const contact =
-                this.form.contact.replace(/[\s-]/g, '');
-        
+            this.form.contact.replace(/[\s-]/g, '');
+            
             const emailValid =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            
             const phoneValid =
-                /^(?:\+63|0)9\d{9}$/.test(contact);
-        
+            /^(?:\+63|0)9\d{9}$/.test(contact);
+            
             // ===== REQUIRED DETAILS =====
             if (
                 !email ||
@@ -1167,7 +1165,7 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             // ===== EMAIL =====
             if (!emailValid) {
                 this.showCheckoutNotice(
@@ -1176,7 +1174,7 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             // ===== PHONE =====
             if (!phoneValid) {
                 this.showCheckoutNotice(
@@ -1185,7 +1183,7 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             // ===== PAYMENT METHOD =====
             if (
                 this.form.deliveryOption !== 'same_day' &&
@@ -1197,9 +1195,9 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             this.paymentModalOpen = true;
-        
+            
         },
         
         buildOrderSummary() {
@@ -1392,19 +1390,19 @@ document.addEventListener('alpine:init', () => {
         },
         
         async copyOrderDetails() {
-
+            
             const email =
-                this.form.email.trim();
-        
+            this.form.email.trim();
+            
             const contact =
-                this.form.contact.replace(/[\s-]/g, '');
-        
+            this.form.contact.replace(/[\s-]/g, '');
+            
             const emailValid =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            
             const phoneValid =
-                /^(?:\+63|0)9\d{9}$/.test(contact);
-        
+            /^(?:\+63|0)9\d{9}$/.test(contact);
+            
             // ===== REQUIRED DETAILS =====
             if (
                 !email ||
@@ -1420,7 +1418,7 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             // ===== EMAIL =====
             if (!emailValid) {
                 this.showCheckoutNotice(
@@ -1429,7 +1427,7 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             // ===== PHONE =====
             if (!phoneValid) {
                 this.showCheckoutNotice(
@@ -1438,7 +1436,7 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             // ===== PAYMENT METHOD =====
             if (
                 this.form.deliveryOption !== 'same_day' &&
@@ -1450,7 +1448,7 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             // ===== CART =====
             if (!this.cart.length) {
                 this.showCheckoutNotice(
@@ -1459,33 +1457,33 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             const orderDetails =
-                this.buildOrderSummary();
-        
+            this.buildOrderSummary();
+            
             this.preparedOrderDetails =
-                orderDetails;
-        
+            orderDetails;
+            
             try {
-        
+                
                 await navigator.clipboard.writeText(
                     orderDetails
                 );
-        
+                
                 this.showCheckoutNotice(
                     "Order details copied. You can paste them in Messenger.",
                     "success"
                 );
-        
+                
             } catch (error) {
-        
+                
                 this.showCheckoutNotice(
                     "Unable to copy automatically. Please try again.",
                     "error"
                 );
-        
+                
             }
-        
+            
         },
         
         showCheckoutNotice(message, type = 'info') {

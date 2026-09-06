@@ -626,43 +626,36 @@ x-show="form.paymentMethod === 'bank'"
 x-collapse
 class="mb-6"
 >
-<div class="bg-neutral-50 rounded-xl border border-neutral-200 p-5">
+<div class="bg-neutral-50 rounded-xl border border-neutral-200 p-5 text-center">
     
-    <p class="text-xs font-bold uppercase tracking-[0.18em] mb-4">
-        Bank Transfer
-    </p>
+    <!-- BPI Payment Screenshot -->
+<div class="flex justify-center mb-4">
+    <img
+        :src="config.payments.bank.qrImage"
+        alt="BPI Payment Details"
+        class="w-48 h-48 object-contain rounded-xl bg-white border border-neutral-200 p-2"
+    >
+</div>
     
-    <div class="space-y-3 text-sm">
-        
-        <div>
-            <p class="text-[10px] uppercase tracking-wider text-neutral-400">
-                Bank
-            </p>
-            <p
-            class="font-bold text-neutral-900"
-            x-text="config.payments.bank.bankName"
-            ></p>
-        </div>
-        
-        <div>
-            <p class="text-[10px] uppercase tracking-wider text-neutral-400">
-                Account Name
-            </p>
-            <p
-            class="font-bold text-neutral-900"
-            x-text="config.payments.bank.accountName"
-            ></p>
-        </div>
-        
-        <div>
-            <p class="text-[10px] uppercase tracking-wider text-neutral-400">
-                Account Number
-            </p>
-            <p
-            class="font-bold text-neutral-900"
-            x-text="config.payments.bank.accountNumber"
-            ></p>
-        </div>
+    <!-- Account Details -->
+<div class="space-y-1 mb-4 text-center">
+
+    <p
+        class="text-[10px] uppercase tracking-[0.15em] text-neutral-400"
+        x-text="config.payments.bank.bankName"
+    ></p>
+
+    <p
+        class="text-sm font-bold text-neutral-900"
+        x-text="config.payments.bank.accountName"
+    ></p>
+
+    <p
+        class="text-sm text-neutral-600"
+        x-text="config.payments.bank.accountNumber"
+    ></p>
+
+</div>
         
         <div class="text-left space-y-3 mt-5 pt-4 border-t border-neutral-200">
             
@@ -707,15 +700,15 @@ class="mb-6"
         </button>
         
     </div>
-    
-</div>
 
 </div>
+
 </div>
 
 </section>
 
-</div> <!-- END LEFT COLUMN -->
+</div>
+<!-- END LEFT COLUMN -->
 
 <!-- RIGHT: Order Summary (2/5) -->
 <div class="lg:col-span-2">
