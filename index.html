@@ -1500,27 +1500,63 @@ Pre-order Request Submitted
 </p>
 
 <!-- Reservation ID -->
-<div class="bg-neutral-100 rounded-xl px-4 py-4 mt-6">
+<button
+    type="button"
+    @click="copyPreOrderReservationId()"
+    class="w-full bg-neutral-100 hover:bg-neutral-200
+           rounded-xl px-4 py-4 mt-6
+           transition-colors text-center"
+>
     <p class="text-[9px] uppercase tracking-[0.16em] text-neutral-400">
         Reservation ID
     </p>
-    
+
     <p
-    class="text-sm font-bold text-neutral-900 mt-1"
-    x-text="preOrderReservationId"
+        class="text-sm font-bold text-neutral-900 mt-1"
+        x-text="preOrderReservationId"
     ></p>
-</div>
+
+    <p
+    class="text-[9px] mt-1 transition-colors"
+    :class="preOrderIdCopied
+        ? 'text-green-600 font-semibold'
+        : 'text-neutral-400'"
+    x-text="preOrderIdCopied
+        ? 'Copied!'
+        : 'Tap to copy'"
+></p>
+</button>
+
+<p class="text-[11px] text-neutral-500 mt-5">
+    Need help with your pre-order?
+</p>
 
 <button
-type="button"
-@click="
-preOrderSuccess = false;
-preOrderReservationId = '';
-closeQuickView();
-"
-class="w-full mt-6 bg-neutral-900 text-white text-[10px] uppercase tracking-[0.16em] py-3.5 rounded-full font-semibold"
+    type="button"
+    @click="followUpPreOrder()"
+    class="w-full mt-2
+           border border-neutral-900
+           text-neutral-900
+           text-[10px] uppercase tracking-[0.14em]
+           py-3.5 rounded-full font-semibold
+           hover:bg-neutral-900 hover:text-white
+           transition-colors"
 >
-Done
+    Message Us on Messenger
+</button>
+
+<button
+    type="button"
+    @click="
+        preOrderSuccess = false;
+        preOrderReservationId = '';
+        closeQuickView();
+    "
+    class="w-full mt-4 bg-neutral-900 text-white
+           text-[10px] uppercase tracking-[0.16em]
+           py-3.5 rounded-full font-semibold"
+>
+    Back to Shop
 </button>
 
 </div>

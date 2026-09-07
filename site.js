@@ -43,6 +43,8 @@ document.addEventListener('alpine:init', () => {
         preOrderError: '',
         preOrderSuccess: false,
         preOrderReservationId: '',
+        preOrderSubmittedDetails: null,
+        preOrderIdCopied: false,
         
         orderSuccess: false,
         messengerLink: "",
@@ -986,12 +988,24 @@ document.addEventListener('alpine:init', () => {
                     result
                 );
                 
-                
                 // ===== SHOW PRE-ORDER SUCCESS STATE =====
                 this.preOrderReservationId =
                 result.reservationId || '';
                 
                 this.preOrderSuccess = true;
+                
+                this.preOrderSubmittedDetails = {
+                    reservationId: result.reservationId || '',
+                    name: payload.name,
+                    contact: payload.contact,
+                    location: payload.location,
+                    productName: payload.productName,
+                    productId: payload.productId,
+                    size: payload.size,
+                    quantity: payload.quantity,
+                    downpayment: payload.downpayment,
+                    note: payload.note || ''
+                };
                 
                 
                 // Release old screenshot preview from browser memory
@@ -1032,6 +1046,68 @@ document.addEventListener('alpine:init', () => {
                 
             }
             
+        },
+        
+        async copyPreOrderReservationId() {
+            if (!this.preOrderReservationId) return;
+        
+            try {
+                await navigator.clipboard.writeText(
+                    this.preOrderReservationId
+                );
+        
+                this.preOrderIdCopied = true;
+        
+                setTimeout(() => {
+                    this.preOrderIdCopied = false;
+                }, 1800);
+        
+            } catch (error) {
+                console.error(
+                    'Unable to copy Reservation ID:',
+                    error
+                );
+            }
+        },
+        
+        followUpPreOrder() {
+            const details = this.preOrderSubmittedDetails;
+            const messengerBase = this.config.socials?.messenger;
+        
+            if (!details || !messengerBase) {
+                alert('Messenger follow-up is currently unavailable.');
+                return;
+            }
+        
+            const messageLines = [
+                "Hi! I'd like to follow up on my pre-order.",
+                "",
+                `Reservation ID: ${details.reservationId}`,
+                `Product: ${details.productName}`,
+                details.size ? `Size: US ${details.size}` : null,
+                `Quantity: ${details.quantity}`,
+                `Downpayment: ₱${Number(details.downpayment || 0).toLocaleString()}`,
+                "",
+                `Name: ${details.name}`,
+                `Contact: ${details.contact}`,
+                `Location: ${details.location}`,
+                details.note ? `Note: ${details.note}` : null,
+                "",
+                "Thank you!"
+            ].filter(line => line !== null);
+        
+            const message = messageLines.join('\n');
+        
+            const messengerLink =
+                messengerBase +
+                '?text=' +
+                encodeURIComponent(message);
+        
+            window.open(
+                messengerLink,
+                '_blank',
+                'noopener,noreferrer'
+            );
         },
         
         // Add to cart then close with animation
