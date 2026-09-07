@@ -7,6 +7,7 @@ document.addEventListener('alpine:init', () => {
         
         // Products & Filtering
         products: [],
+        productsReady: false,
         categories: ['All'],
         selectedCategory: 'All',
         searchQuery: '',
@@ -191,6 +192,7 @@ document.addEventListener('alpine:init', () => {
             
             // Load Google Sheet data, config.js stays as fallback
             await this.loadGoogleSheetData();
+            this.productsReady = true;
             
             // Monthly Sale Modal first.
             // Hot Style toast will wait until the Sale modal is closed.
@@ -484,62 +486,62 @@ document.addEventListener('alpine:init', () => {
         // ===== MONTHLY SALE MODAL =====
         
         initSaleModal() {
-
+            
             const settings =
-                this.config.saleModal || {};
-        
+            this.config.saleModal || {};
+            
             if (settings.enabled === false) {
                 this.scheduleHotToast();
                 return;
             }
-        
+            
             if (this.saleModalTimer) {
                 clearTimeout(this.saleModalTimer);
             }
-        
+            
             const delay =
-                Math.max(
-                    0,
-                    Number(settings.showDelay) || 0
-                );
-        
+            Math.max(
+                0,
+                Number(settings.showDelay) || 0
+            );
+            
             const openWhenReady = () => {
-        
+                
                 if (this.siteLoaderVisible) {
                     this.saleModalTimer =
-                        setTimeout(openWhenReady, 100);
+                    setTimeout(openWhenReady, 100);
                     return;
                 }
-        
+                
                 this.stopHotToastLoop();
                 this.hotToastVisible = false;
-        
+                
                 document.documentElement.style.overflow =
-                    'hidden';
-        
+                'hidden';
+                
                 document.body.style.overflow =
-                    'hidden';
-        
+                'hidden';
+                
                 this.saleModalVisible = true;
             };
-        
+            
             this.saleModalTimer =
-                setTimeout(
-                    openWhenReady,
-                    delay
-                );
+            setTimeout(
+                openWhenReady,
+                delay
+            );
         },
         
         
         closeSaleModal() {
-
+            
             this.saleModalVisible = false;
-        
+            
             if (!this.quickViewOpen) {
                 document.documentElement.style.overflow = '';
                 document.body.style.overflow = '';
             }
-        
+            
             this.scheduleHotToast();
         },
         
@@ -1457,7 +1459,7 @@ document.addEventListener('alpine:init', () => {
                 orderSummary +=
                 `- ${item.name}${sizeText} | Qty: ${item.quantity} | ₱${lineTotal.toLocaleString()}\n`;
             });
-
+            
             orderSummary +=
 `\nSubtotal: ₱${this.cartTotal.toLocaleString()}`;
             
@@ -1684,7 +1686,7 @@ document.addEventListener('alpine:init', () => {
             if (this._checkoutNoticeTimer) {
                 clearTimeout(this._checkoutNoticeTimer);
             }
-
+            
             this.checkoutNotice.message = message;
             this.checkoutNotice.type = type;
             this.checkoutNotice.show = true;

@@ -21,7 +21,11 @@
             font-family: 'Space Grotesk', sans-serif;
             background-color: #ffffff;
         }
-        
+    
+        [x-cloak] {
+            display: none !important;
+        }
+    
         /* ===== MARQUEE ANIMATIONS ===== */
         @keyframes marquee {
             0% {
@@ -423,7 +427,11 @@ Help / FAQs
 </div>
 
 <!-- Product Grid (Config-Driven) -->
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
+<div
+    x-cloak
+    x-show="productsReady"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12"
+>
     <template x-for="product in filteredProducts" :key="product.id">
         <div class="group cursor-pointer">
             <!-- Image -->
@@ -1842,18 +1850,17 @@ x-transition:leave="transition ease-in duration-200"
 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
 x-transition:leave-end="opacity-0 scale-95 translate-y-3"
 class="relative w-full
-max-w-[520px]
-max-h-[calc(100vh-2rem)] overflow-y-auto
-
-md:max-w-[520px]
-md:max-h-none
-md:overflow-visible
-
-lg:max-w-[560px]
-
-bg-[#f6f5f2] text-neutral-950
-rounded-[22px] shadow-2xl
-border border-white/40"
+       max-w-[520px]
+       max-h-[calc(100vh-2rem)]
+       overflow-y-auto
+       overflow-x-hidden
+       md:max-w-[520px]
+       md:max-h-none
+       md:overflow-visible
+       lg:max-w-[560px]
+       bg-[#f6f5f2] text-neutral-950
+       rounded-[22px] shadow-2xl
+       border border-white/40"
 >
 
 <!-- Decorative Watermark -->
@@ -1867,10 +1874,10 @@ rotate-90 select-none pointer-events-none"
 ULTI
 </div>
 
-<div class="relative px-6 py-7 sm:px-10 sm:py-8 lg:px-12 lg:py-9">
+<div class="relative px-5 py-4 sm:px-8 sm:py-6 lg:px-10 lg:py-7">
     
     <!-- Logo + Close -->
-    <div class="flex items-start justify-between mb-8">
+    <div class="flex items-start justify-between mb-5 sm:mb-6">
         
         <img
         :src="config.logo"
@@ -1906,7 +1913,7 @@ ULTI
 
 
 <!-- Eyebrow -->
-<div class="flex items-center gap-4 justify-center mb-6">
+<div class="flex items-center gap-3 justify-center mb-4 sm:mb-5">
     
     <span class="h-px flex-1 max-w-[70px] bg-neutral-400"></span>
     
@@ -1927,16 +1934,16 @@ ULTI
     
     <div
     class="font-black tracking-[-0.08em]
-    leading-[0.78]
-    text-[92px] sm:text-[108px] lg:text-[118px]"
+       leading-[0.78]
+       text-[76px] sm:text-[96px] lg:text-[108px]"
     x-text="config.saleModal.saleNumber"
     ></div>
     
     <div
     class="font-black italic tracking-[-0.055em]
-    leading-none
-    text-[64px] sm:text-[82px]
-    text-red-600 mt-3"
+       leading-none
+       text-[52px] sm:text-[70px]
+       text-red-600 mt-2"
     x-text="config.saleModal.saleLabel"
     ></div>
     
@@ -1945,9 +1952,9 @@ ULTI
 
 <!-- Discount Ticket -->
 <div
-class="mx-auto mt-7 max-w-[390px]
-border-2 border-neutral-950
-px-4 py-4 text-center bg-white"
+class="mx-auto mt-5 max-w-[360px]
+       border-2 border-neutral-950
+       px-4 py-3 text-center bg-white"
 >
 <p
 class="text-xl sm:text-2xl
@@ -1959,7 +1966,7 @@ x-text="config.saleModal.discountText"
 
 <!-- Message -->
 <p
-class="mt-7 text-center
+class="mt-5 text-center
 text-[10px] sm:text-[11px]
 font-semibold uppercase
 tracking-[0.32em]
@@ -1972,7 +1979,7 @@ x-text="config.saleModal.message"
 <button
 type="button"
 @click="shopSale()"
-class="group w-full mt-8
+class="group w-full mt-6
 bg-neutral-950 text-white
 rounded-xl px-5 py-5
 flex items-center justify-center gap-4
@@ -2006,7 +2013,7 @@ d="M5 12h14M13 6l6 6-6 6"
 <button
 type="button"
 @click="closeSaleModal()"
-class="block mx-auto mt-6
+class="block mx-auto mt-4
 text-[10px] uppercase
 tracking-[0.28em]
 text-neutral-500
@@ -2018,7 +2025,7 @@ Don't show again
 
 
 <!-- Footer Brand Line -->
-<div class="flex items-center gap-4 justify-center mt-8">
+<div class="flex items-center gap-3 justify-center mt-5">
     
     <span class="h-px flex-1 bg-neutral-300"></span>
     
