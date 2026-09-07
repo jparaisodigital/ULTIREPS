@@ -26,32 +26,32 @@
             display: none !important;
         }
         
-        /* ===== COPY RESERVATION ID NUDGE ===== */
-        @keyframes copyNudge {
-            0%, 68%, 100% {
+        /* ===== RESERVATION ID ATTENTION JUMP ===== */
+        @keyframes reservationIdJump {
+            0%, 62%, 100% {
                 transform: translateY(0);
+            }
+            
+            68% {
+                transform: translateY(-10px);
             }
             
             73% {
-                transform: translateY(-5px);
-            }
-            
-            78% {
                 transform: translateY(0);
             }
             
-            82% {
-                transform: translateY(-3px);
+            77% {
+                transform: translateY(-5px);
             }
             
-            86% {
+            82% {
                 transform: translateY(0);
             }
         }
         
-        .copy-nudge {
+        .reservation-id-jump {
             display: inline-block;
-            animation: copyNudge 2.6s ease-in-out infinite;
+            animation: reservationIdJump 2.8s ease-in-out infinite;
             will-change: transform;
         }
         
@@ -1530,31 +1530,42 @@ Pre-order Request Submitted
     Final availability and payment verification will still be confirmed by our team.
 </p>
 
-<!-- Reservation ID -->
+<!-- Reservation ID / Copy Order Details -->
 <button
 type="button"
 @click="copyPreOrderReservationId()"
 class="w-full bg-neutral-100 hover:bg-neutral-200
-rounded-xl px-4 py-4 mt-6
+rounded-xl px-4 py-5 mt-6
 transition-colors text-center"
 >
-<p class="text-[9px] uppercase tracking-[0.16em] text-neutral-400">
-    Reservation ID
+<!-- Label -->
+<p
+class="text-[9px] uppercase tracking-[0.16em]
+font-semibold text-neutral-900"
+>
+Reservation ID
 </p>
 
+<!-- Reservation ID Number -->
 <p
-class="text-sm font-bold text-neutral-900 mt-1"
+class="reservation-id-jump
+text-sm font-bold mt-2"
+style="color: #B42318;"
 x-text="preOrderReservationId"
 ></p>
 
+<!-- Copy Status -->
 <p
-class="text-[9px] mt-1 transition-colors"
+class="text-[10px] mt-2 font-semibold transition-colors"
 :class="preOrderIdCopied
-? 'text-green-600 font-semibold'
-: 'text-neutral-500 copy-nudge'"
+? 'text-green-600'
+: ''"
+:style="preOrderIdCopied
+? ''
+: 'color: #B42318;'"
 x-text="preOrderIdCopied
-? 'Copied!'
-: 'Tap to copy'"
+? 'Order details copied!'
+: 'Tap to copy order details'"
 ></p>
 </button>
 

@@ -51,6 +51,9 @@ document.addEventListener('alpine:init', () => {
         preparedOrderDetails: "",
         paymentModalOpen: false,
         
+        orderDetailsCopied: false,
+        _orderDetailsCopiedTimer: null,
+        
         checkoutNotice: {
             show: false,
             message: '',
@@ -1049,22 +1052,41 @@ document.addEventListener('alpine:init', () => {
         },
         
         async copyPreOrderReservationId() {
-            if (!this.preOrderReservationId) return;
-        
+            const details = this.preOrderSubmittedDetails;
+            
+            if (!this.preOrderReservationId || !details) return;
+            
+            const lines = [
+                'PRE-ORDER DETAILS',
+                '',
+                `Reservation ID: ${this.preOrderReservationId}`,
+                `Product: ${details.productName}`,
+                details.size ? `Size: US ${details.size}` : null,
+                `Quantity: ${details.quantity}`,
+                `Downpayment: ₱${Number(
+                    details.downpayment || 0
+                ).toLocaleString()}`,
+                '',
+                `Name: ${details.name}`,
+                `Contact: ${details.contact}`,
+                `Location: ${details.location}`,
+                details.note ? `Note: ${details.note}` : null
+            ].filter(line => line !== null);
+            
+            const copyText = lines.join('\n');
+            
             try {
-                await navigator.clipboard.writeText(
-                    this.preOrderReservationId
-                );
-        
+                await navigator.clipboard.writeText(copyText);
+                
                 this.preOrderIdCopied = true;
-        
+                
                 setTimeout(() => {
                     this.preOrderIdCopied = false;
                 }, 1800);
-        
+                
             } catch (error) {
                 console.error(
-                    'Unable to copy Reservation ID:',
+                    'Unable to copy pre-order details:',
                     error
                 );
             }
@@ -1073,12 +1095,12 @@ document.addEventListener('alpine:init', () => {
         followUpPreOrder() {
             const details = this.preOrderSubmittedDetails;
             const messengerBase = this.config.socials?.messenger;
-        
+            
             if (!details || !messengerBase) {
                 alert('Messenger follow-up is currently unavailable.');
                 return;
             }
-        
+            
             const messageLines = [
                 "Hi! I'd like to follow up on my pre-order.",
                 "",
@@ -1095,14 +1117,14 @@ document.addEventListener('alpine:init', () => {
                 "",
                 "Thank you!"
             ].filter(line => line !== null);
-        
+            
             const message = messageLines.join('\n');
-        
+            
             const messengerLink =
-                messengerBase +
-                '?text=' +
-                encodeURIComponent(message);
-        
+            messengerBase +
+            '?text=' +
+            encodeURIComponent(message);
+            
             window.open(
                 messengerLink,
                 '_blank',
@@ -1639,9 +1661,32 @@ document.addEventListener('alpine:init', () => {
             
             this.messengerLink =
             messengerBase +
-            "?text=" +
+"?text=" +
             encodeURIComponent(orderSummary);
+            
             this.preparedOrderDetails = orderSummary;
+            
+            // ===== AUTOMATIC COPY BACKUP =====
+            // Try to copy the same prepared order details before Messenger opens.
+            // Do not await this so mobile browsers can still open Messenger
+            // from the customer's original click.
+            if (navigator.clipboard && window.isSecureContext) {
+                
+                navigator.clipboard
+                .writeText(orderSummary)
+                .then(() => {
+                    console.log(
+                        'Order details automatically copied.'
+                    );
+                })
+                .catch(error => {
+                    console.warn(
+                        'Automatic order copy failed:',
+                        error
+                    );
+                });
+                
+            }
             
             this.isSubmitting = false;
             
@@ -1661,65 +1706,7 @@ document.addEventListener('alpine:init', () => {
         },
         
         async copyOrderDetails() {
-            
-            const email =
-            this.form.email.trim();
-            
-            const contact =
-            this.form.contact.replace(/[\s-]/g, '');
-            
-            const emailValid =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            
-            const phoneValid =
-            /^(?:\+63|0)9\d{9}$/.test(contact);
-            
-            // ===== REQUIRED DETAILS =====
-            if (
-                !email ||
-                !this.form.firstName.trim() ||
-                !this.form.lastName.trim() ||
-                !this.form.address.trim() ||
-                !contact
-            ) {
-                this.showCheckoutNotice(
-                    "Please complete all required checkout details first.",
-                    "error"
-                );
-                return;
-            }
-            
-            // ===== EMAIL =====
-            if (!emailValid) {
-                this.showCheckoutNotice(
-                    "Please enter a valid email address.",
-                    "error"
-                );
-                return;
-            }
-            
-            // ===== PHONE =====
-            if (!phoneValid) {
-                this.showCheckoutNotice(
-                    "Please enter a valid Philippine mobile number.",
-                    "error"
-                );
-                return;
-            }
-            
-            // ===== PAYMENT METHOD =====
-            if (
-                this.form.deliveryOption !== 'same_day' &&
-                !this.form.paymentMethod
-            ) {
-                this.showCheckoutNotice(
-                    "Please select a payment method.",
-                    "error"
-                );
-                return;
-            }
-            
-            // ===== CART =====
+
             if (!this.cart.length) {
                 this.showCheckoutNotice(
                     "Your cart is empty.",
@@ -1727,33 +1714,49 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-            
+        
             const orderDetails =
-            this.buildOrderSummary();
-            
+                this.buildOrderSummary();
+        
             this.preparedOrderDetails =
-            orderDetails;
-            
+                orderDetails;
+        
             try {
-                
+        
                 await navigator.clipboard.writeText(
                     orderDetails
                 );
-                
-                this.showCheckoutNotice(
-                    "Order details copied. You can paste them in Messenger.",
-                    "success"
-                );
-                
+        
+                // Stop previous reset timer
+                if (this._orderDetailsCopiedTimer) {
+                    clearTimeout(
+                        this._orderDetailsCopiedTimer
+                    );
+                }
+        
+                // Success state
+                this.orderDetailsCopied = true;
+        
+                // Return to normal after 5 seconds
+                this._orderDetailsCopiedTimer =
+                setTimeout(() => {
+        
+                    this.orderDetailsCopied = false;
+        
+                }, 5000);
+        
             } catch (error) {
-                
+        
+                console.error(
+                    "Unable to copy order details:",
+                    error
+                );
+        
                 this.showCheckoutNotice(
                     "Unable to copy automatically. Please try again.",
                     "error"
                 );
-                
             }
-            
         },
         
         showCheckoutNotice(message, type = 'info') {
