@@ -4,16 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
-<link rel="icon" type="image/png" href="assets/fav.png">
+    <link rel="icon" type="image/png" href="assets/fav.png">
     <title x-text="'Ulti Story | ' + (config.storeName || 'Ulti')">Ulti Story | Ulti</title>
+    
+    <!-- ===== SOCIAL / MESSENGER LINK PREVIEW ===== -->
+    <meta
+    name="description"
+    content="Ulti Reps — Premium footwear, hot drops, and new releases."
+    >
+    
+    <meta property="og:type" content="website">
+    
+    <meta
+    property="og:title"
+    content="Ulti Reps | Premium Footwear Store"
+    >
+    
+    <meta
+    property="og:description"
+    content="Top Tier Quality · Hot Drops · New Releases"
+    >
+    
+    <meta
+    property="og:url"
+    content="https://jparaisodigital.github.io/ULTIREPS/"
+    >
+    
+    <meta
+    property="og:image"
+    content="https://jparaisodigital.github.io/ULTIREPS/assets/hero.png"
+    >
+    
+    <meta
+    property="og:image:width"
+    content="1200"
+    >
+    
+    <meta
+    property="og:image:height"
+    content="630"
+    >
+    
+    <meta
+    property="og:image:alt"
+    content="Ulti Reps Premium Footwear Store"
+    >
+    
+    <!-- Twitter / other social previews -->
+    <meta
+    name="twitter:card"
+    content="summary_large_image"
+    >
+    
+    <meta
+    name="twitter:title"
+    content="Ulti Reps | Premium Footwear Store"
+    >
+    
+    <meta
+    name="twitter:description"
+    content="Top Tier Quality · Hot Drops · New Releases"
+    >
+    
+    <meta
+    name="twitter:image"
+    content="https://jparaisodigital.github.io/ULTIREPS/assets/hero.png"
+    >
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js CDN -->
     <!-- Alpine Collapse Plugin -->
-<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-
-<!-- Alpine.js -->
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Google Fonts: Space Grotesk -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -21,11 +85,11 @@
     </style>
 </head>
 <body
-    class="bg-neutral-100 text-neutral-900 antialiased
-           selection:bg-neutral-900 selection:text-white
-           opacity-0 transition-opacity duration-300"
-    x-data="storeApp()"
-    x-init="initHeader(); requestAnimationFrame(() => document.body.classList.remove('opacity-0'))"
+class="bg-neutral-100 text-neutral-900 antialiased
+selection:bg-neutral-900 selection:text-white
+opacity-0 transition-opacity duration-300"
+x-data="storeApp()"
+x-init="initHeader(); requestAnimationFrame(() => document.body.classList.remove('opacity-0'))"
 >
 
 <!-- ===== HEADER ===== -->
@@ -52,17 +116,17 @@
     <a
     href="index.html"
     @click.prevent="
-        sessionStorage.setItem('ulti_skip_loader_once', 'true');
-        document.body.classList.add('opacity-0');
-        setTimeout(() => window.location.href = 'index.html', 250);
+    sessionStorage.setItem('ulti_skip_loader_once', 'true');
+    document.body.classList.add('opacity-0');
+    setTimeout(() => window.location.href = 'index.html', 250);
     "
     class="transition-all duration-300 hover:text-neutral-300 hover:scale-105"
->
+    >
     Shop
 </a>
-    <a href="story.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Ulti Story</a>
-    <a href="about.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">About</a>
-    <a href="feedback.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Feedback</a>
+<a href="story.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Ulti Story</a>
+<a href="about.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">About</a>
+<a href="feedback.html" class="transition-all duration-300 hover:text-neutral-300 hover:scale-105">Feedback</a>
 </nav>
 </div>
 
@@ -77,130 +141,130 @@
 
 <!-- RIGHT: Help + Cart -->
 <div class="flex items-center justify-end w-1/3 space-x-5">
-
+    
     <button
-        @click="helpOpen = true"
-        class="hidden md:flex relative text-white transition-all duration-300 hover:text-neutral-300 hover:scale-110 active:scale-95 items-center"
-        aria-label="Help"
+    @click="helpOpen = true"
+    class="hidden md:flex relative text-white transition-all duration-300 hover:text-neutral-300 hover:scale-110 active:scale-95 items-center"
+    aria-label="Help"
     >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.86.416-1.51 1.235-1.51 2.226v.5M12 17.5h.008v.008H12V17.5z"
-            ></path>
-            <circle
-                cx="12"
-                cy="12"
-                r="9"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-            ></circle>
-        </svg>
-    </button>
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.86.416-1.51 1.235-1.51 2.226v.5M12 17.5h.008v.008H12V17.5z"
+        ></path>
+        <circle
+        cx="12"
+        cy="12"
+        r="9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        ></circle>
+    </svg>
+</button>
 
-    <button
-        @click="cartOpen = true"
-        class="relative text-white transition-all duration-300 hover:text-neutral-300 hover:scale-110 active:scale-95 flex items-center"
-        aria-label="Cart"
-    >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-            ></path>
-        </svg>
+<button
+@click="cartOpen = true"
+class="relative text-white transition-all duration-300 hover:text-neutral-300 hover:scale-110 active:scale-95 flex items-center"
+aria-label="Cart"
+>
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1.5"
+    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+    ></path>
+</svg>
 
-        <span
-            class="absolute -top-1.5 -right-2 bg-white text-neutral-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
-            x-text="cartCount"
-        >0</span>
-    </button>
+<span
+class="absolute -top-1.5 -right-2 bg-white text-neutral-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+x-text="cartCount"
+>0</span>
+</button>
 
 </div>
 </div>
 
 <!-- Mobile Menu Dropdown -->
 <div
-    x-show="mobileMenuOpen"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0 -translate-y-4"
-    x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 -translate-y-4"
-    class="md:hidden absolute top-0 left-0 w-full bg-neutral-950 pt-24 px-6 pb-8 border-b border-neutral-800 shadow-2xl z-10"
-    style="display: none;"
+x-show="mobileMenuOpen"
+x-transition:enter="transition ease-out duration-300"
+x-transition:enter-start="opacity-0 -translate-y-4"
+x-transition:enter-end="opacity-100 translate-y-0"
+x-transition:leave="transition ease-in duration-200"
+x-transition:leave-start="opacity-100 translate-y-0"
+x-transition:leave-end="opacity-0 -translate-y-4"
+class="md:hidden absolute top-0 left-0 w-full bg-neutral-950 pt-24 px-6 pb-8 border-b border-neutral-800 shadow-2xl z-10"
+style="display: none;"
 >
 
-    <nav class="flex flex-col items-center text-center space-y-4 text-base font-bold tracking-[0.15em] uppercase text-white">
-
-        <!-- SHOP -->
-<a
-href="index.html"
-@click.prevent="
+<nav class="flex flex-col items-center text-center space-y-4 text-base font-bold tracking-[0.15em] uppercase text-white">
+    
+    <!-- SHOP -->
+    <a
+    href="index.html"
+    @click.prevent="
     mobileMenuOpen = false;
     sessionStorage.setItem('ulti_skip_loader_once', 'true');
     document.body.classList.add('opacity-0');
     setTimeout(() => window.location.href = 'index.html', 250);
+    "
+    class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
+    >
+    Shop
+</a>
+
+<!-- ULTI STORY -->
+<a
+href="story.html"
+@click.prevent="
+mobileMenuOpen = false;
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'story.html', 150);
 "
 class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
 >
-Shop
+Ulti Story
 </a>
 
-        <!-- ULTI STORY -->
-        <a
-            href="story.html"
-            @click.prevent="
-                mobileMenuOpen = false;
-                document.body.classList.add('opacity-0');
-                setTimeout(() => window.location.href = 'story.html', 150);
-            "
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
-        >
-            Ulti Story
-        </a>
+<!-- ABOUT -->
+<a
+href="about.html"
+@click.prevent="
+mobileMenuOpen = false;
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'about.html', 150);
+"
+class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
+>
+About
+</a>
 
-        <!-- ABOUT -->
-        <a
-            href="about.html"
-            @click.prevent="
-                mobileMenuOpen = false;
-                document.body.classList.add('opacity-0');
-                setTimeout(() => window.location.href = 'about.html', 150);
-            "
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
-        >
-            About
-        </a>
+<!-- FEEDBACK -->
+<a
+href="feedback.html"
+@click.prevent="
+mobileMenuOpen = false;
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'feedback.html', 400);
+"
+class="w-full text-white transition-colors hover:text-neutral-400 py-2"
+>
+Feedback
+</a>
 
-        <!-- FEEDBACK -->
-        <a
-            href="feedback.html"
-            @click.prevent="
-                mobileMenuOpen = false;
-                document.body.classList.add('opacity-0');
-                setTimeout(() => window.location.href = 'feedback.html', 400);
-            "
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2"
-        >
-            Feedback
-        </a>
+<!-- HELP -->
+<button
+@click="mobileMenuOpen = false; helpOpen = true"
+class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-t border-neutral-800/50 pt-4 mt-1"
+>
+Help / FAQs
+</button>
 
-        <!-- HELP -->
-        <button
-            @click="mobileMenuOpen = false; helpOpen = true"
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-t border-neutral-800/50 pt-4 mt-1"
-        >
-            Help / FAQs
-        </button>
-
-    </nav>
+</nav>
 
 </div>
 </header>
@@ -217,36 +281,36 @@ Shop
         </div>
     </div>
     
-        <!-- Story Intro -->
-        <div class="max-w-7xl mx-auto px-6 mb-16">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-center">
-                <div class="relative overflow-hidden bg-neutral-200 aspect-[4/5]">
-                    <img :src="(config.storyImages && config.storyImages[0]) || config.fallbackImage" 
-                         alt="Ulti Story"
-                         class="w-full h-full object-cover">
-                </div>
-                <div class="max-w-md">
-                    <p class="text-xs uppercase tracking-[0.2em] text-neutral-500 font-bold mb-4">Our Story</p>
-                    <p class="text-lg md:text-xl leading-relaxed text-neutral-800">
-                        Ulti started with a simple idea — footwear should feel personal, not mass-produced. Every pair we put out carries that same intention: clean design, honest quality, and a story worth telling. This is a look back at where we've been.
-                    </p>
-                </div>
+    <!-- Story Intro -->
+    <div class="max-w-7xl mx-auto px-6 mb-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-center">
+            <div class="relative overflow-hidden bg-neutral-200 aspect-[4/5]">
+                <img :src="(config.storyImages && config.storyImages[0]) || config.fallbackImage" 
+                alt="Ulti Story"
+                class="w-full h-full object-cover">
+            </div>
+            <div class="max-w-md">
+                <p class="text-xs uppercase tracking-[0.2em] text-neutral-500 font-bold mb-4">Our Story</p>
+                <p class="text-lg md:text-xl leading-relaxed text-neutral-800">
+                    Ulti started with a simple idea — footwear should feel personal, not mass-produced. Every pair we put out carries that same intention: clean design, honest quality, and a story worth telling. This is a look back at where we've been.
+                </p>
             </div>
         </div>
+    </div>
     
-        <!-- Story Gallery -->
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="columns-2 md:columns-3 gap-0">
-                <template x-for="(img, index) in (config.storyImages || []).slice(0, 10)" :key="index">
-                    <div class="overflow-hidden bg-neutral-200 break-inside-avoid">
-                        <img :src="img" 
-                             :alt="'Ulti Story ' + (index + 1)"
-                             class="w-full h-auto block transition-transform duration-700 hover:scale-105"
-                             loading="lazy">
-                    </div>
-                </template>
-            </div>
+    <!-- Story Gallery -->
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="columns-2 md:columns-3 gap-0">
+            <template x-for="(img, index) in (config.storyImages || []).slice(0, 10)" :key="index">
+                <div class="overflow-hidden bg-neutral-200 break-inside-avoid">
+                    <img :src="img" 
+                    :alt="'Ulti Story ' + (index + 1)"
+                    class="w-full h-auto block transition-transform duration-700 hover:scale-105"
+                    loading="lazy">
+                </div>
+            </template>
         </div>
+    </div>
     
 </main>
 
@@ -341,49 +405,49 @@ x-transition:leave-end="translate-x-full">
     
     <div class="flex-1 overflow-y-auto px-6 py-6 space-y-6">
         <template
-    x-for="item in cart"
-    :key="`${item.id}-${item.selectedSize ?? 'no-size'}`"
->
-            <div class="flex items-center space-x-4 border-b border-neutral-100 pb-4">
-                <img :src="item.image_url || config.fallbackImage" class="w-16 h-20 object-cover rounded bg-neutral-100">
-                <div class="flex-1">
-                    <h4 class="text-sm font-medium text-neutral-900" x-text="item.name"></h4>
-                    <p
-    x-show="item.selectedSize !== null && item.selectedSize !== undefined"
-    class="text-xs text-neutral-500 mt-1"
->
-    Size:
-    <span
-        class="font-medium"
-        x-text="'US ' + item.selectedSize"
-    ></span>
-</p>
-                    <p class="text-xs text-neutral-500 mt-1" x-text="config.currency + Number(item.price).toLocaleString()"></p>
-                    <div class="flex items-center space-x-3 mt-2">
-                        <button @click="updateQuantity(item.id, item.selectedSize, -1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">-</button>
-                        <span class="text-xs font-medium" x-text="item.quantity"></span>
-                        <button @click="updateQuantity(item.id, item.selectedSize, 1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">+</button>
-                    </div>
-                </div>
-                <button @click="removeFromCart(item.id, item.selectedSize)" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors">Remove</button>
+        x-for="item in cart"
+        :key="`${item.id}-${item.selectedSize ?? 'no-size'}`"
+        >
+        <div class="flex items-center space-x-4 border-b border-neutral-100 pb-4">
+            <img :src="item.image_url || config.fallbackImage" class="w-16 h-20 object-cover rounded bg-neutral-100">
+            <div class="flex-1">
+                <h4 class="text-sm font-medium text-neutral-900" x-text="item.name"></h4>
+                <p
+                x-show="item.selectedSize !== null && item.selectedSize !== undefined"
+                class="text-xs text-neutral-500 mt-1"
+                >
+                Size:
+                <span
+                class="font-medium"
+                x-text="'US ' + item.selectedSize"
+                ></span>
+            </p>
+            <p class="text-xs text-neutral-500 mt-1" x-text="config.currency + Number(item.price).toLocaleString()"></p>
+            <div class="flex items-center space-x-3 mt-2">
+                <button @click="updateQuantity(item.id, item.selectedSize, -1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">-</button>
+                <span class="text-xs font-medium" x-text="item.quantity"></span>
+                <button @click="updateQuantity(item.id, item.selectedSize, 1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">+</button>
             </div>
-        </template>
-        <div x-show="cart.length === 0" class="text-center py-12 text-neutral-400 text-sm">
-            Your cart is empty.
         </div>
+        <button @click="removeFromCart(item.id, item.selectedSize)" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors">Remove</button>
     </div>
-    
-    <div class="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
-        <div class="flex justify-between items-center mb-4">
-            <span class="text-sm text-neutral-600">Subtotal</span>
-            <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
-        </div>
-        <a href="checkout.html" 
-        @click="cartOpen = false"
-        :class="cart.length === 0 ? 'opacity-50 pointer-events-none' : ''"
-        class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
-        Proceed to Checkout
-    </a>
+</template>
+<div x-show="cart.length === 0" class="text-center py-12 text-neutral-400 text-sm">
+    Your cart is empty.
+</div>
+</div>
+
+<div class="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
+    <div class="flex justify-between items-center mb-4">
+        <span class="text-sm text-neutral-600">Subtotal</span>
+        <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
+    </div>
+    <a href="checkout.html" 
+    @click="cartOpen = false"
+    :class="cart.length === 0 ? 'opacity-50 pointer-events-none' : ''"
+    class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
+    Proceed to Checkout
+</a>
 </div>
 </div>
 </div>

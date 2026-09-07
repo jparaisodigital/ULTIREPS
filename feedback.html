@@ -4,17 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
-<link rel="icon" type="image/png" href="assets/fav.png">
+    <link rel="icon" type="image/png" href="assets/fav.png">
     <title x-text="'Feedback | ' + config.storeName"></title>
+    
+    <!-- ===== SOCIAL / MESSENGER LINK PREVIEW ===== -->
+    <meta
+    name="description"
+    content="Ulti Reps — Premium footwear, hot drops, and new releases."
+    >
+    
+    <meta property="og:type" content="website">
+    
+    <meta
+    property="og:title"
+    content="Ulti Reps | Premium Footwear Store"
+    >
+    
+    <meta
+    property="og:description"
+    content="Top Tier Quality · Hot Drops · New Releases"
+    >
+    
+    <meta
+    property="og:url"
+    content="https://jparaisodigital.github.io/ULTIREPS/"
+    >
+    
+    <meta
+    property="og:image"
+    content="https://jparaisodigital.github.io/ULTIREPS/assets/hero.png"
+    >
+    
+    <meta
+    property="og:image:width"
+    content="1200"
+    >
+    
+    <meta
+    property="og:image:height"
+    content="630"
+    >
+    
+    <meta
+    property="og:image:alt"
+    content="Ulti Reps Premium Footwear Store"
+    >
+    
+    <!-- Twitter / other social previews -->
+    <meta
+    name="twitter:card"
+    content="summary_large_image"
+    >
+    
+    <meta
+    name="twitter:title"
+    content="Ulti Reps | Premium Footwear Store"
+    >
+    
+    <meta
+    name="twitter:description"
+    content="Top Tier Quality · Hot Drops · New Releases"
+    >
+    
+    <meta
+    name="twitter:image"
+    content="https://jparaisodigital.github.io/ULTIREPS/assets/hero.png"
+    >
     <!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Alpine.js + Collapse Plugin -->
-<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-<!-- Google Fonts: Space Grotesk -->
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js + Collapse Plugin -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Google Fonts: Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Google Fonts: Space Grotesk para makuha ang vibe ng image -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -22,11 +86,11 @@
     </style>
 </head>
 <body
-    class="bg-neutral-100 text-neutral-900 antialiased
-           selection:bg-neutral-900 selection:text-white
-           opacity-0 transition-opacity duration-300"
-    x-data="storeApp()"
-    x-init="initHeader(); requestAnimationFrame(() => document.body.classList.remove('opacity-0'))"
+class="bg-neutral-100 text-neutral-900 antialiased
+selection:bg-neutral-900 selection:text-white
+opacity-0 transition-opacity duration-300"
+x-data="storeApp()"
+x-init="initHeader(); requestAnimationFrame(() => document.body.classList.remove('opacity-0'))"
 >
 
 <!-- ===== HEADER ===== -->
@@ -90,81 +154,81 @@ x-text="cartCount">0</span>
 
 <!-- Mobile Menu Dropdown -->
 <div
-    x-show="mobileMenuOpen"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0 -translate-y-4"
-    x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 -translate-y-4"
-    class="md:hidden absolute top-0 left-0 w-full bg-neutral-950 pt-24 px-6 pb-8 border-b border-neutral-800 shadow-2xl z-10"
-    style="display: none;"
+x-show="mobileMenuOpen"
+x-transition:enter="transition ease-out duration-300"
+x-transition:enter-start="opacity-0 -translate-y-4"
+x-transition:enter-end="opacity-100 translate-y-0"
+x-transition:leave="transition ease-in duration-200"
+x-transition:leave-start="opacity-100 translate-y-0"
+x-transition:leave-end="opacity-0 -translate-y-4"
+class="md:hidden absolute top-0 left-0 w-full bg-neutral-950 pt-24 px-6 pb-8 border-b border-neutral-800 shadow-2xl z-10"
+style="display: none;"
 >
 
-    <nav class="flex flex-col items-center text-center space-y-4 text-base font-bold tracking-[0.15em] uppercase text-white">
-
-        <!-- SHOP -->
-<a
-href="index.html"
-@click.prevent="
+<nav class="flex flex-col items-center text-center space-y-4 text-base font-bold tracking-[0.15em] uppercase text-white">
+    
+    <!-- SHOP -->
+    <a
+    href="index.html"
+    @click.prevent="
     mobileMenuOpen = false;
     sessionStorage.setItem('ulti_skip_loader_once', 'true');
     document.body.classList.add('opacity-0');
     setTimeout(() => window.location.href = 'index.html', 250);
+    "
+    class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
+    >
+    Shop
+</a>
+
+<!-- ULTI STORY -->
+<a
+href="story.html"
+@click.prevent="
+mobileMenuOpen = false;
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'story.html', 150);
 "
 class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
 >
-Shop
+Ulti Story
 </a>
 
-        <!-- ULTI STORY -->
-        <a
-            href="story.html"
-            @click.prevent="
-                mobileMenuOpen = false;
-                document.body.classList.add('opacity-0');
-                setTimeout(() => window.location.href = 'story.html', 150);
-            "
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
-        >
-            Ulti Story
-        </a>
+<!-- ABOUT -->
+<a
+href="about.html"
+@click.prevent="
+mobileMenuOpen = false;
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'about.html', 150);
+"
+class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
+>
+About
+</a>
 
-        <!-- ABOUT -->
-        <a
-            href="about.html"
-            @click.prevent="
-                mobileMenuOpen = false;
-                document.body.classList.add('opacity-0');
-                setTimeout(() => window.location.href = 'about.html', 150);
-            "
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-b border-neutral-800/50"
-        >
-            About
-        </a>
+<!-- FEEDBACK -->
+<a
+href="feedback.html"
+@click.prevent="
+mobileMenuOpen = false;
+document.body.classList.add('opacity-0');
+setTimeout(() => window.location.href = 'feedback.html', 400);
+"
+class="w-full text-white transition-colors hover:text-neutral-400 py-2"
+>
+Feedback
+</a>
 
-        <!-- FEEDBACK -->
-        <a
-            href="feedback.html"
-            @click.prevent="
-                mobileMenuOpen = false;
-                document.body.classList.add('opacity-0');
-                setTimeout(() => window.location.href = 'feedback.html', 400);
-            "
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2"
-        >
-            Feedback
-        </a>
+<!-- HELP -->
+<button
+@click="mobileMenuOpen = false; helpOpen = true"
+class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-t border-neutral-800/50 pt-4 mt-1"
+>
+Help / FAQs
+</button>
 
-        <!-- HELP -->
-        <button
-            @click="mobileMenuOpen = false; helpOpen = true"
-            class="w-full text-white transition-colors hover:text-neutral-400 py-2 border-t border-neutral-800/50 pt-4 mt-1"
-        >
-            Help / FAQs
-        </button>
-
-    </nav>
+</nav>
 
 </div>
 </header>
@@ -322,49 +386,49 @@ x-transition:leave-end="translate-x-full">
     
     <div class="flex-1 overflow-y-auto px-6 py-6 space-y-6">
         <template
-    x-for="item in cart"
-    :key="`${item.id}-${item.selectedSize ?? 'no-size'}`"
->
-            <div class="flex items-center space-x-4 border-b border-neutral-100 pb-4">
-                <img :src="item.image_url || config.fallbackImage" class="w-16 h-20 object-cover rounded bg-neutral-100">
-                <div class="flex-1">
-                    <h4 class="text-sm font-medium text-neutral-900" x-text="item.name"></h4>
-                    <p
-    x-show="item.selectedSize !== null && item.selectedSize !== undefined"
-    class="text-xs text-neutral-500 mt-1"
->
-    Size:
-    <span
-        class="font-medium"
-        x-text="'US ' + item.selectedSize"
-    ></span>
-</p>
-                    <p class="text-xs text-neutral-500 mt-1" x-text="config.currency + Number(item.price).toLocaleString()"></p>
-                    <div class="flex items-center space-x-3 mt-2">
-                        <button @click="updateQuantity(item.id, item.selectedSize, -1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">-</button>
-                        <span class="text-xs font-medium" x-text="item.quantity"></span>
-                        <button @click="updateQuantity(item.id, item.selectedSize, 1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">+</button>
-                    </div>
-                </div>
-                <button @click="removeFromCart(item.id, item.selectedSize)" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors">Remove</button>
+        x-for="item in cart"
+        :key="`${item.id}-${item.selectedSize ?? 'no-size'}`"
+        >
+        <div class="flex items-center space-x-4 border-b border-neutral-100 pb-4">
+            <img :src="item.image_url || config.fallbackImage" class="w-16 h-20 object-cover rounded bg-neutral-100">
+            <div class="flex-1">
+                <h4 class="text-sm font-medium text-neutral-900" x-text="item.name"></h4>
+                <p
+                x-show="item.selectedSize !== null && item.selectedSize !== undefined"
+                class="text-xs text-neutral-500 mt-1"
+                >
+                Size:
+                <span
+                class="font-medium"
+                x-text="'US ' + item.selectedSize"
+                ></span>
+            </p>
+            <p class="text-xs text-neutral-500 mt-1" x-text="config.currency + Number(item.price).toLocaleString()"></p>
+            <div class="flex items-center space-x-3 mt-2">
+                <button @click="updateQuantity(item.id, item.selectedSize, -1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">-</button>
+                <span class="text-xs font-medium" x-text="item.quantity"></span>
+                <button @click="updateQuantity(item.id, item.selectedSize, 1)" class="w-6 h-6 rounded border border-neutral-200 flex items-center justify-center text-xs hover:bg-neutral-100">+</button>
             </div>
-        </template>
-        <div x-show="cart.length === 0" class="text-center py-12 text-neutral-400 text-sm">
-            Your cart is empty.
         </div>
+        <button @click="removeFromCart(item.id, item.selectedSize)" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors">Remove</button>
     </div>
-    
-    <div class="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
-        <div class="flex justify-between items-center mb-4">
-            <span class="text-sm text-neutral-600">Subtotal</span>
-            <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
-        </div>
-        <a href="checkout.html" 
-        @click="cartOpen = false"
-        :class="cart.length === 0 ? 'opacity-50 pointer-events-none' : ''"
-        class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
-        Proceed to Checkout
-    </a>
+</template>
+<div x-show="cart.length === 0" class="text-center py-12 text-neutral-400 text-sm">
+    Your cart is empty.
+</div>
+</div>
+
+<div class="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
+    <div class="flex justify-between items-center mb-4">
+        <span class="text-sm text-neutral-600">Subtotal</span>
+        <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
+    </div>
+    <a href="checkout.html" 
+    @click="cartOpen = false"
+    :class="cart.length === 0 ? 'opacity-50 pointer-events-none' : ''"
+    class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors">
+    Proceed to Checkout
+</a>
 </div>
 </div>
 </div>
