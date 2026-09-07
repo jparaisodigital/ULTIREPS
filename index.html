@@ -26,6 +26,35 @@
             display: none !important;
         }
         
+        /* ===== COPY RESERVATION ID NUDGE ===== */
+        @keyframes copyNudge {
+            0%, 68%, 100% {
+                transform: translateY(0);
+            }
+            
+            73% {
+                transform: translateY(-5px);
+            }
+            
+            78% {
+                transform: translateY(0);
+            }
+            
+            82% {
+                transform: translateY(-3px);
+            }
+            
+            86% {
+                transform: translateY(0);
+            }
+        }
+        
+        .copy-nudge {
+            display: inline-block;
+            animation: copyNudge 2.6s ease-in-out infinite;
+            will-change: transform;
+        }
+        
         /* ===== MARQUEE ANIMATIONS ===== */
         @keyframes marquee {
             0% {
@@ -471,58 +500,58 @@ product.hot &&
 </span>
 </template>
 <img
-    :src="product.image_url || config.fallbackImage"
-    :alt="product.name"
-    class="w-full h-full object-contain transition-all duration-500"
+:src="product.image_url || config.fallbackImage"
+:alt="product.name"
+class="w-full h-full object-contain transition-all duration-500"
 
-    :class="isProductSoldOut(product)
-    ? ''
-    : 'group-hover:scale-105'"
+:class="isProductSoldOut(product)
+? ''
+: 'group-hover:scale-105'"
 >
 
 <!-- Available for Pre-order CTA -->
 <template
-    x-if="
-        productsReady &&
-        isProductSoldOut(product) &&
-        product.reserveAllowed === true
-    "
+x-if="
+productsReady &&
+isProductSoldOut(product) &&
+product.reserveAllowed === true
+"
 >
-    <button
-        type="button"
-        @click.stop="openQuickView(product)"
-        class="absolute bottom-4 left-1/2 -translate-x-1/2
-               z-20
-               inline-flex items-center justify-center gap-2
-               whitespace-nowrap
-               rounded-lg
-               border border-amber-200
-               bg-amber-50/95
-               backdrop-blur-sm
-               px-4 py-2.5
-               text-[9px] font-bold uppercase
-               tracking-[0.12em]
-               text-neutral-900
-               shadow-sm
-               hover:bg-amber-100
-               transition-colors"
-    >
-        <svg
-            class="w-3.5 h-3.5 flex-shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-        >
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.6"
-                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-            />
-        </svg>
+<button
+type="button"
+@click.stop="openQuickView(product)"
+class="absolute bottom-4 left-1/2 -translate-x-1/2
+z-20
+inline-flex items-center justify-center gap-2
+whitespace-nowrap
+rounded-lg
+border border-amber-200
+bg-amber-50/95
+backdrop-blur-sm
+px-4 py-2.5
+text-[9px] font-bold uppercase
+tracking-[0.12em]
+text-neutral-900
+shadow-sm
+hover:bg-amber-100
+transition-colors"
+>
+<svg
+class="w-3.5 h-3.5 flex-shrink-0"
+fill="none"
+stroke="currentColor"
+viewBox="0 0 24 24"
+>
+<path
+stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="1.6"
+d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+/>
+</svg>
 
-        Available for Pre-order
-    </button>
+Available for Pre-order
+</button>
 </template>
 
 </div>
@@ -1522,7 +1551,7 @@ x-text="preOrderReservationId"
 class="text-[9px] mt-1 transition-colors"
 :class="preOrderIdCopied
 ? 'text-green-600 font-semibold'
-: 'text-neutral-400'"
+: 'text-neutral-500 copy-nudge'"
 x-text="preOrderIdCopied
 ? 'Copied!'
 : 'Tap to copy'"
