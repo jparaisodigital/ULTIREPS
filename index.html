@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
-<link rel="icon" type="image/png" href="assets/fav.png">
+    <link rel="icon" type="image/png" href="assets/fav.png">
     <!-- Config-Driven Page Title -->
     <title x-text="config.storeName + ' | Minimalist Store'"></title>
     <!-- Tailwind CSS -->
@@ -19,6 +19,7 @@
     <style>
         body {
             font-family: 'Space Grotesk', sans-serif;
+            background-color: #ffffff;
         }
         
         /* ===== MARQUEE ANIMATIONS ===== */
@@ -91,7 +92,7 @@
     </style>
 </head>
 <body
-class="bg-neutral-100 text-neutral-900 antialiased
+class="bg-white text-neutral-900 antialiased
 selection:bg-neutral-900 selection:text-white
 opacity-0 transition-opacity duration-300"
 x-data="storeApp()"
@@ -372,7 +373,7 @@ Help / FAQs
 </div>
 
 <!-- Text Sale Marquee -->
-<div class="overflow-hidden w-full bg-neutral-100 border-b border-neutral-200 py-6">
+<div class="overflow-hidden w-full bg-white border-b border-neutral-200 py-6">
     <div class="animate-marquee-slow flex items-center space-x-8 text-sm md:text-base font-bold tracking-[0.25em] uppercase">
         <template x-for="i in 4">
             <div class="flex items-center space-x-8 shrink-0">
@@ -386,13 +387,13 @@ Help / FAQs
 
 
 <!-- Image Marquee (Landscape proportions para hindi ma-cut ang images) -->
-<div class="overflow-hidden w-full bg-neutral-100 border-b border-neutral-200 py-6">
+<div class="overflow-hidden w-full bg-white border-b border-neutral-200 py-6">
     <div class="animate-marquee flex items-center space-x-6">
         <template x-for="i in 2">
             <div class="flex items-center space-x-6 shrink-0">
                 <template x-for="img in config.marqueeImages">
                     <div class="w-64 h-40 md:w-96 md:h-56 shrink-0 bg-transparent flex items-center justify-center p-2">
-                        <img :src="img" class="w-full h-full object-contain block drop-shadow-md" alt="Brand Marquee Image">
+                        <img :src="img" class="w-full h-full object-contain block" alt="Brand Marquee Image">
                     </div>
                 </template>
             </div>
@@ -429,8 +430,8 @@ Help / FAQs
             <div
             class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5] transition-colors duration-300"
             :class="isProductSoldOut(product)
-            ? 'bg-neutral-300'
-            : 'bg-neutral-100'"
+            ? 'bg-neutral-200'
+            : 'bg-white'"
             @click="openQuickView(product)"
             >
             
@@ -448,81 +449,100 @@ Help / FAQs
             </span>
         </template>
         
-        <!-- HOT only when product is available -->
-        <template x-if="product.hot && !isProductSoldOut(product)">
-            <span class="absolute top-3 left-3 z-10 bg-neutral-900 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-2.5 py-1 rounded-sm">
-                Hot
-            </span>
-        </template>
-        <img
-        :src="product.image_url || config.fallbackImage"
-        :alt="product.name"
-        class="w-full h-full object-contain transition-all duration-500"
-        :style="isProductSoldOut(product)
-        ? 'opacity: 0.32; filter: grayscale(100%);'
-        : ''"
-        
-        :class="isProductSoldOut(product)
-        ? ''
-        : 'group-hover:scale-105'"
+        <!-- PRE-ORDER Badge -->
+        <template
+        x-if="
+        isProductSoldOut(product) &&
+        product.reserveAllowed === true
+        "
         >
+        <span
+        class="absolute top-3 right-3 z-20
+        bg-neutral-900 text-white
+        text-[9px] font-bold uppercase
+        tracking-[0.16em]
+        px-3 py-1.5 rounded-md
+        shadow-sm pointer-events-none"
+        >
+        Pre-order
+    </span>
+</template>
+
+<!-- HOT only when product is available -->
+<template x-if="product.hot && !isProductSoldOut(product)">
+    <span class="absolute top-3 left-3 z-10 bg-neutral-900 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-2.5 py-1 rounded-sm">
+        Hot
+    </span>
+</template>
+<img
+:src="product.image_url || config.fallbackImage"
+:alt="product.name"
+class="w-full h-full object-contain transition-all duration-500"
+:style="isProductSoldOut(product)
+? 'opacity: 0.32; filter: grayscale(100%);'
+: ''"
+
+:class="isProductSoldOut(product)
+? ''
+: 'group-hover:scale-105'"
+>
+</div>
+
+<!-- Name + Price + Add to Cart -->
+<div class="flex items-start justify-between gap-3">
+    
+    <!-- Product Name + Price -->
+    <div
+    class="min-w-0"
+    @click="openQuickView(product)"
+    >
+    
+    <!-- Product Name -->
+    <h3
+    class="text-sm font-medium text-neutral-900 mb-1 truncate"
+    x-text="product.name"
+    ></h3>
+    
+    <!-- Price -->
+    <div class="flex items-center gap-2">
+        
+        <span
+        x-show="hasProductDiscount(product)"
+        class="text-[11px] text-neutral-400 line-through"
+        x-text="
+        config.currency +
+        Number(product.price).toLocaleString()
+        "
+        ></span>
+        
+        <span
+        class="text-sm font-semibold text-neutral-900"
+        x-text="
+        config.currency +
+        Number(
+        getProductFinalPrice(product)
+        ).toLocaleString()
+        "
+        ></span>
+        
     </div>
     
-    <!-- Name + Price + Add to Cart -->
-    <div class="flex items-start justify-between gap-3">
-        
-        <!-- Product Name + Price -->
-        <div
-        class="min-w-0"
-        @click="openQuickView(product)"
-        >
-        
-        <!-- Product Name -->
-        <h3
-        class="text-sm font-medium text-neutral-900 mb-1 truncate"
-        x-text="product.name"
-        ></h3>
-        
-        <!-- Price -->
-        <div class="flex items-center gap-2">
-            
-            <span
-            x-show="hasProductDiscount(product)"
-            class="text-[11px] text-neutral-400 line-through"
-            x-text="
-            config.currency +
-            Number(product.price).toLocaleString()
-            "
-            ></span>
-            
-            <span
-            class="text-sm font-semibold text-neutral-900"
-            x-text="
-            config.currency +
-            Number(
-            getProductFinalPrice(product)
-            ).toLocaleString()
-            "
-            ></span>
-            
-        </div>
-        
-    </div>
+</div>
+
+<!-- Add to Cart (Text + Icon) -->
+<!-- Available -->
+<template x-if="!isProductSoldOut(product)">
+    <button
+    @click.stop="addToCart(product)"
+    class="flex-shrink-0 flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-medium text-neutral-900 hover:text-neutral-600 transition-all duration-200 active:scale-90 pt-0.5"
+    >
+    <span>Add</span>
     
-    <!-- Add to Cart (Text + Icon) -->
-    <!-- Available -->
-    <template x-if="!isProductSoldOut(product)">
-        <button
-        @click.stop="addToCart(product)"
-        class="flex-shrink-0 flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-medium text-neutral-900 hover:text-neutral-600 transition-all duration-200 active:scale-90 pt-0.5"
-        >
-        <span>Add</span>
-        
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-        </svg>
-    </button>
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+    </svg>
+</button>
 </template> 
 
 <!-- Pre-order -->
@@ -537,7 +557,7 @@ Help / FAQs
     hover:bg-[#B42318] hover:text-white
     focus:outline-none focus:ring-0
     focus-visible:ring-2 focus-visible:ring-[#B42318] focus-visible:ring-offset-2"
->
+    >
     Pre-order
     
     <svg
@@ -599,9 +619,9 @@ style="display: none;">
 <div class="flex flex-col md:flex-row">
     
     <!-- Image Slider -->
-    <div class="relative bg-neutral-50 md:w-1/2 aspect-square md:aspect-auto md:min-h-[420px]">
+    <div class="relative bg-white md:w-1/2 aspect-square md:aspect-auto md:min-h-[420px]">
         
-        <!-- Sold Out Badge -->
+        <!-- Sold Out + Pre-order Badges -->
         <template
         x-if="
         isProductSoldOut(quickViewProduct) ||
@@ -614,15 +634,95 @@ style="display: none;">
         )
         "
         >
-        
-        <span
+        <div
         x-transition
-        class="absolute top-4 left-4 z-20 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 rounded-sm"
+        class="absolute top-4 left-4 z-20 flex flex-col items-start gap-2"
+        >
+        
+        <!-- SOLD OUT -->
+        <span
+        class="text-white text-[10px] font-bold tracking-[0.2em]
+        uppercase px-3 py-1.5 rounded-sm"
         style="background-color: #B42318;"
         >
         Sold Out
     </span>
     
+    <!-- AVAILABLE FOR PRE-ORDER -->
+    <button
+    x-show="
+    quickViewProduct.reserveAllowed === true &&
+    (
+    isProductSoldOut(quickViewProduct) ||
+    (
+    selectedSize &&
+    canPreOrderSize(
+    quickViewProduct,
+    selectedSize
+    )
+    )
+    )
+    "
+    type="button"
+    @click="
+    if (selectedSize) {
+        preOrderForm.size = selectedSize;
+        preOrderExpanded = true;
+        
+        $nextTick(() => {
+            setTimeout(() => {
+                const modal = $refs.quickViewScroll;
+                const header = $refs.preOrderFormHeader;
+                
+                if (modal && header) {
+                    const modalTop =
+                    modal.getBoundingClientRect().top;
+                    
+                    const headerTop =
+                    header.getBoundingClientRect().top;
+                    
+                    const targetScroll =
+                    modal.scrollTop +
+                    (headerTop - modalTop) -
+                    8;
+                    
+                    modal.scrollTo({
+                        top: targetScroll,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 550);
+        });
+    }
+    "
+    class="inline-flex items-center gap-2
+    bg-amber-50 border border-amber-200
+    text-neutral-900
+    text-[9px] font-bold uppercase
+    tracking-[0.12em]
+    px-3 py-2 rounded-md
+    shadow-sm
+    hover:bg-amber-100
+    transition-colors"
+    >
+    <svg
+    class="w-3.5 h-3.5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    >
+    <path
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1.6"
+    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+    />
+</svg>
+
+Available for Pre-order
+</button>
+
+</div>
 </template>
 
 <!-- Images always FULL COLOR -->
@@ -1715,227 +1815,227 @@ Your cart is empty.
 
 <!-- ===== MONTHLY SALE MODAL ===== -->
 <div
-    x-show="saleModalVisible"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
-    class="fixed inset-0 z-[95] flex items-center justify-center p-4"
-    style="display: none;"
+x-show="saleModalVisible"
+x-transition:enter="transition ease-out duration-300"
+x-transition:enter-start="opacity-0"
+x-transition:enter-end="opacity-100"
+x-transition:leave="transition ease-in duration-200"
+x-transition:leave-start="opacity-100"
+x-transition:leave-end="opacity-0"
+class="fixed inset-0 z-[95] flex items-center justify-center p-4"
+style="display: none;"
 >
 
-    <!-- Backdrop -->
-    <div
-        class="absolute inset-0 bg-black/75 backdrop-blur-[2px]"
-        @click="closeSaleModal()"
-    ></div>
+<!-- Backdrop -->
+<div
+class="absolute inset-0 bg-black/75 backdrop-blur-[2px]"
+@click="closeSaleModal()"
+></div>
 
-    <!-- Modal Card -->
-    <div
-        x-show="saleModalVisible"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 scale-95 translate-y-3"
-        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-        x-transition:leave-end="opacity-0 scale-95 translate-y-3"
-        class="relative w-full
-       max-w-[520px]
-       max-h-[calc(100vh-2rem)] overflow-y-auto
+<!-- Modal Card -->
+<div
+x-show="saleModalVisible"
+x-transition:enter="transition ease-out duration-300"
+x-transition:enter-start="opacity-0 scale-95 translate-y-3"
+x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+x-transition:leave="transition ease-in duration-200"
+x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+x-transition:leave-end="opacity-0 scale-95 translate-y-3"
+class="relative w-full
+max-w-[520px]
+max-h-[calc(100vh-2rem)] overflow-y-auto
 
-       md:max-w-[560px]
-       md:max-h-none
-       md:overflow-visible
+md:max-w-[520px]
+md:max-h-none
+md:overflow-visible
 
-       lg:max-w-[620px]
+lg:max-w-[560px]
 
-       bg-[#f6f5f2] text-neutral-950
-       rounded-[22px] shadow-2xl
-       border border-white/40"
-    >
+bg-[#f6f5f2] text-neutral-950
+rounded-[22px] shadow-2xl
+border border-white/40"
+>
 
-        <!-- Decorative Watermark -->
-        <div
-            class="absolute right-[-45px] top-[26%]
-                   text-[130px] sm:text-[170px]
-                   font-black tracking-[-0.08em]
-                   text-neutral-900/[0.035]
-                   rotate-90 select-none pointer-events-none"
+<!-- Decorative Watermark -->
+<div
+class="absolute right-[-45px] top-[26%]
+text-[130px] sm:text-[170px]
+font-black tracking-[-0.08em]
+text-neutral-900/[0.035]
+rotate-90 select-none pointer-events-none"
+>
+ULTI
+</div>
+
+<div class="relative px-6 py-7 sm:px-10 sm:py-8 lg:px-12 lg:py-9">
+    
+    <!-- Logo + Close -->
+    <div class="flex items-start justify-between mb-8">
+        
+        <img
+        :src="config.logo"
+        :alt="config.storeName"
+        class="w-[105px] sm:w-[125px] h-auto object-contain"
+        style="filter: brightness(0);"
         >
-            ULTI
-        </div>
+        
+        <button
+        type="button"
+        @click="closeSaleModal()"
+        aria-label="Close sale"
+        class="w-10 h-10 flex items-center justify-center
+        rounded-full hover:bg-black/5
+        transition-colors"
+        >
+        <svg
+        class="w-7 h-7"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        >
+        <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M6 18L18 6M6 6l12 12"
+        />
+    </svg>
+</button>
 
-        <div class="relative px-6 py-7 sm:px-10 sm:py-8 lg:px-12 lg:py-9">
-
-            <!-- Logo + Close -->
-            <div class="flex items-start justify-between mb-8">
-
-                <img
-                    :src="config.logo"
-                    :alt="config.storeName"
-                    class="w-[105px] sm:w-[125px] h-auto object-contain"
-                    style="filter: brightness(0);"
-                >
-
-                <button
-                    type="button"
-                    @click="closeSaleModal()"
-                    aria-label="Close sale"
-                    class="w-10 h-10 flex items-center justify-center
-                           rounded-full hover:bg-black/5
-                           transition-colors"
-                >
-                    <svg
-                        class="w-7 h-7"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
-                </button>
-
-            </div>
+</div>
 
 
-            <!-- Eyebrow -->
-            <div class="flex items-center gap-4 justify-center mb-6">
-
-                <span class="h-px flex-1 max-w-[70px] bg-neutral-400"></span>
-
-                <p
-                    class="text-[9px] sm:text-[10px]
-                           uppercase tracking-[0.42em]
-                           font-semibold whitespace-nowrap"
-                    x-text="config.saleModal.eyebrow"
-                ></p>
-
-                <span class="h-px flex-1 max-w-[70px] bg-neutral-400"></span>
-
-            </div>
-
-
-            <!-- Main Sale Number -->
-            <div class="text-center">
-
-                <div
-                    class="font-black tracking-[-0.08em]
-                           leading-[0.78]
-                           text-[92px] sm:text-[108px] lg:text-[118px]"
-                    x-text="config.saleModal.saleNumber"
-                ></div>
-
-                <div
-                    class="font-black italic tracking-[-0.055em]
-                           leading-none
-                           text-[64px] sm:text-[82px]
-                           text-red-600 mt-3"
-                    x-text="config.saleModal.saleLabel"
-                ></div>
-
-            </div>
+<!-- Eyebrow -->
+<div class="flex items-center gap-4 justify-center mb-6">
+    
+    <span class="h-px flex-1 max-w-[70px] bg-neutral-400"></span>
+    
+    <p
+    class="text-[9px] sm:text-[10px]
+    uppercase tracking-[0.42em]
+    font-semibold whitespace-nowrap"
+    x-text="config.saleModal.eyebrow"
+    ></p>
+    
+    <span class="h-px flex-1 max-w-[70px] bg-neutral-400"></span>
+    
+</div>
 
 
-            <!-- Discount Ticket -->
-            <div
-                class="mx-auto mt-7 max-w-[390px]
-                       border-2 border-neutral-950
-                       px-4 py-4 text-center bg-white"
-            >
-                <p
-                    class="text-xl sm:text-2xl
-                           font-black uppercase tracking-[0.08em]"
-                    x-text="config.saleModal.discountText"
-                ></p>
-            </div>
+<!-- Main Sale Number -->
+<div class="text-center">
+    
+    <div
+    class="font-black tracking-[-0.08em]
+    leading-[0.78]
+    text-[92px] sm:text-[108px] lg:text-[118px]"
+    x-text="config.saleModal.saleNumber"
+    ></div>
+    
+    <div
+    class="font-black italic tracking-[-0.055em]
+    leading-none
+    text-[64px] sm:text-[82px]
+    text-red-600 mt-3"
+    x-text="config.saleModal.saleLabel"
+    ></div>
+    
+</div>
 
 
-            <!-- Message -->
-            <p
-                class="mt-7 text-center
-                       text-[10px] sm:text-[11px]
-                       font-semibold uppercase
-                       tracking-[0.32em]
-                       leading-relaxed"
-                x-text="config.saleModal.message"
-            ></p>
+<!-- Discount Ticket -->
+<div
+class="mx-auto mt-7 max-w-[390px]
+border-2 border-neutral-950
+px-4 py-4 text-center bg-white"
+>
+<p
+class="text-xl sm:text-2xl
+font-black uppercase tracking-[0.08em]"
+x-text="config.saleModal.discountText"
+></p>
+</div>
 
 
-            <!-- CTA -->
-            <button
-                type="button"
-                @click="shopSale()"
-                class="group w-full mt-8
-                       bg-neutral-950 text-white
-                       rounded-xl px-5 py-5
-                       flex items-center justify-center gap-4
-                       text-xs sm:text-sm
-                       uppercase tracking-[0.25em]
-                       font-bold
-                       hover:bg-neutral-800
-                       active:scale-[0.99]
-                       transition-all"
-            >
-                <span x-text="config.saleModal.buttonText"></span>
-
-                <svg
-                    class="w-5 h-5 transition-transform duration-200
-                           group-hover:translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.7"
-                        d="M5 12h14M13 6l6 6-6 6"
-                    />
-                </svg>
-            </button>
+<!-- Message -->
+<p
+class="mt-7 text-center
+text-[10px] sm:text-[11px]
+font-semibold uppercase
+tracking-[0.32em]
+leading-relaxed"
+x-text="config.saleModal.message"
+></p>
 
 
-            <!-- Don't Show Again -->
-            <button
-                type="button"
-                @click="closeSaleModal()"
-                class="block mx-auto mt-6
-                       text-[10px] uppercase
-                       tracking-[0.28em]
-                       text-neutral-500
-                       hover:text-neutral-950
-                       transition-colors"
-            >
-                Don't show again
-            </button>
+<!-- CTA -->
+<button
+type="button"
+@click="shopSale()"
+class="group w-full mt-8
+bg-neutral-950 text-white
+rounded-xl px-5 py-5
+flex items-center justify-center gap-4
+text-xs sm:text-sm
+uppercase tracking-[0.25em]
+font-bold
+hover:bg-neutral-800
+active:scale-[0.99]
+transition-all"
+>
+<span x-text="config.saleModal.buttonText"></span>
+
+<svg
+class="w-5 h-5 transition-transform duration-200
+group-hover:translate-x-1"
+fill="none"
+stroke="currentColor"
+viewBox="0 0 24 24"
+>
+<path
+stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="1.7"
+d="M5 12h14M13 6l6 6-6 6"
+/>
+</svg>
+</button>
 
 
-            <!-- Footer Brand Line -->
-            <div class="flex items-center gap-4 justify-center mt-8">
+<!-- Don't Show Again -->
+<button
+type="button"
+@click="closeSaleModal()"
+class="block mx-auto mt-6
+text-[10px] uppercase
+tracking-[0.28em]
+text-neutral-500
+hover:text-neutral-950
+transition-colors"
+>
+Don't show again
+</button>
 
-                <span class="h-px flex-1 bg-neutral-300"></span>
 
-                <p
-                    class="text-[8px] sm:text-[9px]
-                           uppercase tracking-[0.32em]
-                           text-neutral-500 text-center whitespace-nowrap"
-                    x-text="config.saleModal.footerText"
-                ></p>
+<!-- Footer Brand Line -->
+<div class="flex items-center gap-4 justify-center mt-8">
+    
+    <span class="h-px flex-1 bg-neutral-300"></span>
+    
+    <p
+    class="text-[8px] sm:text-[9px]
+    uppercase tracking-[0.32em]
+    text-neutral-500 text-center whitespace-nowrap"
+    x-text="config.saleModal.footerText"
+    ></p>
+    
+    <span class="h-px flex-1 bg-neutral-300"></span>
+    
+</div>
 
-                <span class="h-px flex-1 bg-neutral-300"></span>
+</div>
 
-            </div>
-
-        </div>
-
-    </div>
+</div>
 
 </div>
 <!-- ===== END MONTHLY SALE MODAL ===== -->

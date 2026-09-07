@@ -147,10 +147,10 @@ window.CONFIG = {
             hot: true,
             reserveAllowed: true,
             
-            image_url: "products/1 (1).png",
+            image_url: "products/1 (1).jpg",
             
             images: [
-                "products/1 (1).png",
+                "products/1 (1).jpg",
                 "products/back/1 (1).webp",
                 "products/back/1 (2).webp",
                 "products/back/1 (3).webp",
@@ -168,10 +168,10 @@ window.CONFIG = {
             hot: true,
             reserveAllowed: true,
             
-            image_url: "products/1 (2).png",
+            image_url: "products/1 (2).jpg",
             
             images: [
-                "products/1 (2).png",
+                "products/1 (2).jpg",
                 "products/back/2 (1).webp",
                 "products/back/2 (2).webp",
                 "products/back/2 (3).webp",
@@ -189,10 +189,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (3).png",
+            image_url: "products/1 (3).jpg",
             
             images: [
-                "products/1 (3).png",
+                "products/1 (3).jpg",
                 "products/back/3 (1).webp",
                 "products/back/3 (2).webp",
                 "products/back/3 (3).webp",
@@ -210,10 +210,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (4).png",
+            image_url: "products/1 (4).jpg",
             
             images: [
-                "products/1 (4).png",
+                "products/1 (4).jpg",
                 "products/back/4 (1).webp",
                 "products/back/4 (2).webp",
                 "products/back/4 (3).webp",
@@ -231,10 +231,10 @@ window.CONFIG = {
             hot: true,
             reserveAllowed: true,
             
-            image_url: "products/1 (5).png",
+            image_url: "products/1 (5).jpg",
             
             images: [
-                "products/1 (5).png",
+                "products/1 (5).jpg",
                 "products/back/5 (1).webp",
                 "products/back/5 (2).webp",
                 "products/back/5 (3).webp",
@@ -252,10 +252,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (6).png",
+            image_url: "products/1 (6).jpg",
             
             images: [
-                "products/1 (6).png",
+                "products/1 (6).jpg",
                 "products/back/6 (1).webp",
                 "products/back/6 (2).webp",
                 "products/back/6 (3).webp",
@@ -273,10 +273,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (7).png",
+            image_url: "products/1 (7).jpg",
             
             images: [
-                "products/1 (7).png",
+                "products/1 (7).jpg",
                 "products/back/7 (1).webp",
                 "products/back/7 (2).webp",
                 "products/back/7 (3).webp",
@@ -294,10 +294,10 @@ window.CONFIG = {
             hot: true,
             reserveAllowed: true,
             
-            image_url: "products/1 (8).png",
+            image_url: "products/1 (8).jpg",
             
             images: [
-                "products/1 (8).png",
+                "products/1 (8).jpg",
                 "products/back/8 (1).webp",
                 "products/back/8 (2).webp",
                 "products/back/8 (3).webp",
@@ -315,10 +315,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (9).png",
+            image_url: "products/1 (9).jpg",
             
             images: [
-                "products/1 (9).png",
+                "products/1 (9).jpg",
                 "products/back/9 (1).webp",
                 "products/back/9 (2).webp",
                 "products/back/9 (3).webp",
@@ -336,10 +336,10 @@ window.CONFIG = {
             hot: true,
             reserveAllowed: true,
             
-            image_url: "products/1 (10).png",
+            image_url: "products/1 (10).jpg",
             
             images: [
-                "products/1 (10).png",
+                "products/1 (10).jpg",
                 "products/back/10 (1).webp",
                 "products/back/10 (2).webp",
                 "products/back/10 (3).webp",
@@ -357,10 +357,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (11).png",
+            image_url: "products/1 (11).jpg",
             
             images: [
-                "products/1 (11).png",
+                "products/1 (11).jpg",
                 "products/back/11 (1).webp",
                 "products/back/11 (2).webp",
                 "products/back/11 (3).webp",
@@ -378,10 +378,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (12).png",
+            image_url: "products/1 (12).jpg",
             
             images: [
-                "products/1 (12).png",
+                "products/1 (12).jpg",
                 "products/back/12 (1).webp",
                 "products/back/12 (2).webp",
                 "products/back/12 (3).webp",
@@ -399,10 +399,10 @@ window.CONFIG = {
             hot: true,
             reserveAllowed: true,
             
-            image_url: "products/1 (13).png",
+            image_url: "products/1 (13).jpg",
             
             images: [
-                "products/1 (13).png",
+                "products/1 (13).jpg",
                 "products/back/13 (1).webp",
                 "products/back/13 (2).webp",
                 "products/back/13 (3).webp",
@@ -420,10 +420,10 @@ window.CONFIG = {
             hot: true,
             reserveAllowed: true,
             
-            image_url: "products/1 (14).png",
+            image_url: "products/1 (14).jpg",
             
             images: [
-                "products/1 (14).png",
+                "products/1 (14).jpg",
                 "products/back/14 (1).webp",
                 "products/back/14 (2).webp",
                 "products/back/14 (3).webp",
@@ -441,10 +441,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (15).png",
+            image_url: "products/1 (15).jpg",
             
             images: [
-                "products/1 (15).png",
+                "products/1 (15).jpg",
                 "products/back/15 (1).webp",
                 "products/back/15 (2).webp",
                 "products/back/15 (3).webp",
@@ -462,10 +462,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (16).png",
+            image_url: "products/1 (16).jpg",
             
             images: [
-                "products/1 (16).png",
+                "products/1 (16).jpg",
                 "products/back/16 (1).webp",
                 "products/back/16 (2).webp",
                 "products/back/16 (3).webp",
@@ -483,14 +483,35 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (17).png",
+            image_url: "products/1 (17).jpg",
             
             images: [
-                "products/1 (17).png",
+                "products/1 (17).jpg",
                 "products/back/17 (1).webp",
                 "products/back/17 (2).webp",
                 "products/back/17 (3).webp",
                 "products/back/17 (4).webp"
+            ],
+            
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
+        
+        {
+            id: 18,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+            
+            image_url: "products/1 (18).jpg",
+            
+            images: [
+                "products/1 (18).jpg",
+                "products/back/18 (1).webp",
+                "products/back/18 (2).webp",
+                "products/back/18 (3).webp",
+                "products/back/18 (4).webp"
             ],
             
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
@@ -511,24 +532,24 @@ window.CONFIG = {
         "assets/history/1 (10).webp",
         "assets/history/1 (11).webp"
     ],
-       
+    
     // Product Marquee Images
     marqueeImages: [
-        "products/1 (1).png",
-        "products/1 (2).png",
-        "products/1 (3).png",
-        "products/1 (4).png",
-        "products/1 (5).png",
-        "products/1 (6).png",
-        "products/1 (7).png",
-        "products/1 (8).png",
-        "products/1 (9).png",
-        "products/1 (10).png",
-        "products/1 (11).png",
-        "products/1 (12).png",
-        "products/1 (13).png",
-        "products/1 (14).png",
-        "products/1 (15).png"
+        "products/1 (1).jpg",
+        "products/1 (2).jpg",
+        "products/1 (3).jpg",
+        "products/1 (4).jpg",
+        "products/1 (5).jpg",
+        "products/1 (6).jpg",
+        "products/1 (7).jpg",
+        "products/1 (8).jpg",
+        "products/1 (9).jpg",
+        "products/1 (10).jpg",
+        "products/1 (11).jpg",
+        "products/1 (12).jpg",
+        "products/1 (13).jpg",
+        "products/1 (14).jpg",
+        "products/1 (15).jpg"
     ],
     
     
