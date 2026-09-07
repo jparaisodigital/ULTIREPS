@@ -124,6 +124,23 @@ body {
     pointer-events: none;
     animation: checkoutCopyShine 3s ease-in-out infinite;
 }
+
+/* ===== GLOBAL MODAL PAGE LOCK ===== */
+html.modal-open,
+body.modal-open {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+}
+
+/*
+Prevent accidental double-tap zoom on interactive controls.
+Pinch-to-zoom remains available for accessibility.
+*/
+button,
+a,
+[role="button"] {
+    touch-action: manipulation;
+}
 </style>
 </head>
 <body
@@ -1167,249 +1184,365 @@ x-transition:leave-end="translate-x-full">
 
 <!-- Remove -->
 <button
-type="button"
-@click="removeFromCart(item.id, item.selectedSize)"
-class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors"
+    type="button"
+    @click="removeFromCart(item.id, item.selectedSize)"
+    class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors"
 >
-Remove
+    Remove
 </button>
-
 </div>
 </template>
 
-
 <!-- Empty Cart -->
 <div
-x-show="cart.length === 0"
-class="text-center py-12 text-neutral-400 text-sm"
+    x-show="cart.length === 0"
+    class="text-center py-12 text-neutral-400 text-sm"
 >
-Your cart is empty.
+    Your cart is empty.
 </div>
-
 </div>
 
 <div class="border-t border-neutral-100 px-6 py-6 bg-neutral-50">
     <div class="flex justify-between items-center mb-4">
         <span class="text-sm text-neutral-600">Subtotal</span>
-        <span class="text-base font-semibold text-neutral-900" x-text="config.currency + Number(cartTotal).toLocaleString()"></span>
+
+        <span
+            class="text-base font-semibold text-neutral-900"
+            x-text="config.currency + Number(cartTotal).toLocaleString()"
+        ></span>
     </div>
+
     <button
-    type="button"
-    @click="cartOpen = false"
-    class="block w-full text-center bg-neutral-900 text-white text-xs uppercase tracking-wider py-4 rounded-full font-medium hover:bg-neutral-800 transition-colors"
+        type="button"
+        @click="cartOpen = false"
+        class="block w-full text-center bg-neutral-900 text-white
+               text-xs uppercase tracking-wider py-4 rounded-full
+               font-medium hover:bg-neutral-800 transition-colors"
     >
-    Continue Checkout
-</button>
+        Continue Checkout
+    </button>
+</div>
+
 </div>
 </div>
 </div>
-</div>
+
 
 <!-- ===== PAYMENT MODAL ===== -->
-<div x-show="paymentModalOpen" 
-x-transition:enter="transition ease-out duration-200"
-x-transition:enter-start="opacity-0"
-x-transition:enter-end="opacity-100"
-x-transition:leave="transition ease-in duration-150"
-x-transition:leave-start="opacity-100"
-x-transition:leave-end="opacity-0"
-class="fixed inset-0 z-[80] flex items-center justify-center px-4"
-style="display: none;">
+<div
+    x-show="paymentModalOpen"
 
-<div @click="paymentModalOpen = false" class="absolute inset-0 bg-neutral-900/60 backdrop-blur-sm"></div>
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
 
-<div class="relative bg-white rounded-2xl w-full max-w-md p-8 shadow-2xl z-10 text-center">
-    <button
-    type="button"
-    @click="paymentModalOpen = false" class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-900">✕</button>
-    
-    <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-2">Confirm Order</h3>
-    
-    <p class="text-lg font-bold mb-1" x-text="config.currency + Number(grandTotal).toLocaleString()"></p>
-    <p class="text-xs text-neutral-500 uppercase tracking-wider mb-6"
-    x-text="form.deliveryOption === 'same_day' ? 'Same Day Delivery' : (form.paymentMethod === 'gcash' ? 'GCash' : 'Bank Transfer')"></p>
-    
-    <div class="bg-neutral-100 rounded-xl p-4 mb-6 text-left text-sm space-y-2">
-        
-        <p>
-            <span class="text-neutral-500">Name:</span>
-            <span x-text="form.firstName + ' ' + form.lastName"></span>
-        </p>
-        
-        <p>
-            <span class="text-neutral-500">Email:</span>
-            <span x-text="form.email"></span>
-        </p>
-        
-        <p>
-            <span class="text-neutral-500">Contact:</span>
-            <span x-text="form.contact"></span>
-        </p>
-        
-        <p>
-            <span class="text-neutral-500">Address:</span>
-            <span x-text="form.address"></span>
-        </p>
-        
-        <p x-show="form.postalCode">
-            <span class="text-neutral-500">Postal Code:</span>
-            <span x-text="form.postalCode"></span>
-        </p>
-        
-        <p>
-            <span class="text-neutral-500">Delivery:</span>
-            <span
-            x-text="
-            form.deliveryOption === 'same_day'
-            ? 'Same Day Delivery'
-            : 'Standard Delivery'
-            "
-            ></span>
-        </p>
-        
-        <div
-        x-show="form.orderNotes"
-        class="pt-2 mt-2 border-t border-neutral-200"
-        >
-        <p class="text-neutral-500 mb-1">Order Notes:</p>
-        <p
-        class="text-neutral-700 whitespace-pre-line"
-        x-text="form.orderNotes"
-        ></p>
-    </div>
-    
-</div>
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
 
-<!-- ===== MESSENGER ORDER GUIDE ===== -->
-<div class="mt-6 text-left">
+    class="fixed inset-0 z-[80] flex items-center justify-center px-4"
+    style="display: none;"
+>
 
-    <p
-        class="text-[10px] font-bold uppercase
-               tracking-[0.16em] text-neutral-900 mb-3"
-    >
-        Guide
-    </p>
-
-    <div class="space-y-3">
-
-        <div class="flex items-start gap-3">
-            <div
-                class="w-6 h-6 rounded-full bg-neutral-100
-                       flex items-center justify-center
-                       flex-shrink-0
-                       text-[10px] font-bold text-neutral-700"
-            >
-                1
-            </div>
-
-            <p class="text-[11px] text-neutral-600 leading-relaxed pt-1">
-                Order details will be prepared automatically in Messenger.
-            </p>
-        </div>
-
-        <div class="flex items-start gap-3">
-            <div
-                class="w-6 h-6 rounded-full bg-neutral-100
-                       flex items-center justify-center
-                       flex-shrink-0
-                       text-[10px] font-bold text-neutral-700"
-            >
-                2
-            </div>
-
-            <p class="text-[11px] text-neutral-600 leading-relaxed pt-1">
-                Tap <strong>Copy Order Details</strong> below for backup.
-            </p>
-        </div>
-
-        <div class="flex items-start gap-3">
-            <div
-                class="w-6 h-6 rounded-full bg-neutral-100
-                       flex items-center justify-center
-                       flex-shrink-0
-                       text-[10px] font-bold text-neutral-700"
-            >
-                3
-            </div>
-
-            <p class="text-[11px] text-neutral-600 leading-relaxed pt-1">
-                If the prepared message does not appear,
-                paste the copied details in Messenger.
-            </p>
-        </div>
-
-    </div>
-
-    <!-- Same Day Delivery Note -->
+    <!-- Backdrop -->
     <div
-        x-show="form.deliveryOption === 'same_day'"
-        class="mt-4 bg-neutral-50 border border-neutral-200
-               rounded-xl px-4 py-3"
+        @click="
+            paymentModalOpen = false;
+            unlockPageScroll('payment');
+        "
+        class="absolute inset-0 bg-neutral-900/60 backdrop-blur-sm"
+    ></div>
+
+
+    <!-- Modal Card -->
+    <div
+        class="relative bg-white rounded-2xl
+               w-full max-w-md p-8
+               shadow-2xl z-10 text-center"
     >
-        <p class="text-[10px] text-neutral-600 leading-relaxed">
-            Priority same-day arrangement and final delivery fee
-            will be confirmed via Messenger.
-        </p>
+
+        <!-- Close -->
+        <button
+            type="button"
+            @click="
+                paymentModalOpen = false;
+                unlockPageScroll('payment');
+            "
+            class="absolute top-4 right-4
+                   text-neutral-400 hover:text-neutral-900"
+        >
+            ✕
+        </button>
+
+
+        <!-- Header -->
+        <h3
+            class="text-sm font-bold tracking-[0.2em]
+                   uppercase mb-2"
+        >
+            Confirm Order
+        </h3>
+
+        <p
+            class="text-lg font-bold mb-1"
+            x-text="config.currency + Number(grandTotal).toLocaleString()"
+        ></p>
+
+        <p
+            class="text-xs text-neutral-500 uppercase
+                   tracking-wider mb-6"
+            x-text="
+                form.deliveryOption === 'same_day'
+                ? 'Same Day Delivery'
+                : (
+                    form.paymentMethod === 'gcash'
+                    ? 'GCash'
+                    : 'Bank Transfer'
+                )
+            "
+        ></p>
+
+
+        <!-- Customer Details -->
+        <div
+            class="bg-neutral-100 rounded-xl p-4
+                   mb-6 text-left text-sm space-y-2"
+        >
+
+            <p>
+                <span class="text-neutral-500">Name:</span>
+                <span x-text="form.firstName + ' ' + form.lastName"></span>
+            </p>
+
+            <p>
+                <span class="text-neutral-500">Email:</span>
+                <span x-text="form.email"></span>
+            </p>
+
+            <p>
+                <span class="text-neutral-500">Contact:</span>
+                <span x-text="form.contact"></span>
+            </p>
+
+            <p>
+                <span class="text-neutral-500">Address:</span>
+                <span x-text="form.address"></span>
+            </p>
+
+            <p x-show="form.postalCode">
+                <span class="text-neutral-500">Postal Code:</span>
+                <span x-text="form.postalCode"></span>
+            </p>
+
+            <p>
+                <span class="text-neutral-500">Delivery:</span>
+
+                <span
+                    x-text="
+                        form.deliveryOption === 'same_day'
+                        ? 'Same Day Delivery'
+                        : 'Standard Delivery'
+                    "
+                ></span>
+            </p>
+
+
+            <!-- Order Notes -->
+            <div
+                x-show="form.orderNotes"
+                class="pt-2 mt-2 border-t border-neutral-200"
+            >
+                <p class="text-neutral-500 mb-1">
+                    Order Notes:
+                </p>
+
+                <p
+                    class="text-neutral-700 whitespace-pre-line"
+                    x-text="form.orderNotes"
+                ></p>
+            </div>
+
+        </div>
+
+
+        <!-- ===== MESSENGER ORDER GUIDE ===== -->
+        <div class="mt-6 text-left">
+
+            <p
+                class="text-[10px] font-bold uppercase
+                       tracking-[0.16em]
+                       text-neutral-900 mb-3"
+            >
+                Guide
+            </p>
+
+            <div class="space-y-3">
+
+                <!-- Step 1 -->
+                <div class="flex items-start gap-3">
+
+                    <div
+                        class="w-6 h-6 rounded-full bg-neutral-100
+                               flex items-center justify-center
+                               flex-shrink-0
+                               text-[10px] font-bold text-neutral-700"
+                    >
+                        1
+                    </div>
+
+                    <p
+                        class="text-[11px] text-neutral-600
+                               leading-relaxed pt-1"
+                    >
+                        Order details will be prepared automatically in Messenger.
+                    </p>
+
+                </div>
+
+
+                <!-- Step 2 -->
+                <div class="flex items-start gap-3">
+
+                    <div
+                        class="w-6 h-6 rounded-full bg-neutral-100
+                               flex items-center justify-center
+                               flex-shrink-0
+                               text-[10px] font-bold text-neutral-700"
+                    >
+                        2
+                    </div>
+
+                    <p
+                        class="text-[11px] text-neutral-600
+                               leading-relaxed pt-1"
+                    >
+                        Tap <strong>Copy Order Details</strong>
+                        below for backup.
+                    </p>
+
+                </div>
+
+
+                <!-- Step 3 -->
+                <div class="flex items-start gap-3">
+
+                    <div
+                        class="w-6 h-6 rounded-full bg-neutral-100
+                               flex items-center justify-center
+                               flex-shrink-0
+                               text-[10px] font-bold text-neutral-700"
+                    >
+                        3
+                    </div>
+
+                    <p
+                        class="text-[11px] text-neutral-600
+                               leading-relaxed pt-1"
+                    >
+                        If the prepared message does not appear,
+                        paste the copied details in Messenger.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Same Day Delivery Note -->
+            <div
+                x-show="form.deliveryOption === 'same_day'"
+                class="mt-4 bg-neutral-50
+                       border border-neutral-200
+                       rounded-xl px-4 py-3"
+            >
+                <p
+                    class="text-[10px] text-neutral-600
+                           leading-relaxed"
+                >
+                    Priority same-day arrangement and final delivery fee
+                    will be confirmed via Messenger.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- ===== COPY ORDER DETAILS ===== -->
+        <button
+            type="button"
+            @click="copyOrderDetails()"
+            :disabled="orderDetailsCopied"
+
+            class="w-full mt-5
+                   border
+                   text-[10px] uppercase tracking-[0.14em]
+                   py-3.5 rounded-full font-bold
+                   transition-all duration-300"
+
+            :class="orderDetailsCopied
+                ? 'border-green-500 bg-green-50 text-green-700'
+                : 'checkout-copy-button border-red-500 bg-white'"
+
+            :style="orderDetailsCopied
+                ? ''
+                : 'color: #B42318;'"
+        >
+            <span
+                x-text="orderDetailsCopied
+                    ? '✓ Order Details Copied'
+                    : 'Copy Order Details'"
+            ></span>
+        </button>
+
+
+        <!-- ===== PLACE ORDER VIA MESSENGER ===== -->
+        <button
+            type="button"
+
+            @click="
+                paymentModalOpen = false;
+                unlockPageScroll('payment');
+                submitOrder();
+            "
+
+            :disabled="isSubmitting"
+
+            class="w-full mt-3
+                   bg-neutral-900 text-white
+                   text-xs uppercase tracking-wider
+                   py-4 rounded-full font-medium
+                   hover:bg-neutral-800
+                   transition-colors
+                   disabled:opacity-50"
+        >
+            <span x-show="!isSubmitting">
+                Place Order via Messenger
+            </span>
+
+            <span x-show="isSubmitting">
+                Processing...
+            </span>
+        </button>
+
+
+        <!-- Cancel -->
+        <button
+            type="button"
+
+            @click="
+                paymentModalOpen = false;
+                unlockPageScroll('payment');
+            "
+
+            aria-label="Close confirmation"
+
+            class="mt-4 text-xs uppercase tracking-wider
+                   text-neutral-500 hover:text-neutral-900"
+        >
+            Cancel
+        </button>
+
     </div>
-
-</div>
-
-<!-- ===== COPY ORDER DETAILS ===== -->
-<button
-    type="button"
-    @click="copyOrderDetails()"
-    :disabled="orderDetailsCopied"
-    class="w-full mt-5
-           border
-           text-[10px] uppercase tracking-[0.14em]
-           py-3.5 rounded-full font-bold
-           transition-all duration-300"
-    :class="orderDetailsCopied
-        ? 'border-green-500 bg-green-50 text-green-700'
-        : 'checkout-copy-button border-red-500 bg-white'"
-    :style="orderDetailsCopied
-        ? ''
-        : 'color: #B42318;'"
->
-    <span
-        x-text="orderDetailsCopied
-            ? '✓ Order Details Copied'
-            : 'Copy Order Details'"
-    ></span>
-</button>
-
-<!-- ===== PLACE ORDER VIA MESSENGER ===== -->
-<button
-    type="button"
-    @click="paymentModalOpen = false; submitOrder()"
-    :disabled="isSubmitting"
-    class="w-full mt-3
-           bg-neutral-900 text-white
-           text-xs uppercase tracking-wider
-           py-4 rounded-full font-medium
-           hover:bg-neutral-800
-           transition-colors
-           disabled:opacity-50"
->
-    <span x-show="!isSubmitting">
-        Place Order via Messenger
-    </span>
-
-    <span x-show="isSubmitting">
-        Processing...
-    </span>
-</button>
-
-<button
-type="button"
-@click="paymentModalOpen = false"
-aria-label="Close confirmation"
-class="mt-4 text-xs uppercase tracking-wider
-text-neutral-500 hover:text-neutral-900"
->
-Cancel
-</button>
-</div>
 </div>
 
 <!-- Footer -->

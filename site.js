@@ -50,6 +50,10 @@ document.addEventListener('alpine:init', () => {
         messengerLink: "",
         preparedOrderDetails: "",
         paymentModalOpen: false,
+        // ===== GLOBAL PAGE SCROLL LOCK =====
+        _pageScrollY: 0,
+        _pageScrollLocked: false,
+        _scrollLockSources: new Set(),
         
         orderDetailsCopied: false,
         _orderDetailsCopiedTimer: null,
@@ -521,11 +525,7 @@ document.addEventListener('alpine:init', () => {
                 this.stopHotToastLoop();
                 this.hotToastVisible = false;
                 
-                document.documentElement.style.overflow =
-                'hidden';
-                
-                document.body.style.overflow =
-                'hidden';
+                this.lockPageScroll('sale');
                 
                 this.saleModalVisible = true;
             };
@@ -539,14 +539,10 @@ document.addEventListener('alpine:init', () => {
         
         
         closeSaleModal() {
-            
             this.saleModalVisible = false;
-            
-            if (!this.quickViewOpen) {
-                document.documentElement.style.overflow = '';
-                document.body.style.overflow = '';
-            }
-            
+        
+            this.unlockPageScroll('sale');
+        
             this.scheduleHotToast();
         },
         
@@ -674,6 +670,80 @@ document.addEventListener('alpine:init', () => {
             }, 300);
         },
         
+        // ===== GLOBAL MODAL PAGE LOCK =====
+        lockPageScroll(source = 'modal') {
+            
+            this._scrollLockSources.add(source);
+            
+            // Already locked — don't overwrite saved scroll position
+            if (this._pageScrollLocked) return;
+            
+            this._pageScrollY =
+            window.scrollY ||
+            window.pageYOffset ||
+            0;
+            
+            document.documentElement.classList.add(
+                'modal-open'
+            );
+            
+            document.body.classList.add(
+                'modal-open'
+            );
+            
+            /*
+            position: fixed prevents mobile Safari / in-app browsers
+            from scrolling the page behind an open modal.
+            */
+            document.body.style.position = 'fixed';
+            document.body.style.top =
+            `-${this._pageScrollY}px`;
+            document.body.style.left = '0';
+            document.body.style.right = '0';
+            document.body.style.width = '100%';
+            
+            this._pageScrollLocked = true;
+        },
+        
+        unlockPageScroll(source = 'modal') {
+            
+            this._scrollLockSources.delete(source);
+            
+            /*
+            Another modal is still open.
+            Keep the background locked.
+            */
+            if (this._scrollLockSources.size > 0) {
+                return;
+            }
+            
+            if (!this._pageScrollLocked) return;
+            
+            const savedScrollY =
+            this._pageScrollY || 0;
+            
+            document.documentElement.classList.remove(
+                'modal-open'
+            );
+            
+            document.body.classList.remove(
+                'modal-open'
+            );
+            
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.style.width = '';
+            
+            this._pageScrollLocked = false;
+            
+            window.scrollTo(
+                0,
+                savedScrollY
+            );
+        },
+        
         // Open the Quick View modal for a clicked product
         openQuickView(product) {
             
@@ -709,8 +779,7 @@ document.addEventListener('alpine:init', () => {
                 proofPreview: ''
             };
             
-            document.documentElement.style.overflow = 'hidden';
-            document.body.style.overflow = 'hidden';
+            this.lockPageScroll('quickview');
             
             this.quickViewOpen = true;
             
@@ -722,8 +791,7 @@ document.addEventListener('alpine:init', () => {
             this.quickViewProduct = null;
             this.quickViewClosing = false;
             
-            document.documentElement.style.overflow = '';
-            document.body.style.overflow = '';
+            this.unlockPageScroll('quickview');
         },
         
         // ===== PRE-ORDER MODAL =====
@@ -1495,6 +1563,7 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
             
+            this.lockPageScroll('payment');
             this.paymentModalOpen = true;
             
         },
@@ -1706,7 +1775,7 @@ document.addEventListener('alpine:init', () => {
         },
         
         async copyOrderDetails() {
-
+            
             if (!this.cart.length) {
                 this.showCheckoutNotice(
                     "Your cart is empty.",
@@ -1714,44 +1783,44 @@ document.addEventListener('alpine:init', () => {
                 );
                 return;
             }
-        
+            
             const orderDetails =
-                this.buildOrderSummary();
-        
+            this.buildOrderSummary();
+            
             this.preparedOrderDetails =
-                orderDetails;
-        
+            orderDetails;
+            
             try {
-        
+                
                 await navigator.clipboard.writeText(
                     orderDetails
                 );
-        
+                
                 // Stop previous reset timer
                 if (this._orderDetailsCopiedTimer) {
                     clearTimeout(
                         this._orderDetailsCopiedTimer
                     );
                 }
-        
+                
                 // Success state
                 this.orderDetailsCopied = true;
-        
+                
                 // Return to normal after 5 seconds
                 this._orderDetailsCopiedTimer =
                 setTimeout(() => {
-        
+                    
                     this.orderDetailsCopied = false;
-        
+                    
                 }, 5000);
-        
+                
             } catch (error) {
-        
+                
                 console.error(
                     "Unable to copy order details:",
                     error
                 );
-        
+                
                 this.showCheckoutNotice(
                     "Unable to copy automatically. Please try again.",
                     "error"
