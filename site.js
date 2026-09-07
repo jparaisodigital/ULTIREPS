@@ -50,6 +50,12 @@ document.addEventListener('alpine:init', () => {
         messengerLink: "",
         preparedOrderDetails: "",
         paymentModalOpen: false,
+        
+        // ===== CHECKOUT GUIDE DRAWER =====
+        checkoutGuideOpen: false,
+        checkoutGuideAutoOpened: false,
+        checkoutGuideTimer: null,
+        
         // ===== GLOBAL PAGE SCROLL LOCK =====
         _pageScrollY: 0,
         _pageScrollLocked: false,
@@ -540,9 +546,9 @@ document.addEventListener('alpine:init', () => {
         
         closeSaleModal() {
             this.saleModalVisible = false;
-        
+            
             this.unlockPageScroll('sale');
-        
+            
             this.scheduleHotToast();
         },
         
@@ -1346,6 +1352,38 @@ document.addEventListener('alpine:init', () => {
             }
             
             return false;
+        },
+
+        // ===== CHECKOUT GUIDE DRAWER =====
+        initCheckoutGuide() {
+            
+            // Safety: checkout page only
+            if (!window.location.pathname.includes('checkout')) {
+                return;
+            }
+            
+            // Auto-open once per page load
+            if (this.checkoutGuideAutoOpened) {
+                return;
+            }
+            
+            this.checkoutGuideAutoOpened = true;
+            
+            if (this.checkoutGuideTimer) {
+                clearTimeout(this.checkoutGuideTimer);
+            }
+            
+            this.checkoutGuideTimer = setTimeout(() => {
+                this.checkoutGuideOpen = true;
+            }, 1500);
+        },
+        
+        openCheckoutGuide() {
+            this.checkoutGuideOpen = true;
+        },
+        
+        closeCheckoutGuide() {
+            this.checkoutGuideOpen = false;
         },
         
         // ===== PRODUCT DISCOUNT HELPERS =====
