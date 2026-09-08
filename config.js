@@ -6,6 +6,9 @@ window.CONFIG = {
     // Google Sheets / Apps Script API
     googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbzNJ02SRpIlLT4L_pQfkRAQpZ55ssvjUo-xLIw42eDn41e_FiERw53HWM8wdGWdZ50axw/exec",
     
+    // Cloudflare Turnstile public Site Key
+    turnstileSiteKey: "0x4AAAAAAEse6MEcqGBcskgi",
+    
     // Product Categories
     categories: [
         "NIKE",

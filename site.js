@@ -1,3 +1,24 @@
+function loadStoredCart() {
+    try {
+        const savedCart =
+        JSON.parse(
+            localStorage.getItem('ulti_cart')
+        );
+        
+        return Array.isArray(savedCart)
+        ? savedCart
+        : [];
+        
+    } catch (error) {
+        console.warn(
+            'Invalid saved cart was ignored.',
+            error
+        );
+        
+        return [];
+    }
+}
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('storeApp', () => ({
         config: window.CONFIG,
@@ -21,7 +42,7 @@ document.addEventListener('alpine:init', () => {
         lastScrollY: 0,
         
         // Cart State
-        cart: JSON.parse(localStorage.getItem('ulti_cart')) || [],
+        cart: loadStoredCart(),
         
         // Checkout Form State
         form: {
@@ -38,6 +59,11 @@ document.addEventListener('alpine:init', () => {
         },
         isSubmitting: false,
         isPreOrderSubmitting: false,
+        
+        // Cloudflare Turnstile state
+        turnstileToken: '',
+        turnstileWidgetId: null,
+        turnstileRenderTimer: null,
         
         // Pre-order validation / success state
         preOrderError: '',
@@ -207,6 +233,10 @@ document.addEventListener('alpine:init', () => {
             
             // Load Google Sheet data, config.js stays as fallback
             await this.loadGoogleSheetData();
+            
+            // Rebuild saved cart using trusted catalog data
+            this.secureCartFromCatalog();
+            
             this.productsReady = true;
             
             // Monthly Sale Modal first.
@@ -824,6 +854,100 @@ document.addEventListener('alpine:init', () => {
             
         },
         
+        renderPreOrderTurnstile(element) {
+            if (
+                !element ||
+                !this.config.turnstileSiteKey
+            ) {
+                this.preOrderError =
+                'Security verification is not configured.';
+                
+                return;
+            }
+            
+            const tryRender = () => {
+                // Prevent duplicate widget
+                if (this.turnstileWidgetId !== null) {
+                    return;
+                }
+                
+                // Wait until Cloudflare script is ready
+                if (!window.turnstile) {
+                    clearTimeout(
+                        this.turnstileRenderTimer
+                    );
+                    
+                    this.turnstileRenderTimer =
+                    setTimeout(tryRender, 200);
+                    
+                    return;
+                }
+                
+                try {
+                    this.turnstileWidgetId =
+                    window.turnstile.render(
+                        element,
+                        {
+                            sitekey:
+                            this.config.turnstileSiteKey,
+                            
+                            theme: 'light',
+                            
+                            action: 'preorder_submit',
+                            
+                            callback: token => {
+                                this.turnstileToken = token;
+                                this.preOrderError = '';
+                            },
+                            
+                            'expired-callback': () => {
+                                this.turnstileToken = '';
+                            },
+                            
+                            'error-callback': () => {
+                                this.turnstileToken = '';
+                                
+                                this.preOrderError =
+                                'Security verification failed. Please refresh and try again.';
+                            }
+                        }
+                    );
+                    
+                } catch (error) {
+                    console.error(
+                        'Turnstile render error:',
+                        error
+                    );
+                    
+                    this.preOrderError =
+                    'Unable to load security verification.';
+                }
+            };
+            
+            tryRender();
+        },
+        
+        
+        resetPreOrderTurnstile() {
+            this.turnstileToken = '';
+            
+            if (
+                window.turnstile &&
+                this.turnstileWidgetId !== null
+            ) {
+                try {
+                    window.turnstile.reset(
+                        this.turnstileWidgetId
+                    );
+                } catch (error) {
+                    console.warn(
+                        'Turnstile reset failed:',
+                        error
+                    );
+                }
+            }
+        },
+        
         handlePreOrderProof(event) {
             
             const file = event.target.files?.[0];
@@ -988,6 +1112,12 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
             
+            if (!this.turnstileToken) {
+                this.preOrderError =
+                'Please complete the security verification.';
+                return;
+            }
+            
             try {
                 
                 // Lock submit button
@@ -1033,6 +1163,9 @@ document.addEventListener('alpine:init', () => {
                     website:
                     this.preOrderForm.website || '',
                     
+                    turnstileToken:
+                    this.turnstileToken,
+                    
                     proofBase64:
                     proofBase64,
                     
@@ -1071,6 +1204,9 @@ document.addEventListener('alpine:init', () => {
                 
                 this.preOrderSuccess = true;
                 
+                // Turnstile tokens are single-use
+                this.resetPreOrderTurnstile();
+                
                 this.preOrderSubmittedDetails = {
                     reservationId: result.reservationId || '',
                     name: payload.name,
@@ -1107,6 +1243,9 @@ document.addEventListener('alpine:init', () => {
                 };
                 
             } catch (error) {
+                
+                // Get a fresh token before retrying
+                this.resetPreOrderTurnstile();
                 
                 console.error(
                     'PRE-ORDER SUBMISSION ERROR:',
@@ -1353,7 +1492,7 @@ document.addEventListener('alpine:init', () => {
             
             return false;
         },
-
+        
         // ===== CHECKOUT GUIDE DRAWER =====
         initCheckoutGuide() {
             
@@ -1471,26 +1610,49 @@ document.addEventListener('alpine:init', () => {
         },
         
         addToCart(product, size = null) {
-            
             // Products with sizes must have a selected size
-            if (product.sizes && product.sizes.length && !size) {
+            if (
+                product.sizes &&
+                product.sizes.length &&
+                !size
+            ) {
                 this.openQuickView(product);
                 return;
             }
             
-            // Never add a zero-stock size to the normal cart
-            if (size && this.isSizeSoldOut(product, size)) {
+            const availableStock =
+            this.getSizeStock(product, size);
+            
+            // Never add sold-out items
+            if (
+                availableStock !== null &&
+                availableStock <= 0
+            ) {
                 return;
             }
             
-            // Same product + same size = same cart line
-            const existing = this.cart.find(item =>
-                item.id === product.id &&
-                item.selectedSize === size
+            const maximumQuantity =
+            availableStock === null
+            ? 10
+            : Math.min(
+                10,
+                Math.floor(availableStock)
+            );
+            
+            const existing =
+            this.cart.find(item =>
+                String(item.id) === String(product.id) &&
+                String(item.selectedSize ?? '') ===
+                String(size ?? '')
             );
             
             if (existing) {
-                existing.quantity++;
+                existing.quantity =
+                Math.min(
+                    existing.quantity + 1,
+                    maximumQuantity
+                );
+                
             } else {
                 this.cart.push({
                     ...product,
@@ -1503,24 +1665,65 @@ document.addEventListener('alpine:init', () => {
             this.cartOpen = true;
         },
         
+        
         updateQuantity(id, size, change) {
-            
-            const item = this.cart.find(i =>
-                i.id === id &&
-                i.selectedSize === size
+            const item =
+            this.cart.find(cartItem =>
+                String(cartItem.id) === String(id) &&
+                String(cartItem.selectedSize ?? '') ===
+                String(size ?? '')
             );
             
-            if (item) {
-                item.quantity += change;
-                
-                if (item.quantity <= 0) {
-                    this.cart = this.cart.filter(i =>
-                        !(
-                            i.id === id &&
-                            i.selectedSize === size
-                        )
-                    );
-                }
+            if (!item) {
+                return;
+            }
+            
+            const trustedProduct =
+            this.products.find(product =>
+                String(product.id) === String(id)
+            );
+            
+            if (!trustedProduct) {
+                this.removeFromCart(id, size);
+                return;
+            }
+            
+            const availableStock =
+            this.getSizeStock(
+                trustedProduct,
+                size
+            );
+            
+            const maximumQuantity =
+            availableStock === null
+            ? 10
+            : Math.min(
+                10,
+                Math.max(
+                    0,
+                    Math.floor(availableStock)
+                )
+            );
+            
+            item.quantity =
+            Math.min(
+                item.quantity + change,
+                maximumQuantity
+            );
+            
+            if (item.quantity <= 0) {
+                this.cart =
+                this.cart.filter(cartItem =>
+                    !(
+                        String(cartItem.id) ===
+                        String(id) &&
+                        
+                        String(
+                            cartItem.selectedSize ?? ''
+                        ) ===
+                        String(size ?? '')
+                    )
+                );
             }
             
             this.saveCart();
@@ -1535,6 +1738,121 @@ document.addEventListener('alpine:init', () => {
                 )
             );
             
+            this.saveCart();
+        },
+        
+        secureCartFromCatalog() {
+            const trustedCart = [];
+            
+            this.cart.forEach(savedItem => {
+                const trustedProduct =
+                this.products.find(product =>
+                    String(product.id) ===
+                    String(savedItem.id)
+                );
+                
+                // Remove unknown or inactive products
+                if (
+                    !trustedProduct ||
+                    trustedProduct.active === false
+                ) {
+                    return;
+                }
+                
+                let selectedSize =
+                savedItem.selectedSize ?? null;
+                
+                // Validate selected size
+                if (
+                    Array.isArray(trustedProduct.sizes) &&
+                    trustedProduct.sizes.length
+                ) {
+                    const matchedSize =
+                    trustedProduct.sizes.find(size =>
+                        String(size) ===
+                        String(selectedSize)
+                    );
+                    
+                    if (matchedSize === undefined) {
+                        return;
+                    }
+                    
+                    selectedSize = matchedSize;
+                    
+                } else {
+                    selectedSize = null;
+                }
+                
+                // Validate quantity
+                let quantity =
+                Math.floor(Number(savedItem.quantity));
+                
+                if (
+                    !Number.isInteger(quantity) ||
+                    quantity < 1
+                ) {
+                    quantity = 1;
+                }
+                
+                quantity =
+                Math.min(quantity, 10);
+                
+                // Do not keep sold-out items
+                const availableStock =
+                this.getSizeStock(
+                    trustedProduct,
+                    selectedSize
+                );
+                
+                if (
+                    availableStock !== null &&
+                    availableStock <= 0
+                ) {
+                    return;
+                }
+                
+                if (availableStock !== null) {
+                    quantity =
+                    Math.min(quantity, availableStock);
+                }
+                
+                // Merge duplicate product-size lines
+                const existingItem =
+                trustedCart.find(item =>
+                    String(item.id) ===
+                    String(trustedProduct.id) &&
+                    String(item.selectedSize ?? '') ===
+                    String(selectedSize ?? '')
+                );
+                
+                if (existingItem) {
+                    let combinedQuantity =
+                    existingItem.quantity + quantity;
+                    
+                    combinedQuantity =
+                    Math.min(combinedQuantity, 10);
+                    
+                    if (availableStock !== null) {
+                        combinedQuantity =
+                        Math.min(
+                            combinedQuantity,
+                            availableStock
+                        );
+                    }
+                    
+                    existingItem.quantity =
+                    combinedQuantity;
+                    
+                } else {
+                    trustedCart.push({
+                        ...trustedProduct,
+                        selectedSize: selectedSize,
+                        quantity: quantity
+                    });
+                }
+            });
+            
+            this.cart = trustedCart;
             this.saveCart();
         },
         
