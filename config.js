@@ -446,10 +446,10 @@ window.CONFIG = {
             
             images: [
                 "products/1 (15).jpg",
-                "products/back/15 (1).webp",
+                /*"products/back/15 (1).webp",
                 "products/back/15 (2).webp",
                 "products/back/15 (3).webp",
-                "products/back/15 (4).webp"
+                "products/back/15 (4).webp"*/
             ],
             
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
