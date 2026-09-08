@@ -897,7 +897,6 @@ document.addEventListener('alpine:init', () => {
                             
                             callback: token => {
                                 this.turnstileToken = token;
-                                this.preOrderError = '';
                             },
                             
                             'expired-callback': () => {
@@ -906,9 +905,11 @@ document.addEventListener('alpine:init', () => {
                             
                             'error-callback': () => {
                                 this.turnstileToken = '';
-                                
-                                this.preOrderError =
-                                'Security verification failed. Please refresh and try again.';
+                            
+                                if (!this.preOrderError) {
+                                    this.preOrderError =
+                                    'Security verification failed. Please refresh and try again.';
+                                }
                             }
                         }
                     );
@@ -1129,6 +1130,12 @@ document.addEventListener('alpine:init', () => {
                 
                 const proofBase64 =
                 await this.fileToBase64(proofFile);
+                
+                if (!this.turnstileToken) {
+                    throw new Error(
+                        'Security verification expired. Please wait for verification and submit again.'
+                    );
+                }
                 
                 const payload = {
                     name: this.preOrderForm.name.trim(),
