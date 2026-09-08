@@ -132,7 +132,6 @@ document.addEventListener('alpine:init', () => {
         // ===== SITE LOADER LOGIC =====
         initSiteLoader() {
             const settings = this.config.siteLoader || {};
-            // Skip loader once kapag galing sa internal/header navigation
             const skipLoaderOnce =
             sessionStorage.getItem('ulti_skip_loader_once') === 'true';
             
@@ -166,7 +165,7 @@ document.addEventListener('alpine:init', () => {
             this.siteLoaderVisible = true;
             this.siteLoaderLeaving = false;
             
-            // Prevent scrolling habang loader ang nakikita
+            // Prevent scrolling while the loader is visible
             document.documentElement.style.overflow = 'hidden';
             document.body.style.overflow = 'hidden';
             
@@ -211,7 +210,7 @@ document.addEventListener('alpine:init', () => {
                 }, remainingTime);
             };
             
-            // Hintayin muna na fully loaded ang page/images
+            // Wait until the page and images are fully loaded
             if (document.readyState === 'complete') {
                 hideLoader();
             } else {
@@ -266,7 +265,7 @@ document.addEventListener('alpine:init', () => {
             
             const url = this.config.googleAppsScriptUrl;
             
-            // Walang API URL = gamitin lang ang config.js
+            // No API URL configured — fall back to config.js
             if (!url) {
                 console.log('Google Sheet API not configured. Using config.js.');
                 return;
@@ -497,8 +496,7 @@ document.addEventListener('alpine:init', () => {
             } catch (error) {
                 
                 // IMPORTANT:
-                // Kapag pumalya ang Google Sheet,
-                // hindi mawawala products.
+                // If Google Sheet fails, products are not lost.
                 // config.js remains the fallback.
                 console.warn(
                     'Google Sheet unavailable. Using config.js fallback.',
@@ -652,7 +650,7 @@ document.addEventListener('alpine:init', () => {
             
             setTimeout(() => {
                 
-                // Change content habang invisible
+                // Swap content while invisible
                 this.hotToastMode =
                 this.hotToastMode === 'hot'
                 ? 'feedback'

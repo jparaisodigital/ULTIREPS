@@ -84,8 +84,7 @@ window.CONFIG = {
     saleModal: {
         enabled: true,
         
-        // Palitan ito every new campaign
-        // Example next month: "10.10-2026"
+        // Update this ID for every new campaign (e.g. "10.10-2026")
         promoId: "9.9-2026",
         
         eyebrow: "LIMITED TIME ONLY",
@@ -101,11 +100,10 @@ window.CONFIG = {
         
         footerText: "STYLE · QUALITY · FOR EVERYONE",
         
-        // Delay after entering homepage
+        // Delay after homepage load before showing modal
         showDelay: 700,
         
-        // Delay bago lumabas ang existing Hot Style toast
-        // after ma-close ang Sale modal
+        // Delay before Hot Style toast appears after sale modal is closed
         hotToastDelay: 2500
     },
     
