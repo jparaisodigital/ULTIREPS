@@ -517,6 +517,186 @@ window.CONFIG = {
             
             sizes: [6, 7, 8, 9, 10, 11, 12, 13]
         },
+        {
+            id: 19,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+        
+            image_url: "products/1 (19).jpg",
+        
+            images: [
+                "products/1 (19).jpg",
+                "products/back/19 (1).webp",
+                "products/back/19 (2).webp",
+                "products/back/19 (3).webp",
+                "products/back/19 (4).webp"
+            ],
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 20,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+        
+            image_url: "products/1 (20).jpg",
+        
+            images: [
+                "products/1 (20).jpg",
+                "products/back/20 (1).webp",
+                "products/back/20 (2).webp",
+                "products/back/20 (3).webp",
+                "products/back/20 (4).webp"
+            ],
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 21,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+        
+            image_url: "products/1 (21).jpg",
+        
+            images: [
+                "products/1 (21).jpg",
+                "products/back/21 (1).webp",
+                "products/back/21 (2).webp",
+                "products/back/21 (3).webp",
+               
+            ],
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 22,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+        
+            image_url: "products/1 (22).jpg",
+        
+            images: [
+                "products/1 (22).jpg",
+                "products/back/22 (1).webp",
+                "products/back/22 (2).webp",
+                "products/back/22 (3).webp",
+                "products/back/22 (4).webp"
+            ],
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 23,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+        
+            image_url: "products/1 (23).jpg",
+        
+            images: [
+                "products/1 (23).jpg",
+                "products/back/23 (1).webp",
+                "products/back/23 (2).webp",
+                "products/back/23 (3).webp",
+                "products/back/23 (4).webp"
+            ],
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 24,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+        
+            image_url: "products/1 (24).jpg",
+        
+            images: [
+                "products/1 (24).jpg",
+                "products/back/24 (1).webp",
+                "products/back/24 (2).webp",
+                "products/back/24 (3).webp",
+                "products/back/24 (4).webp"
+            ],
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 25,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+        
+            image_url: "products/1 (25).jpg",
+        
+            images: [
+                "products/1 (25).jpg",
+                "products/back/25 (1).webp",
+                "products/back/25 (2).webp",
+                "products/back/25 (3).webp"
+                
+            ],
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 26,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+        
+            image_url: "products/1 (26).jpg",
+        
+            images: [
+                "products/1 (26).jpg",
+                "products/back/26 (1).webp",
+                "products/back/26 (2).webp",
+                "products/back/26 (3).webp",
+                "products/back/26 (4).webp"
+            ],
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 27,
+            name: "Black Spiderman Neo x Crocs",
+            price: 2099,
+            category: "CROCS",
+            hot: false,
+            reserveAllowed: true,
+        
+            image_url: "products/1 (27).jpg",
+        
+            images: [
+                "products/1 (27).jpg",
+                "products/back/27 (1).webp",
+                "products/back/27 (2).webp",
+                "products/back/27 (3).webp",
+                "products/back/27 (4).webp"
+            ],
+        
+            sizes: [6, 7, 8, 9, 10, 11, 12, 13]
+        },
     ],  
     
     // Ulti Story Images
