@@ -253,10 +253,10 @@ window.CONFIG = {
             hot: false,
             reserveAllowed: true,
             
-            image_url: "products/1 (6).jpg",
+            image_url: "products/1 (6).png",
             
             images: [
-                "products/1 (6).jpg",
+                "products/1 (6).png",
                 "products/back/6 (1).webp",
                 "products/back/6 (2).webp",
                 "products/back/6 (3).webp",
