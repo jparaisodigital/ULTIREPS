@@ -519,7 +519,7 @@ window.CONFIG = {
         },
         {
             id: 19,
-            name: "Black Spiderman Neo x Crocs",
+            name: "Coming Soon",
             price: 2099,
             category: "CROCS",
             hot: false,
@@ -539,7 +539,7 @@ window.CONFIG = {
         },
         {
             id: 20,
-            name: "Black Spiderman Neo x Crocs",
+            name: "Coming Soon",
             price: 2099,
             category: "CROCS",
             hot: false,
@@ -559,7 +559,7 @@ window.CONFIG = {
         },
         {
             id: 21,
-            name: "Black Spiderman Neo x Crocs",
+            name: "Coming Soon",
             price: 2099,
             category: "CROCS",
             hot: false,
@@ -579,7 +579,7 @@ window.CONFIG = {
         },
         {
             id: 22,
-            name: "Black Spiderman Neo x Crocs",
+            name: "Coming Soon",
             price: 2099,
             category: "CROCS",
             hot: false,
@@ -599,7 +599,7 @@ window.CONFIG = {
         },
         {
             id: 23,
-            name: "Black Spiderman Neo x Crocs",
+            name: "Coming Soon",
             price: 2099,
             category: "CROCS",
             hot: false,
@@ -619,7 +619,7 @@ window.CONFIG = {
         },
         {
             id: 24,
-            name: "Black Spiderman Neo x Crocs",
+            name: "Coming Soon",
             price: 2099,
             category: "CROCS",
             hot: false,
@@ -639,7 +639,7 @@ window.CONFIG = {
         },
         {
             id: 25,
-            name: "Black Spiderman Neo x Crocs",
+            name: "Coming Soon",
             price: 2099,
             category: "CROCS",
             hot: false,
@@ -659,7 +659,7 @@ window.CONFIG = {
         },
         {
             id: 26,
-            name: "Black Spiderman Neo x Crocs",
+            name: "Coming Soon",
             price: 2099,
             category: "CROCS",
             hot: false,
@@ -679,7 +679,7 @@ window.CONFIG = {
         },
         {
             id: 27,
-            name: "Black Spiderman Neo x Crocs",
+            name: "Coming Soon",
             price: 2099,
             category: "CROCS",
             hot: false,
