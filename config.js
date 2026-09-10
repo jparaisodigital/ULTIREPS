@@ -721,7 +721,7 @@ window.CONFIG = {
         "products/1 (3).jpg",
         "products/1 (4).jpg",
         "products/1 (5).jpg",
-        "products/1 (6).jpg",
+        "products/1 (6).png",
         "products/1 (7).jpg",
         "products/1 (8).jpg",
         "products/1 (9).jpg",
